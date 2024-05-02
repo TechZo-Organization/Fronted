@@ -147,5 +147,15 @@ export default {
   color: #ffd146;
 }
 
+@media screen and (max-width: 980px) {
+  .center,
+  .end{
+    display:none;
+  }
+
+  .burger{
+    display:block;
+  }
+}
 
 </style>
