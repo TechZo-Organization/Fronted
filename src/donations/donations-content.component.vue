@@ -130,23 +130,19 @@ export default {
     flex-direction: column;
     padding: 3rem 1.25rem 7rem 1.25rem;
   }
-
   .categories-container {
     order: 1;
     width: 100%;
   }
-
   .ongs-container {
     padding-top: 2rem;
     order: 2;
     width: 100%;
   }
-
   .title-container{
     font-size: 25px;
     padding: 5rem 2rem 2rem 2rem;
   }
-
   .title-container h1{
     font-size: 35px;
   }
