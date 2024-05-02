@@ -123,6 +123,26 @@ export default {
   font-weight: bold;
 }
 
+@media screen and (max-width: 750px) {
+  .f-row1{
+    display: grid;
+    justify-content: center;
+    padding-bottom: 0;
+  }
 
+  .image-section,
+  .link-section{
+    padding-bottom: 2rem;
+  }
+
+  .social-media a{
+    margin: 8px;
+  }
+
+  .help-links{
+    display: grid;
+    padding-bottom: 3rem;
+  }
+}
 
 </style>
