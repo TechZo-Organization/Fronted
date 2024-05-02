@@ -74,4 +74,26 @@ export default {
 </template>
 
 <style scoped>
+
+.counter-container{
+  display: flex;
+  padding-top: 1rem;
+}
+
+.counter{
+  background-color: #ffd146;
+  margin: 1rem;
+  padding: 0.5rem;
+  border-radius: 10px;
+  width: 200px;
+  box-shadow: 0px 0px 8px 0px #ccc;
+}
+
+@media screen and (max-width: 780px){
+  .counter-container{
+    display: grid;
+  }
+
+}
+
 </style>
