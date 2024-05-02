@@ -1,27 +1,40 @@
-<script setup>
+<script>
+import ToolbarContent from "./public/components/toolbar-content.component.vue";
+import FooterContent from "./public/components/footer-content.component.vue";
+import LoginContent from "./login/login-content.component.vue";
+
+export default {
+  components:{
+    LoginContent,
+    FooterContent,
+    ToolbarContent,
+  },
+
+}
 </script>
 
 <template>
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-    </a>
+  <div id="app">
+    <toolbar-content v-if="$route.path !== '/log-in' && $route.path !== '/register'
+    && $route.path !== '/admin'
+    && $route.path !== '/admin/users'
+    && $route.path !== '/admin/ongs'
+    && $route.path !== '/admin/memberships'
+    && $route.path !== '/admin/categories-product'
+    && $route.path !== '/admin/categories-ong'"
+    ></toolbar-content>
+    <router-view></router-view>
+    <footer-content v-if="$route.path !== '/log-in' && $route.path !== '/register'
+    && $route.path !== '/admin'
+    && $route.path !== '/admin/users'
+    && $route.path !== '/admin/ongs'
+    && $route.path !== '/admin/memberships'
+    && $route.path !== '/admin/categories-product'
+    && $route.path !== '/admin/categories-ong'"
+    ></footer-content>
   </div>
 </template>
 
 <style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
+
 </style>
