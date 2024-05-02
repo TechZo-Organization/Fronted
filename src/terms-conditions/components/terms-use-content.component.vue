@@ -1,96 +1,186 @@
 <script>
 export default{
-  name: 'privacy-policies-content',
+  name: 'terms-use-content',
 }
 </script>
 
 <template>
-  <div class="privacy-container" style="background-color: #F8F7F4">
+  <div class="terms-container" style="background-color: #F8F7F4">
     <br>
     <br>
     <br>
-    <div class="privacy-title">
-      <h1 class="yellow-text">Política de Privacidad</h1>
-      <h2>Tu Seguridad, Nuestra Prioridad</h2>
+    <div class="terms-title">
+      <h1 class="yellow-text">Condiciones de Uso</h1>
+      <h2>Descubre las Reglas</h2>
     </div>
-    <div class="privacy-sub-text">
+    <div class="terms-sub-text">
       <p>
-        Esta Política de Privacidad describe cómo TechZo recopila, utiliza y protege
-        la información personal de los usuarios de nuestra plataforma, de acuerdo con las
-        leyes de protección de datos de la República del Perú.
+        Bienvenido a CambiaZo, la plataforma que facilita el intercambio de productos
+        y servicios de manera segura y eficiente. Antes de comenzar a utilizar nuestros servicios,
+        te pedimos que leas detenidamente las siguientes condiciones. Al acceder y utilizar nuestra
+        plataforma, aceptas estar sujeto a estas condiciones. Si no estás de acuerdo con alguna parte
+        de estas condiciones, por favor abstente de utilizar nuestro sitio web.
       </p>
     </div>
-    <div class="privacy-main-text">
-      <h2 class="yellow-text">Información Personal Recopilada</h2>
-      <p>
-        Podemos recopilar información personal identificable, como su nombre, dirección
-        de correo electrónico, dirección postal, número de teléfono, información de pago
-        y cualquier otra información que usted nos proporcione voluntariamente al registrarse
-        en nuestra plataforma o realizar transacciones en ella.
-      </p>
-      <h2 class="yellow-text">Uso de la Información</h2>
-      <p>
-        Utilizamos la información personal recopilada para los siguientes fines:
-      </p>
-      <ul class="list-text">
-        <li>Procesar transacciones y brindar los servicios solicitados.</li>
-        <li>Comunicarnos con usted con respecto a su cuenta y brindarle soporte al cliente.</li>
-        <li>Personalizar su experiencia y brindarle contenido y ofertas específicas.</li>
-        <li>Mejorar nuestra plataforma y desarrollar nuevos productos y servicios.</li>
-        <li>Cumplir con nuestras obligaciones legales y proteger nuestros derechos legales.</li>
-      </ul>
-      <br>
-      <h2 class="yellow-text">Compartir Información Personal</h2>
-      <p>
-        No compartimos, vendemos ni alquilamos su información personal a terceros, excepto
-        en las siguientes circunstancias:
-      </p>
-      <ul class="list-text">
-        <li>Con su consentimiento explícito.</li>
-        <li>Con proveedores de servicios de confianza que nos ayudan a operar nuestra plataforma y brindar servicios.</li>
-        <li>Cuando sea necesario para cumplir con las leyes y regulaciones aplicables, responder a solicitudes legales o proteger nuestros derechos legales.</li>
-      </ul>
-      <br>
-      <h2 class="yellow-text">Protección de la Información Personal</h2>
-      <p>
-        Implementamos medidas de seguridad físicas, técnicas y administrativas para proteger
-        su información personal contra accesos no autorizados, uso indebido, divulgación,
-        alteración o destrucción.
-      </p>
-      <h2 class="yellow-text">Derechos de los Usuarios</h2>
-      <p>
-        Usted tiene derecho a acceder, corregir, actualizar o eliminar su información personal
-        en cualquier momento. Puede ejercer estos derechos poniéndose en contacto con nosotros
-        a través de los medios proporcionados en nuestra plataforma.
-      </p>
-      <h2 class="yellow-text">Cambios en la Política de Privacidad</h2>
-      <p>
-        Nos reservamos el derecho de actualizar o modificar esta Política de Privacidad en
-        cualquier momento. Le notificaremos sobre cualquier cambio significativo mediante una
-        notificación en nuestra plataforma o por otros medios que consideremos apropiados.
-      </p>
-      <h2 class="yellow-text">Contacto</h2>
-      <p>
-        Si tiene alguna pregunta o inquietud sobre esta Política de Privacidad, comuníquese con
-        nosotros a través de los medios proporcionados en nuestra plataforma. Al utilizar nuestra
-        plataforma, usted acepta y consiente el procesamiento de su información personal de acuerdo
-        con esta Política de Privacidad y las leyes de protección de datos de la República del Perú.
-      </p>
-      <br>
+    <div class="terms-main-text">
+      <ol>
+        <li>Objeto</li>
+        <p>
+          El propósito de CambiaZo es proporcionar una plataforma en línea donde los usuarios
+          pueden intercambiar objetos y servicios de manera segura y conveniente. Nos esforzamos
+          por crear un entorno digital inclusivo y dinámico que promueva el intercambio justo y
+          beneficioso para todos los usuarios.
+        </p>
+        <li>Información sobre Cookies </li>
+        <p>
+          CambiaZo utiliza cookies para mejorar la experiencia del usuario y personalizar el
+          contenido. Las cookies nos ayudan a entender cómo interactúan los usuarios con nuestro
+          sitio web y nos permiten ofrecer un servicio más eficiente y adaptado a sus necesidades.
+          Al navegar por el sitio web, el usuario acepta el uso de cookies de acuerdo con la política
+          de privacidad de CambiaZo
+        </p>
+        <li>Legislación Aplicable</li>
+        <p>
+          Este sitio web se rige por las leyes de Perú y está sujeto a la jurisdicción de los
+          tribunales peruanos. Cumplimos con todas las disposiciones legales y normativas aplicables
+          para garantizar la protección de los derechos de nuestros usuarios y el cumplimiento de
+          nuestras obligaciones como prestadores de servicios en línea.
+        </p>
+        <li>Licencias </li>
+        <p>
+          Los contenidos generados por los usuarios en CambiaZo siguen siendo propiedad de los
+          mismos, sin embargo, al publicar contenido en la plataforma, el usuario otorga a CambiaZo
+          una licencia mundial, no exclusiva y gratuita para usar, reproducir, modificar, adaptar,
+          publicar, traducir y distribuir dicho contenido con fines promocionales y de marketing.
+          Esta licencia nos permite mostrar y promocionar los productos y servicios ofrecidos en
+          nuestra plataforma, ampliando así su visibilidad y alcance.
+        </p>
+        <li>Política de Funcionamiento </li>
+        <p>
+          CambiaZo se compromete a proporcionar un servicio confiable y seguro. Establecemos condiciones
+          para el uso de nuestra plataforma con el objetivo de garantizar una experiencia positiva
+          para todos los usuarios. Sin embargo, no nos responsabilizamos de la pérdida de información
+          o cualquier daño causado por el uso indebido de la misma. Es importante que los usuarios
+          actúen de manera responsable y respeten las normas y directrices establecidas por CambiaZo.
+        </p>
+        <li>Actividades No Permitidas</li>
+        <p>
+          En CambiaZo nos comprometemos a mantener un entorno digital seguro y libre de actividades que
+          puedan ser consideradas fraudulentas o inapropiadas. Por ello, prohibimos el uso de nuestra
+          plataforma para cualquier actividad que sea ilegal, fraudulenta o que viole los derechos de
+          terceros. Nos reservamos el derecho de eliminar contenido que incumpla estas condiciones y de
+          suspender las cuentas de usuario en caso de infracciones repetidas.
+        </p><br>
+        <p>
+          Está estrictamente prohibido que los usuarios publiquen anuncios o envíen mensajes que
+          contengan información de contacto de personas que no hayan autorizado su divulgación,
+          así como contenido que sea falso, difamatorio, inmoral, insultante, pornográfico, obsceno
+          o de cualquier manera inaceptable. Además, no se permite enviar información que sea ilegal
+          o que incite a la violencia o a cualquier tipo de comportamiento criminal.
+        </p><br>
+        <p>
+          Tampoco se permite revelar asuntos privados o violar los derechos humanos relacionados
+          con la privacidad y la publicidad. Se prohíbe el envío de contenido que contenga virus u
+          otras características dañinas que puedan interferir con el funcionamiento adecuado de nuestro
+          sitio web o el acceso de los usuarios al mismo. Además, no está permitido republicar
+          información suministrada por otros usuarios ni incitar a otros a violar nuestras condiciones
+          de funcionamiento o términos y condiciones.
+        </p><br>
+        <p>
+          No permitimos la infracción de los derechos de propiedad intelectual o industrial de
+          terceros, ni la publicación de productos o servicios cuya acción, distribución o divulgación
+          esté regulada. Queda prohibido el trueque de productos falsificados, réplicas, drogas,
+          armas, alcohol, órganos humanos, animales protegidos por la ley u otros artículos que
+          promuevan la violencia, la discriminación o cualquier actividad ilegal.
+        </p><br>
+        <p>
+          Además, se prohíbe la publicación de contenido relacionado con la prostitución, la
+          pornografía infantil, la pedofilia o cualquier actividad sexual que involucre a personas
+          menores de edad. Asimismo, no se permite el trueque de documentos de identidad ni la
+          promoción de servicios relacionados con el sexo fuera de la categoría correspondiente.
+        </p>
+        <li>Prohibido el uso Menores</li>
+        <p>
+          El acceso a ciertos contenidos de CambiaZo está restringido a usuarios mayores de 18 años.
+          Los menores deben obtener el consentimiento de sus padres o tutores antes de utilizar la
+          plataforma. Esta medida se implementa para proteger a los menores de contenido inapropiado
+          y promover un entorno seguro para todos los usuarios.
+        </p>
+        <li>Uso de Cookies</li>
+        <p>
+          CambiaZo utiliza cookies para recopilar información sobre la navegación de los usuarios
+          y mejorar la funcionalidad del sitio web. El usuario puede configurar su navegador para
+          rechazar cookies, aunque esto puede afectar la experiencia de usuario. Las cookies nos
+          ayudan a personalizar el contenido y los anuncios, proporcionar funciones de redes sociales
+          y analizar el tráfico del sitio web.
+        </p>
+        <li>No Garantía</li>
+        <p>
+          CambiaZo no garantiza la disponibilidad continua del sitio web ni la exactitud de la
+          información proporcionada por los usuarios. El uso del sitio web es bajo el propio riesgo
+          del usuario. Si bien nos esforzamos por mantener un servicio de alta calidad, no podemos
+          garantizar que el sitio web esté libre de errores o interrupciones. Es importante que los
+          usuarios comprendan que la información proporcionada por otros usuarios puede no ser precisa
+          o actualizada, y que deben verificar la autenticidad de dicha información antes de tomar
+          decisiones basadas en ella.
+        </p>
+        <li>Limitacíon de Responsabilidad</li>
+        <p>
+          CambiaZo no será responsable de ningún daño directo, indirecto, incidental, especial,
+          emergente o punitivo que surja del uso o la imposibilidad de uso del sitio web. Hacemos
+          todo lo posible para garantizar la seguridad y confiabilidad de nuestra plataforma, pero
+          no podemos hacernos responsables de los actos de los usuarios ni de los eventos fuera de
+          nuestro control. Los usuarios deben comprender y aceptar los riesgos asociados con el uso
+          de servicios en línea y actuar con prudencia en todo momento.
+        </p>
+        <li>Información del Usuario</li>
+        <p>
+          Los datos personales proporcionados por los usuarios se utilizan de acuerdo con la
+          política de privacidad de CambiaZo y no se comparten con terceros sin consentimiento
+          previo. Respetamos la privacidad de nuestros usuarios y tomamos medidas para proteger
+          la confidencialidad y seguridad de su información personal.
+        </p>
+        <li>Indemnización</li>
+        <p>
+          El usuario acepta indemnizar y eximir de responsabilidad a CambiaZo, sus afiliados,
+          empleados y agentes de cualquier reclamo o demanda, incluidos los honorarios legales
+          razonables, realizados por terceros debido al contenido que el usuario publica, al uso
+          del sitio web o a la violación de estas condiciones. Esta disposición se aplica para
+          proteger los intereses de CambiaZo y garantizar que los usuarios asuman la responsabilidad
+          por sus acciones en la plataforma.
+        </p>
+        <li>Generalidades</li>
+        <p>
+          El usuario no puede transferir total o parcialmente sus derechos u obligaciones derivadas
+          de estas condiciones de servicio a terceros. Cualquier intento en contrario será considerado
+          inválido. Por otro lado, CambiaZo.com tiene la facultad de transferir sus derechos y obligaciones
+          según lo establecido en estas condiciones. Es importante destacar que estas condiciones son
+          vinculantes y aplicables para ambas partes, así como para sus sucesores y cesionarios autorizados.
+          La falta de respuesta por parte de CambiaZo.com ante un incumplimiento de estas condiciones no
+          constituye una aceptación del mismo, ni implica renuncia a tomar acciones al respecto. Estos
+          términos constituyen el acuerdo entre las partes con respecto al uso del sitio web, anulando
+          cualquier acuerdo previo relacionado con el mismo. En caso de que alguna cláusula de estos
+          términos sea considerada inválida o inaplicable, las demás cláusulas seguirán siendo válidas
+          y aplicables, debiendo ser reemplazada la cláusula inválida por una que cumpla con el mismo
+          propósito. Estos términos tienen como único objetivo beneficiar al usuario de CambiaZo.com y
+          a la plataforma misma, sin beneficiar a terceros. En caso de conflicto entre la versión en
+          inglés y cualquier otra versión de estos términos, prevalecerá la versión en castellano.
+        </p>
+      </ol>
     </div>
   </div>
 </template>
 
 <style scoped>
 
-.privacy-title{
+.terms-title{
   text-align: center;
   padding: 6rem 3rem 3rem 3rem;
   font-size: 50px;
   font-weight: 900;
 }
 
-.privacy-title h1{
+.terms-title h1{
   font-size: 60px;
   padding-bottom: 1rem;
 }
@@ -99,57 +189,46 @@ export default{
   color: #FFD146;
 }
 
-.privacy-sub-text{
+.terms-sub-text{
   margin: 0rem 15rem 0rem 15rem;
   padding: 2rem;
   text-align: center;
 }
 
-.privacy-main-text{
-  margin: 0rem 18rem 0rem 18rem;
+.terms-main-text{
+  margin: 0rem 12rem 0rem 12rem;
   padding-bottom: 6rem;
 }
 
-.privacy-main-text h2{
+.terms-main-text ol{
+  text-align: justify;
+  list-style: decimal;
+  padding: 1.5rem;
+}
+
+.terms-main-text ol li{
+  margin: 2.5rem 0rem 1rem 0rem;
   font-size: 30px;
   font-weight: 900;
-  padding-top: 3rem;
-  padding-bottom: 1rem;
-}
-
-.privacy-main-text p{
-  text-align: justify;
-  padding-top: 1.5rem;
-  padding-bottom: 1rem;
-}
-
-.list-text{
-  text-align: justify;
-  list-style: circle;
-  margin-left: 1rem;
+  color: #FFD146;;
 }
 
 @media screen and (max-width: 880px) {
-  .privacy-title h1{
+  .terms-title h1{
     font-size: 45px;
   }
-  .privacy-title h2{
+  .terms-title h2{
     font-size: 40px;
   }
-  .privacy-sub-text{
+  .terms-sub-text{
     margin: 0rem;
     padding: 3rem;
   }
 
-  .privacy-main-text{
+  .terms-main-text{
     margin: 0rem;
-    padding: 1rem 3rem 3rem 3rem;
+    padding: 0rem 3rem 3rem 3rem;
   }
-
-  .privacy-main-text h2{
-    padding-top: 1rem
-  }
-
 }
 
 </style>

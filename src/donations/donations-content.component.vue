@@ -74,7 +74,6 @@ export default {
 </template>
 
 <style scoped>
-
 .title-container{
   padding: 5rem 10rem 5rem 10rem;
   font-size: 30px;
@@ -82,26 +81,21 @@ export default {
   text-align: center;
   color: #FFD146;
 }
-
 .title-container h1{
   font-size: 40px;
   color: #000;
 }
-
 .main-container{
   display: flex;
   gap: 1rem;
   padding: 3rem;
 }
-
 .ongs-container{
   width: 60%;
 }
-
 .input-container{
   padding: 1rem;
 }
-
 .input-container h1{
   font-weight: bolder;
   font-size: 30px;
@@ -125,24 +119,29 @@ export default {
   width: 40%
 }
 
+
 @media screen and (max-width: 900px){
   .main-container {
     flex-direction: column;
     padding: 3rem 1.25rem 7rem 1.25rem;
   }
+
   .categories-container {
     order: 1;
     width: 100%;
   }
+
   .ongs-container {
     padding-top: 2rem;
     order: 2;
     width: 100%;
   }
+
   .title-container{
     font-size: 25px;
     padding: 5rem 2rem 2rem 2rem;
   }
+
   .title-container h1{
     font-size: 35px;
   }
