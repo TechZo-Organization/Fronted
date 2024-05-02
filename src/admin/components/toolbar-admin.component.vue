@@ -60,4 +60,81 @@ export default {
 
 <style scoped>
 
+.toolbar{
+  background-color: #000;
+  padding: 1rem;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+.center{
+  display: flex;
+  color: #fff;
+  gap: 1.5rem;
+}
+
+.yellow-link{
+  transition: 0.43s;
+  font-size: 17px;
+  font-family: 'Montserrat';
+}
+
+.yellow-link:hover{
+  color: #FFD146;
+}
+
+.b-admin{
+  background-color: #fff;
+  border: 1.5px solid #fff;
+  border-radius: 20px;
+  margin: 0px 2.5px 0px 2.5px;
+  padding: 0.25rem 1rem 0.25rem 1rem;
+  transition: 0.43s;
+}
+
+.b-admin:hover{
+  background-color: #FFD146;
+  border: 1.5px solid #FFD146;
+}
+
+.burger{
+  display:none;
+}
+
+.sidebar-content{
+  padding-top: 3rem;
+}
+
+.sidebar-content h1{
+  font-size: 20px;
+}
+
+.b-admin-sidebar{
+  background-color: #ffd146;
+  border: 1.5px solid #fff;
+  border-radius: 20px;
+  margin: 0px 2.5px 0px 2.5px;
+  padding: 0.25rem 4rem 0.25rem 4rem;
+  transition: 0.43s;
+}
+
+.b-admin-sidebar:hover{
+  background-color: #000;
+  color: #ffd146;
+}
+
+@media screen and (max-width: 980px) {
+  .center,
+  .end{
+    display:none;
+  }
+
+  .burger{
+    display:block;
+  }
+}
+
 </style>
