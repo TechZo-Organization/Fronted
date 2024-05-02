@@ -46,6 +46,83 @@ export default {
 </template>
 
 <style scoped>
+.footer{
+  background-color: #000;
+  color: #fff;
+  padding: 2.5rem;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+}
+
+.f-row1{
+  display: flex;
+  padding-top: 1rem;
+  justify-content: space-between;
+}
+
+.f-row1 a{
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.yellow-link{
+  transition: 0.43s;
+  font-size: 18px;
+}
+
+.yellow-link:hover{
+  color: #FFD146;
+}
+
+.gray-link{
+  color: #989898;
+  transition: 0.43s;
+}
+
+.gray-link:hover{
+  color: #ffffff;
+}
+
+.social-media{
+  display:flex;
+  padding-top: 1rem;
+}
+
+.circle-media {
+  background-color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50px;
+  margin: 3px;
+  transition: 0.43s;
+}
+.circle-media:hover{
+  background-color: #FFD146;
+  box-shadow: 0px 0px 8px 0px #FFD146;
+}
+
+.f-row2{
+  margin: 1rem;
+  padding-top: 1.5rem;
+}
+
+.help-links{
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  padding-bottom: 1.5rem;
+}
+
+.help-links a{
+  text-decoration: none;
+  font-weight: bold;
+}
+
 
 
 </style>
