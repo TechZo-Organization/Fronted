@@ -42,6 +42,8 @@ export default {
       </div>
       <h4 style="color: #FFD146">&copy; TechZo 2024. Todos los derechos reservados.</h4>
     </div>
+    <br>
+    <br>
   </div>
 </template>
 

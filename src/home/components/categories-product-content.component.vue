@@ -7,14 +7,22 @@ export default {
       required: true
     }
   },
+  methods: {
+    filterByCategory(categoryName) {
+      this.$emit("category-selected", categoryName);
+    }
+  }
 }
 </script>
 
 <template>
   <div v-for="category_product in category_products" :key="category_product.id">
-      <pv-button class="b-category">{{category_product.name}}</pv-button>
+    <pv-button class="b-category" @click="filterByCategory(category_product.name)">
+      {{category_product.name}}
+    </pv-button>
   </div>
 </template>
+
 
 <style scoped>
 .b-category{

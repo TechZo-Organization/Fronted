@@ -63,6 +63,7 @@ export default {
   left: 0;
   width: 100%;
   z-index: 1000;
+  box-shadow: 0px 0px 50px 0px #707070;
 }
 
 .center{
@@ -123,7 +124,7 @@ export default {
 .b-post-sidebar{
   border: 1.5px solid #FFD146;
   border-radius: 20px;
-  margin: 0px 2.5px 0px 2.5px;
+  margin: 1px 2.5px 1px 2.5px;
   padding: 0.25rem 1rem 0.25rem 1rem;
   color: #FFD146;
   transition: 0.43s;
@@ -137,7 +138,7 @@ export default {
   background-color: #ffd146;
   border: 1.5px solid #fff;
   border-radius: 20px;
-  margin: 0px 2.5px 0px 2.5px;
+  margin: 1px 2.5px 1px 2.5px;
   padding: 0.25rem 1rem 0.25rem 1rem;
   transition: 0.43s;
 }

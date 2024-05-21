@@ -68,15 +68,20 @@ export default {
   display: flex;
 }
 
-.login-form{
+.login-form {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   width: 55%;
+  margin: auto;
+  height: 100%
 }
 
-.main-image{
+.main-image {
   width: 45%;
-  height: 95vh;
+  height: 100vh;
+  object-fit: cover;
 }
-
 footer{
   font-family: 'JetBrains Mono', monospace;
   width: 100%;

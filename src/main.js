@@ -2,7 +2,7 @@ import { createApp } from 'vue'
 import './style.css'
 import App from './App.vue'
 import PrimeVue from "primevue/config";
-import router from './router'
+import router from './router/index.js'
 
 import 'primevue/resources/primevue.min.css';
 import 'primeicons/primeicons.css';

@@ -18,6 +18,8 @@ export default {
       boost_products: [],
       errors: [],
       homeApi: new homeApiService(),
+      searchProduct: "",
+      selectedCategory: ""
     }
   },
   created() {
@@ -25,26 +27,44 @@ export default {
     this.getAllProducts();
   },
   methods: {
-    showConfirmation() {
-      alert("Gracias papu");
-    },
     getAllProductCategories() {
       this.homeApi.getCategoriesProduct()
           .then((response) => {
             this.category_products = response.data;
           })
+          .catch((error) => {
+            this.errors.push(error);
+          });
     },
     getAllProducts() {
       this.homeApi.getProduct()
           .then((response) => {
             this.products = response.data;
-            this.boost_products = response.data;
+            this.boost_products = response.data.filter(product => product.boost);
           })
           .catch((error) => {
             this.errors.push(error);
           });
     },
+    filterByCategory(categoryName) {
+      this.selectedCategory = categoryName;
+    },
   },
+  computed: {
+    filteredProducts() {
+      if (this.selectedCategory) {
+        return this.products.filter(product =>
+            product.category && product.category.name &&
+            product.category.name.toLowerCase().includes(this.selectedCategory.toLowerCase())
+        );
+      } else {
+        return this.products.filter(product =>
+            product.product_name &&
+            product.product_name.toLowerCase().includes(this.searchProduct.toLowerCase())
+        );
+      }
+    }
+  }
 }
 </script>
 
@@ -53,12 +73,11 @@ export default {
     <br>
     <br>
     <br>
-    <form @submit.prevent="showConfirmation" class="search-form">
-      <pv-input required class="input-search" placeholder="Buscar..."></pv-input>
-      <pv-button type="submit" class="b-search"><b>Envíar</b></pv-button>
-    </form>
+    <div class="search-form">
+      <pv-input v-model="searchProduct" class="input-search" placeholder="Buscar..."></pv-input>
+    </div>
     <div class="categories-container">
-      <categories-product :category_products="category_products"></categories-product>
+      <categories-product :category_products="category_products" @categorySelected="filterByCategory"></categories-product>
     </div>
     <div class="boost-container">
       <div class="boost-container-slide">
@@ -69,17 +88,18 @@ export default {
       </div>
     </div>
     <div class="title-container">
-      <h1>Últimos trueques publicados</h1>
+      <h1>Últimos trueques publicadoss</h1>
     </div>
     <div class="products-container">
-      <product-list v-if="errors" :products="products"></product-list>
+      <product-list v-if="filteredProducts.length" :products="filteredProducts"></product-list>
     </div>
     <div class="more-products-container">
-      <pv-button class="b-more-products">Ver más</pv-button>
+      <router-link to="/admin">
+        <pv-button class="b-more-products">Ver más</pv-button>
+      </router-link>
     </div>
   </div>
 </template>
-
 <style scoped>
 
 .search-form{
@@ -90,7 +110,7 @@ export default {
 }
 
 .input-search{
-  width: 90%;
+  width: 100%;
   padding: 0.5rem;
   border-radius: 10px;
   border: 1px solid #cccccc;
@@ -102,20 +122,6 @@ export default {
   outline: none;
 }
 
-.b-search{
-  background-color: #FFD146;
-  color: #000;
-  padding-right: 2rem;
-  padding-left: 2rem;
-  border-radius: 5px;
-  justify-content: center;
-  transition: 0.43s;
-}
-
-.b-search:hover{
-  background-color: #000;
-  color: #FFD146;
-}
 
 .categories-container {
   padding: 1rem 10rem 3rem 10rem;
