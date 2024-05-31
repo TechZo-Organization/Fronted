@@ -1,7 +1,6 @@
 <script>
 export default {
   name: "register-content",
-
 }
 </script>
 
@@ -28,10 +27,10 @@ export default {
               <pv-input required class="input" type="text"></pv-input>
               <br>
               <label><b>Contraseña</b></label><br>
-              <pv-input required class="input" type="text"></pv-input>
+              <pv-input required class="input" type="password"></pv-input>
               <br>
               <label><b>Repetir contraseña</b></label><br>
-              <pv-input required class="input" type="text"></pv-input>
+              <pv-input required class="input" type="password"></pv-input>
               <br>
               <label><b>Correo electrónico</b></label><br>
               <pv-input required class="input" type="text"></pv-input>

@@ -1,7 +1,35 @@
 <script>
+import { userApiService } from './services/user-api.service.js';
+
 export default {
-  name: "login-content"
-}
+  name: "login-content",
+  data() {
+    return {
+      email: '',
+      password: '',
+      userService: new userApiService(),
+    };
+  },
+  methods: {
+    async handleLogin() {
+      try {
+        const response = await this.userService.getUser();
+        const users = response.data;
+        const user = users.find(u => u.email === this.email && u.password === this.password);
+
+        if (user) {
+          localStorage.setItem('user', JSON.stringify(user));
+          this.$router.push('/home');
+          this.$emit('userLoggedIn', user);
+        } else {
+          alert('Invalid credentials');
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
+  },
+};
 </script>
 
 <template>
@@ -10,11 +38,11 @@ export default {
       <div class="login-form">
         <div style="margin: 1rem;">
           <router-link to="/home">
-            <img src="../../public/login/home-icon.png" height="45" width="45"/>
+            <img src="../../public/login/home-icon.png" height="45" width="45" />
           </router-link>
         </div>
-        <form action="" class="form-container">
-          <img src="../../public/login/cambiazo-logo.png" height="95" width="250"/>
+        <form @submit.prevent="handleLogin" class="form-container">
+          <img src="../../public/login/cambiazo-logo.png" height="95" width="250" />
           <div class="inputs-login">
             <h1 style="font-size: 20px; font-weight: bolder; margin-bottom: 15px;">Iniciar Sesión</h1>
             <router-link to="/home">
@@ -29,14 +57,10 @@ export default {
             </div>
             <div class="input-content">
               <label><b>Correo</b></label><br>
-              <pv-input required class="input" type="text"></pv-input>
-              <br><br>
+              <pv-input v-model="email" required class="input" type="text" /><br><br>
               <label style="justify-content: space-between; display: flex;"><b>Contraseña</b> <pv-button style="color: #ffd146;">¿Olvidaste tu contraseña?</pv-button></label>
-              <pv-input required class="input" type="text"></pv-input>
-              <br><br>
-              <router-link to="/home" type="submit">
-                <pv-button  class="submit">Iniciar sesión</pv-button>
-              </router-link>
+              <pv-input v-model="password" required class="input" type="password" /><br><br>
+              <pv-button type="submit" class="submit">Iniciar sesión</pv-button>
               <router-link to="/register">
                 <pv-button class="create-account">¿No tienes una cuenta? <span style="color:#ffd146; margin-left: 10px;">Crea tu cuenta</span></pv-button>
               </router-link>
@@ -44,7 +68,7 @@ export default {
           </div>
         </form>
       </div>
-      <img src="../../public/login/background-image.png" class="main-image"/>
+      <img src="../../public/login/background-image.png" class="main-image" />
     </div>
     <footer>
       <p>&copy TechZo 2024. All Rights Reserved</p>
@@ -54,7 +78,6 @@ export default {
       </div>
     </footer>
   </div>
-
 </template>
 
 <style>

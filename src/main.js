@@ -15,6 +15,13 @@ import Card from "primevue/card";
 
 import InputText from "primevue/inputtext";
 import Checkbox from 'primevue/checkbox';
+import Dropdown from 'primevue/dropdown';
+import ToggleButton from 'primevue/togglebutton';
+import FileUpload from 'primevue/fileupload';
+import Dialog from 'primevue/dialog';
+import TabMenu from 'primevue/tabmenu';
+import TabView from 'primevue/tabview';
+import TabPanel from 'primevue/tabpanel';
 
 createApp(App)
     .use(router)
@@ -26,4 +33,11 @@ createApp(App)
     //
     .component('pv-input', InputText)
     .component('pv-checkbox', Checkbox)
+    .component('pv-dropdown', Dropdown)
+    .component('pv-toggle-button', ToggleButton)
+    .component('pv-file-upload', FileUpload)
+    .component('pv-dialog', Dialog)
+    .component('pv-tab-menu', TabMenu)
+    .component('pv-tab-view', TabView)
+    .component('pv-tab-panel', TabPanel)
     .mount('#app')

@@ -4,19 +4,20 @@ export class Product {
         description = '',
         change_for = '',
         price = 0,
-        images = '',
-        category = '',
+        images = [],
+        category_id = '',
         boost = false,
-        contact_information = ''
-    )
-    {
+        user_id = '',
+        location = { country: '', departament: '', district: '' }
+    ) {
         this.product_name = product_name;
         this.description = description;
         this.change_for = change_for;
         this.price = price;
         this.images = images;
-        this.category = category;
+        this.category_id = category_id;
         this.boost = boost;
-        this.contact_information = contact_information;
+        this.user_id = user_id;
+        this.location = location;
     }
 }

@@ -11,8 +11,8 @@ export default {
     ProductList,
     CategoriesProduct
   },
-  data(){
-    return{
+  data() {
+    return {
       category_products: [],
       products: [],
       boost_products: [],
@@ -46,22 +46,30 @@ export default {
             this.errors.push(error);
           });
     },
-    filterByCategory(categoryName) {
-      this.selectedCategory = categoryName;
+    filterByCategory(categoryId) {
+      this.selectedCategory = categoryId;
     },
+    clearCategoryFilter() {
+      this.selectedCategory = "";
+    }
   },
   computed: {
     filteredProducts() {
-      if (this.selectedCategory) {
+      if (this.selectedCategory && this.searchProduct) {
         return this.products.filter(product =>
-            product.category && product.category.name &&
-            product.category.name.toLowerCase().includes(this.selectedCategory.toLowerCase())
-        );
-      } else {
-        return this.products.filter(product =>
-            product.product_name &&
+            product.category_id === this.selectedCategory &&
             product.product_name.toLowerCase().includes(this.searchProduct.toLowerCase())
         );
+      } else if (this.selectedCategory) {
+        return this.products.filter(product =>
+            product.category_id === this.selectedCategory
+        );
+      } else if (this.searchProduct) {
+        return this.products.filter(product =>
+            product.product_name.toLowerCase().includes(this.searchProduct.toLowerCase())
+        );
+      } else {
+        return this.products;
       }
     }
   }
@@ -75,23 +83,25 @@ export default {
     <br>
     <div class="search-form">
       <pv-input v-model="searchProduct" class="input-search" placeholder="Buscar..."></pv-input>
+      <pv-button class="b-clear-category" @click="clearCategoryFilter">Eliminar filtro</pv-button>
     </div>
     <div class="categories-container">
-      <categories-product :category_products="category_products" @categorySelected="filterByCategory"></categories-product>
+      <categories-product :category_products="category_products" @category-selected="filterByCategory"></categories-product>
     </div>
     <div class="boost-container">
       <div class="boost-container-slide">
-        <card-boost-product :boost_products="boost_products"></card-boost-product>
+        <card-boost-product :boost_products="boost_products" :categories="category_products"></card-boost-product>
       </div>
       <div class="boost-container-slide">
-        <card-boost-product :boost_products="boost_products"></card-boost-product>
+        <card-boost-product :boost_products="boost_products" :categories="category_products"></card-boost-product>
       </div>
     </div>
     <div class="title-container">
-      <h1>Últimos trueques publicadoss</h1>
+      <h1>Últimos trueques publicados</h1>
     </div>
     <div class="products-container">
-      <product-list v-if="filteredProducts.length" :products="filteredProducts"></product-list>
+      <product-list v-if="filteredProducts.length" :products="filteredProducts" :categories="category_products"></product-list>
+      <div v-else>No se encontraron productos.</div>
     </div>
     <div class="more-products-container">
       <router-link to="/admin">
@@ -100,17 +110,17 @@ export default {
     </div>
   </div>
 </template>
-<style scoped>
 
-.search-form{
+<style scoped>
+.search-form {
   padding: 5rem 20rem 1rem 20rem;
   text-align: center;
   display: flex;
   gap: 10px;
 }
 
-.input-search{
-  width: 100%;
+.input-search {
+  width: 80%;
   padding: 0.5rem;
   border-radius: 10px;
   border: 1px solid #cccccc;
@@ -118,10 +128,24 @@ export default {
   box-shadow: 0px 0px 8px 0px #cccccc;
 }
 
-.input-search:focus{
+.input-search:focus {
   outline: none;
 }
 
+.b-clear-category {
+  text-align: center;
+  justify-content: center;
+  background-color: #000;
+  color: #fff;
+  padding: 0.5rem;
+  border-radius: 10px;
+  transition: 0.43s;
+}
+
+.b-clear-category:hover {
+  background-color: #FFD146;
+  color: #000;
+}
 
 .categories-container {
   padding: 1rem 10rem 3rem 10rem;
@@ -132,17 +156,16 @@ export default {
   max-width: 100%;
 }
 
-
-@keyframes slide{
-  from{
+@keyframes slide {
+  from {
     transform: translateX(0);
   }
-  to{
+  to {
     transform: translateX(-100%);
   }
 }
 
-.boost-container{
+.boost-container {
   padding-top: 2rem;
   padding-bottom: 6rem;
   overflow: hidden;
@@ -150,13 +173,13 @@ export default {
   flex-wrap: nowrap;
 }
 
-.boost-container-slide{
+.boost-container-slide {
   display: flex;
   flex-wrap: nowrap;
   animation: 20s slide infinite linear;
 }
 
-.title-container{
+.title-container {
   background-color: #FFD146;
   text-align: center;
   font-weight: bolder;
@@ -167,27 +190,16 @@ export default {
   box-shadow: 0px 0px 15px 0px #cccccc;
 }
 
-.products-container{
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  max-width: 100%;
-  padding-top: 3rem;
-  padding-bottom: 3rem;
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
-
-.more-products-container{
+.more-products-container {
   justify-content: center;
   text-align: center;
   padding-top: 2rem;
   padding-bottom: 4rem;
 }
 
-.b-more-products{
+.b-more-products {
   background-color: #fff;
-  padding: 0.5rem 4rem 0.5rem 4rem;
+  padding: 0.5rem 4rem;
   font-size: 18px;
   border: 1px solid #cccccc;
   font-weight: bold;
@@ -196,19 +208,30 @@ export default {
   transition: 0.43s;
 }
 
-.b-more-products:hover{
+.b-more-products:hover {
   background-color: #fff6e3;
   color: #FFD146;
   border: 1px solid #FFD146;
 }
 
-@media screen and (max-width: 1200px){
-  .search-form{
+@media screen and (max-width: 1200px) {
+  .search-form {
     padding: 5rem 3rem 1rem 3rem;
+    display: grid;
+    text-align: center;
+    justify-items: center;
   }
+
+  .input-search {
+    width: 100%;
+  }
+
+  .b-clear-category {
+    width: auto;
+  }
+
   .categories-container {
     padding: 1rem 3rem 3rem 3rem;
   }
 }
-
 </style>

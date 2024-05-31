@@ -1,61 +1,107 @@
 <script>
+import DialogContent from "./dialog-content.component.vue";
+
 export default {
-  name: 'toolbar-content',
+  name: 'ToolbarContent',
+  components: {
+    DialogContent
+  },
   data() {
     return {
       visibleRight: false,
-      showBurger: false,
+      showDialog: false,
+      user: null,
     };
+  },
+  mounted() {
+    const user = localStorage.getItem('user');
+    if (user) {
+      this.user = JSON.parse(user);
+    }
   },
   methods: {
     toggleDrawer() {
       this.visibleRight = !this.visibleRight;
     },
-  },
-}
+    handlePublish() {
+      if (this.user) {
+        this.$router.push('/publish');
+      } else {
+        this.showDialog = true;
+        document.body.classList.add('no-scroll');
+      }
+    },
+    handlePublishSidebar() {
+      this.handlePublish();
+      this.closeSidebar();
+    },
+    closeSidebar() {
+      this.visibleRight = false;
+    },
+    closeDialog() {
+      this.showDialog = false;
+      document.body.classList.remove('no-scroll');
+    }
+  }
+};
 </script>
 
 <template>
-  <pv-toolbar class="toolbar">
-    <template #start>
-      <div>
-        <img src="../../../public/logo/cambiazo-logo.png" height="45" width="220"/>
+  <div>
+    <pv-toolbar class="toolbar">
+      <template #start>
+        <div>
+          <img src="../../../public/logo/cambiazo-logo.png" height="45" width="220" />
+        </div>
+      </template>
+      <template #center>
+        <div class="center">
+          <router-link to="/home" class="yellow-link">Inicio</router-link>
+          <router-link to="/donations" class="yellow-link">Donaciones</router-link>
+          <router-link to="/memberships" class="yellow-link">Membresías</router-link>
+        </div>
+      </template>
+      <template #end>
+        <div class="end">
+          <pv-button @click="handlePublish" class="b-post"><b>Publicar</b></pv-button>
+          <div v-if="user">
+            <router-link to="/profile">
+              <pv-button class="user-img-button">
+                <img :src="user.img" alt="User Image" class="user-img" />
+              </pv-button>
+            </router-link>
+          </div>
+          <router-link to="/log-in" v-else>
+            <pv-button class="b-login"><b>Iniciar sesión</b></pv-button>
+          </router-link>
+        </div>
+        <pv-button class="p-button-text text-white burger" icon="pi pi-bars" @click="toggleDrawer" />
+      </template>
+    </pv-toolbar>
+    <pv-sidebar v-model:visible="visibleRight" header="Right Sidebar" position="right" class="top-sidebar bg-white p-4">
+      <div class="sidebar-content">
+        <router-link to="/home" class="yellow-link" @click.native="closeSidebar"><h1>Inicio</h1></router-link><br>
+        <router-link to="/donations" class="yellow-link" @click.native="closeSidebar"><h1>Donaciones</h1></router-link><br>
+        <router-link to="/memberships" class="yellow-link" @click.native="closeSidebar"><h1>Membresías</h1></router-link><br>
+        <div style="padding-top: 2rem;">
+          <pv-button @click="handlePublishSidebar" class="b-post-sidebar"><b>Publicar</b></pv-button>
+          <router-link to="/log-in" v-if="!user" @click.native="closeSidebar">
+            <pv-button class="b-login-sidebar"><b>Iniciar sesión</b></pv-button>
+          </router-link>
+          <div v-else>
+            <router-link to="/profile" @click.native="closeSidebar">
+              <pv-button class="b-profile-sidebar"><b>Ver perfil</b></pv-button>
+            </router-link>
+          </div>
+        </div>
       </div>
-    </template>
-    <template #center >
-      <div class="center">
-        <router-link to="/home" class="yellow-link">Inicio</router-link>
-        <router-link to="/donations" class="yellow-link">Donaciones</router-link>
-        <router-link to="/memberships" class="yellow-link">Membresías</router-link>
-      </div>
-    </template>
-    <template #end>
-      <div class="end">
-        <pv-button class="b-post"><b>Publicar</b></pv-button>
-        <router-link to="/log-in"><pv-button class="b-login"><b>Iniciar sesión</b></pv-button></router-link>
-      </div>
-      <pv-button class="p-button-text text-white burger" icon="pi pi-bars" @click="toggleDrawer" />
-    </template>
-  </pv-toolbar>
-  <pv-sidebar v-model:visible="visibleRight" header="Right Sidebar" position="right" class="top-sidebar bg-white p-4">
-    <div class="sidebar-content">
-      <router-link to="/home" class="yellow-link"><h1>Inicio</h1></router-link><br>
-      <router-link to="/donations" class="yellow-link"><h1>Donaciones</h1></router-link><br>
-      <router-link to="/memberships" class="yellow-link"><h1>Membresías</h1></router-link><br>
-      <div style="padding-top: 2rem;">
-        <pv-button class="b-post-sidebar"><b>Publicar</b></pv-button>
-        <router-link to="/log-in">
-          <pv-button class="b-login-sidebar"><b>Iniciar sesión</b></pv-button>
-        </router-link>
-      </div>
-    </div>
-  </pv-sidebar>
+    </pv-sidebar>
+    <dialog-content :visible="showDialog" @close="closeDialog"/>
+  </div>
 </template>
 
-
 <style scoped>
-
-.toolbar{
+.toolbar {
   background-color: #000;
   padding: 1rem;
   position: fixed;
@@ -66,97 +112,146 @@ export default {
   box-shadow: 0px 0px 50px 0px #707070;
 }
 
-.center{
+.center {
   display: flex;
   color: #fff;
   gap: 1.5rem;
 }
 
-.yellow-link{
+.yellow-link {
   transition: 0.43s;
   font-size: 17px;
   font-family: 'Montserrat';
 }
 
-.yellow-link:hover{
+.yellow-link:hover {
   color: #FFD146;
 }
 
-.b-post{
+.b-post {
   border: 1.5px solid #FFD146;
   border-radius: 20px;
   margin: 0px 2.5px 0px 2.5px;
   padding: 0.25rem 1rem 0.25rem 1rem;
   color: #FFD146;
   transition: 0.43s;
+  height: 40px;
 }
 
-.b-post:hover{
+.b-post:hover {
   background-color: #fff;
 }
 
-.b-login{
+.b-login {
   background-color: #fff;
   border: 1.5px solid #fff;
   border-radius: 20px;
   margin: 0px 2.5px 0px 2.5px;
   padding: 0.25rem 1rem 0.25rem 1rem;
   transition: 0.43s;
+  height: 40px;
 }
 
-.b-login:hover{
+.b-login:hover {
   background-color: #FFD146;
   border: 1.5px solid #FFD146;
 }
 
-.burger{
-  display:none;
+.burger {
+  display: none;
 }
 
-.sidebar-content{
+.user-img {
+  border-radius: 50%;
+  width: 65px;
+  height: 65px;
+  border: 3px solid #FFD146;
+}
+
+.user-img-button {
+  display: inline-flex;
+}
+
+.end {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.sidebar-content {
   padding-top: 3rem;
 }
 
-.sidebar-content h1{
-  font-size: 20px;
-}
-
-.b-post-sidebar{
+.b-post-sidebar {
   border: 1.5px solid #FFD146;
   border-radius: 20px;
-  margin: 1px 2.5px 1px 2.5px;
   padding: 0.25rem 1rem 0.25rem 1rem;
   color: #FFD146;
   transition: 0.43s;
 }
 
-.b-post-sidebar:hover{
-  background-color: #fdf4e2;
+.b-post-sidebar:hover {
+  background-color: #fff;
 }
 
-.b-login-sidebar{
-  background-color: #ffd146;
+.b-login-sidebar {
+  background-color: #fff;
   border: 1.5px solid #fff;
   border-radius: 20px;
-  margin: 1px 2.5px 1px 2.5px;
   padding: 0.25rem 1rem 0.25rem 1rem;
   transition: 0.43s;
 }
 
-.b-login-sidebar:hover{
+.b-login-sidebar:hover {
+  background-color: #FFD146;
+  border: 1.5px solid #FFD146;
+}
+
+.b-profile-sidebar {
   background-color: #000;
-  color: #ffd146;
+  border-radius: 20px;
+  padding: 0.25rem 1rem 0.25rem 1rem;
+  transition: 0.43s;
+  margin-top: 1rem;
+  color: #fff;
 }
 
-@media screen and (max-width: 980px) {
-  .center,
-  .end{
-    display:none;
-  }
-
-  .burger{
-    display:block;
-  }
+.b-profile-sidebar:hover {
+  background-color: #FFD146;
+  border: 1.5px solid #FFD146;
+  color: #000;
 }
 
+.dialog-container h1 {
+  font-size: 30px;
+  font-weight: bolder;
+  padding-bottom: 1rem;
+}
+
+.dialog-container p {
+  font-size: 20px;
+  padding-bottom: 2rem;
+}
+
+@media screen and (max-width: 820px) {
+  .center {
+    display: none;
+  }
+
+  .b-post {
+    display: none;
+  }
+
+  .b-login {
+    display: none;
+  }
+
+  .burger {
+    display: block;
+  }
+
+  .user-img-button {
+    display: none;
+  }
+}
 </style>
