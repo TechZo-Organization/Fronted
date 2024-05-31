@@ -5,31 +5,41 @@ export default {
     boost_products: {
       type: Array,
       required: true
+    },
+    categories: {
+      type: Array,
+      required: true
     }
   },
+  methods: {
+    getCategoryName(categoryId) {
+      const category = this.categories.find(cat => cat.id === categoryId);
+      return category ? category.name : 'Unknown';
+    }
+  }
 }
 </script>
 
 <template>
-  <div v-for="boost_product in boost_products"  :key="boost_product.id" class="boost-products-container">
-    <pv-card class="card-boost-container" v-if="boost_product.boost === true">
+  <div v-for="boost_product in boost_products" :key="boost_product.id" class="boost-products-container">
+    <pv-card class="card-boost-container" v-if="boost_product.boost">
       <template #content>
         <div class="card-main">
           <div>
-            <img :src="boost_product.images" class="boost_product">
+            <img :src="boost_product.images[0]" class="boost_product">
           </div>
           <div class="card-content">
             <div class="card-location">
               <img src="../../../public/donations/location-icon.png" style="width: 15px; height: 15px"/>
-              <p>{{ boost_product.contact_information["departament"] }}</p>
+              <p>{{ boost_product.location.departament }}</p>
             </div>
             <div class="card-title">
               <h1>{{ boost_product.product_name }}</h1>
-              <h2>{{boost_product.category["name"]}}</h2>
+              <h2>{{ getCategoryName(boost_product.category_id) }}</h2> <!-- Uso de la función getCategoryName -->
             </div>
             <div class="card-exchange">
-              <h3>{{boost_product.change_for}}</h3>
-              <h4>s/.{{boost_product.price}} valor apróx</h4>
+              <h3>{{ boost_product.change_for }}</h3>
+              <h4>s/.{{ boost_product.price }} valor apróx</h4>
             </div>
           </div>
         </div>
@@ -49,6 +59,8 @@ export default {
 .boost_product{
   height: 60vh;
   filter: brightness(0.5);
+  object-fit: cover;
+  object-position: center;
 }
 
 .card-main {

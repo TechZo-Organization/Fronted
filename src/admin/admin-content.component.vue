@@ -8,24 +8,46 @@ export default {
 </script>
 
 <template>
-  <toolbar-admin></toolbar-admin>
-  <div style="text-align:center; padding: 2rem;">
-    <h1>¡Bienvenido a la plataforma de Administrador!</h1>
-    <h3>En esta vista usted como administrador podrá gestionar toda la información registrada en CambiaZo, sé responsable</h3>
+  <div class="full-height">
+    <toolbar-admin></toolbar-admin>
+    <div class="centered-content">
+      <h1>¡Bienvenido a la plataforma de Administrador!</h1>
+      <h3>En esta vista usted como administrador podrá gestionar toda la información registrada en CambiaZo, sé responsable</h3>
+    </div>
   </div>
 </template>
 
 <style scoped>
-h1{
-  font-size: 60px;
-  font-weight: bolder;
-  padding-top: 8rem;
-  color: #ffd146;
+.full-height {
+  height: 100vh;
 }
 
-h3{
+.centered-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  height: 100vh;
+  padding-right: 0.5rem;
+  padding-left: 0.5rem;
+}
+
+h1 {
+  font-size: 60px;
+  font-weight: bolder;
+  color: #ffd146;
+  padding-top: 5rem;
+}
+
+h3 {
   font-size: 30px;
-  padding-top: 2rem;
   margin: 3rem;
+}
+
+@media screen and (max-width: 980px){
+  h1{
+    font-size: 40px;
+  }
 }
 </style>

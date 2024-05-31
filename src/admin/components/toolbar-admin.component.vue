@@ -68,6 +68,7 @@ export default {
   left: 0;
   width: 100%;
   z-index: 1000;
+  box-shadow: 0px 0px 50px 0px #707070;
 }
 
 .center{

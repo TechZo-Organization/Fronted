@@ -18,6 +18,9 @@ import CrudOngsComponent from "../admin/components/crud-ongs.component.vue";
 import CrudMembershipsComponent from "../admin/components/crud-memberships.component.vue";
 import CrudCategoriesProductComponent from "../admin/components/crud-categories-product.component.vue";
 import CrudCategoriesOngComponent from "../admin/components/crud-categories-ong.component.vue";
+import PublishComponent from "../publish/publish-content.component.vue";
+import ProfileComponent from "../profile/profile-content.component.vue";
+import ProductInformation from "../home/components/product-information.component.vue";
 
 const router = createRouter({
     history: createWebHistory(),
@@ -25,6 +28,9 @@ const router = createRouter({
         { path: '/home', component: HomeContent, meta: { title: 'Home' } },
         { path: '/donations', component: DonationsContent, meta: { title: 'Donations' } },
         { path: '/memberships', component: MembershipsContent, meta: { title: 'Memberships' } },
+        { path: '/publish', component: PublishComponent, meta: { title: 'Publish' }},
+        { path: '/profile', component: ProfileComponent, meta: { title: 'Profile' }},
+        { path: '/product', component: ProductInformation, meta: { title: 'Product Information' }},
         //Terms & conditions pages:
         { path: '/help', component: HelpContent, meta: { title: 'Help' } },
         { path: '/contact-us', component: ContactUsContent, meta: { title: 'Contact us' } },

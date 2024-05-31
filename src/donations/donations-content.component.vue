@@ -9,14 +9,15 @@ export default {
     InputCategory,
     OngList,
   },
-  data(){
-    return{
+  data() {
+    return {
       ongs: [],
       categories: [],
       errors: [],
       donationsApi: new donationsApiService(),
       accept: false,
-    }
+      searchOng: "",
+    };
   },
   created() {
     this.getAllOngs();
@@ -24,7 +25,8 @@ export default {
   },
   methods: {
     getAllOngs() {
-      this.donationsApi.getOngs()
+      this.donationsApi
+          .getOngs()
           .then((response) => {
             this.ongs = response.data;
           })
@@ -33,16 +35,22 @@ export default {
           });
     },
     getAllCategories() {
-      this.donationsApi.getCategories()
+      this.donationsApi
+          .getCategories()
           .then((response) => {
             this.categories = response.data;
           })
           .catch((error) => {
             this.errors.push(error);
           });
-    }
+    },
+    filterOngs() {
+      return this.ongs.filter((ong) =>
+          ong.name.toLowerCase().includes(this.searchOng.toLowerCase())
+      );
+    },
   },
-}
+};
 </script>
 
 <template>
@@ -55,16 +63,16 @@ export default {
       <h2>Tenemos muchas opciones para poder contribuir con diferentes sectores de la población</h2>
     </div>
     <div class="main-container">
-      <div class="ongs-container" >
+      <div class="ongs-container">
         <div class="input-container">
           <div style="display: flex; align-items: center; margin-bottom: 3rem">
             <img src="../../public/donations/look-icon.png" style="width: 5vh; height: 5vh" />
-            <pv-input class="input-ong" placeholder="Buscar por nombre de ONG, rubro..."></pv-input>
+            <pv-input v-model="searchOng" class="input-ong" placeholder="Buscar por nombre de ONG, rubro..." />
           </div>
           <h1>Nuevas ONG’s</h1>
-          <p>Se han añadido {{ ongs.length }} nuevas organizaciones...</p>
+          <p>Se han añadido {{ filterOngs().length }} nuevas organizaciones...</p>
         </div>
-        <ong-list v-if="errors" :ongs="ongs"></ong-list>
+        <ong-list v-if="errors" :ongs="filterOngs()"></ong-list>
       </div>
       <div class="categories-container">
         <input-category :categories="categories" :accept.sync="accept"></input-category>
@@ -72,8 +80,8 @@ export default {
     </div>
   </div>
 </template>
-
 <style scoped>
+
 .title-container{
   padding: 5rem 10rem 5rem 10rem;
   font-size: 30px;
@@ -81,21 +89,26 @@ export default {
   text-align: center;
   color: #FFD146;
 }
+
 .title-container h1{
   font-size: 40px;
   color: #000;
 }
+
 .main-container{
   display: flex;
   gap: 1rem;
   padding: 3rem;
 }
+
 .ongs-container{
   width: 60%;
 }
+
 .input-container{
   padding: 1rem;
 }
+
 .input-container h1{
   font-weight: bolder;
   font-size: 30px;
@@ -118,7 +131,6 @@ export default {
 .categories-container{
   width: 40%
 }
-
 
 @media screen and (max-width: 900px){
   .main-container {
