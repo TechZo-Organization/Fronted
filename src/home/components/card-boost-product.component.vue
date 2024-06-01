@@ -15,36 +15,44 @@ export default {
     getCategoryName(categoryId) {
       const category = this.categories.find(cat => cat.id === categoryId);
       return category ? category.name : 'Unknown';
-    }
+    },
+    scrollToTop() {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    },
   }
 }
 </script>
 
 <template>
   <div v-for="boost_product in boost_products" :key="boost_product.id" class="boost-products-container">
-    <pv-card class="card-boost-container" v-if="boost_product.boost">
-      <template #content>
-        <div class="card-main">
-          <div>
-            <img :src="boost_product.images[0]" class="boost_product">
+    <router-link :to="`/product-information/${boost_product.id}`" @click.native="scrollToTop">
+      <pv-card class="card-boost-container" v-if="boost_product.boost">
+        <template #content>
+          <div class="card-main">
+            <div>
+              <img :src="boost_product.images[0]" class="boost_product">
+            </div>
+            <div class="card-content">
+              <div class="card-location">
+                <img src="../../../public/donations/location-icon.png" style="width: 15px; height: 15px"/>
+                <p>{{ boost_product.location.departament }}</p>
+              </div>
+              <div class="card-title">
+                <h1>{{ boost_product.product_name }}</h1>
+                <h2>{{ getCategoryName(boost_product.category_id) }}</h2> <!-- Uso de la función getCategoryName -->
+              </div>
+              <div class="card-exchange">
+                <h3>{{ boost_product.change_for }}</h3>
+                <h4>s/.{{ boost_product.price }} valor apróx</h4>
+              </div>
+            </div>
           </div>
-          <div class="card-content">
-            <div class="card-location">
-              <img src="../../../public/donations/location-icon.png" style="width: 15px; height: 15px"/>
-              <p>{{ boost_product.location.departament }}</p>
-            </div>
-            <div class="card-title">
-              <h1>{{ boost_product.product_name }}</h1>
-              <h2>{{ getCategoryName(boost_product.category_id) }}</h2> <!-- Uso de la función getCategoryName -->
-            </div>
-            <div class="card-exchange">
-              <h3>{{ boost_product.change_for }}</h3>
-              <h4>s/.{{ boost_product.price }} valor apróx</h4>
-            </div>
-          </div>
-        </div>
-      </template>
-    </pv-card>
+        </template>
+      </pv-card>
+    </router-link>
   </div>
 </template>
 
@@ -54,6 +62,7 @@ export default {
   height: auto;
   width: 260px;
   margin-left: 1rem;
+  cursor: pointer;
 }
 
 .boost_product{

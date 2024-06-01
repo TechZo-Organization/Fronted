@@ -7,9 +7,8 @@ const http = axios.create({
 
 export class userApiService {
     getUsers() {
-        return http.get('/users');
+        return http.get("/users");
     }
-
     getUserById(userId) {
         return http.get(`/users/${userId}`);
     }
