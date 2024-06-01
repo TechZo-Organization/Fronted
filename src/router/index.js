@@ -4,8 +4,6 @@ import {createRouter, createWebHistory} from "vue-router";
 import HomeContent from "../home/home-content.component.vue";
 import DonationsContent from "../donations/donations-content.component.vue";
 import MembershipsContent from "../memberships/memberships-content.component.vue";
-
-//Terms & conditions pages:
 import HelpContent from "../terms-conditions/components/help-content.component.vue";
 import ContactUsContent from "../terms-conditions/components/contact-us-content.component.vue";
 import TermsUseContent from "../terms-conditions/components/terms-use-content.component.vue";
@@ -20,7 +18,7 @@ import CrudCategoriesProductComponent from "../admin/components/crud-categories-
 import CrudCategoriesOngComponent from "../admin/components/crud-categories-ong.component.vue";
 import PublishComponent from "../publish/publish-content.component.vue";
 import ProfileComponent from "../profile/profile-content.component.vue";
-import ProductInformation from "../home/components/product-information.component.vue";
+import ProductInformationContent from "../product-information/product-information-content.component.vue";
 
 const router = createRouter({
     history: createWebHistory(),
@@ -30,7 +28,7 @@ const router = createRouter({
         { path: '/memberships', component: MembershipsContent, meta: { title: 'Memberships' } },
         { path: '/publish', component: PublishComponent, meta: { title: 'Publish' }},
         { path: '/profile', component: ProfileComponent, meta: { title: 'Profile' }},
-        { path: '/product', component: ProductInformation, meta: { title: 'Product Information' }},
+        { path: '/product-information/:id', component: ProductInformationContent, meta: { title: 'Product Information' }},
         //Terms & conditions pages:
         { path: '/help', component: HelpContent, meta: { title: 'Help' } },
         { path: '/contact-us', component: ContactUsContent, meta: { title: 'Contact us' } },
