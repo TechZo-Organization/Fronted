@@ -11,8 +11,16 @@ export default {
       categories: [],
     };
   },
+  methods: {
+    scrollToTop() {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    },
+  },
   async created() {
-    const productId = this.$route.params.id; // Obtener el ID del producto desde los parámetros de la ruta
+    const productId = this.$route.params.id;
     try {
       const homeService = new homeApiService();
       const productResponse = await homeService.getProductById(productId);
@@ -23,7 +31,6 @@ export default {
       const userResponse = await userService.getUserById(userId);
       this.user = userResponse.data;
 
-      // Obtener las categorías
       const categoriesResponse = await homeService.getCategoriesProduct();
       this.categories = categoriesResponse.data;
     } catch (error) {
@@ -73,9 +80,11 @@ export default {
         </div>
         <div class="user-details">
           <h1>{{ user.name }}</h1>
-          <pv-button class="show-profile">
-            Ver Perfil
-          </pv-button>
+          <router-link :to="`/publisher-profile/${product.user_id}`" @click.native="scrollToTop">
+            <pv-button class="show-profile">
+              Ver Perfil
+            </pv-button>
+          </router-link>
           <hr />
           <div class="offer-profile">
             <h2>¿Estás interesado?</h2>
@@ -311,10 +320,6 @@ export default {
   .product-content{
     width: 100%;
   }
-  
-
-
-
 
   .user-content{
     width: 100%;

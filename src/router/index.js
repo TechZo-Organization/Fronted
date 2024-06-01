@@ -19,6 +19,7 @@ import CrudCategoriesOngComponent from "../admin/components/crud-categories-ong.
 import PublishComponent from "../publish/publish-content.component.vue";
 import ProfileComponent from "../profile/profile-content.component.vue";
 import ProductInformationContent from "../product-information/product-information-content.component.vue";
+import PublisherProfileContent from "../publisher-profile/publisher-profile-content.component.vue";
 
 const router = createRouter({
     history: createWebHistory(),
@@ -29,6 +30,7 @@ const router = createRouter({
         { path: '/publish', component: PublishComponent, meta: { title: 'Publish' }},
         { path: '/profile', component: ProfileComponent, meta: { title: 'Profile' }},
         { path: '/product-information/:id', component: ProductInformationContent, meta: { title: 'Product Information' }},
+        { path: '/publisher-profile/:id', component: PublisherProfileContent, meta: { title: 'Publisher Profile' }},
         //Terms & conditions pages:
         { path: '/help', component: HelpContent, meta: { title: 'Help' } },
         { path: '/contact-us', component: ContactUsContent, meta: { title: 'Contact us' } },
