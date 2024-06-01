@@ -44,7 +44,9 @@ export default {
           :class="['tab-item', { 'active': selectedIndex === index }]"
           @click="selectTab(index)"
       >
-        {{ item.label }}
+        <router-link to="">
+          {{ item.label }}
+        </router-link>
       </div>
     </div>
     <div class="tab-content" >
