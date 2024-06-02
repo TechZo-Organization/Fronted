@@ -8,11 +8,9 @@ export default {
 </script>
 
 <template>
-<div>
   <div class="product-info-content" style="background-color: #F8F7F4">
     <product-information></product-information>
   </div>
-</div>
 </template>
 
 <style scoped>

@@ -13,4 +13,8 @@ export class donationsApiService {
     getOngs() {
         return http.get('/ongs');
     }
+
+    getOngById(id) {
+        return http.get(`/ongs/${id}`);
+    }
 }

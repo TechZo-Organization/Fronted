@@ -176,7 +176,7 @@ export default {
 .boost-container-slide {
   display: flex;
   flex-wrap: nowrap;
-  animation: 20s slide infinite linear;
+  animation: 50s slide infinite linear;
 }
 
 .title-container {
