@@ -1,5 +1,6 @@
 export class Product {
     constructor(
+        id= '',
         product_name = '',
         description = '',
         change_for = '',
@@ -10,6 +11,7 @@ export class Product {
         user_id = '',
         location = { country: '', departament: '', district: '' }
     ) {
+        this.id = id;
         this.product_name = product_name;
         this.description = description;
         this.change_for = change_for;
