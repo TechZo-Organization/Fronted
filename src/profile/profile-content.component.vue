@@ -24,8 +24,7 @@ export default {
   },
   methods: {
     getUserIdFromLocalStorage() {
-      const user = localStorage.getItem('user');
-      return user ? JSON.parse(user).id : null;
+      return localStorage.getItem('user');
     },
     async fetchUserData() {
       try {
