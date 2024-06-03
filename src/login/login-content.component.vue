@@ -18,7 +18,7 @@ export default {
         const user = users.find(u => u.email === this.email && u.password === this.password);
 
         if (user) {
-          localStorage.setItem('user', JSON.stringify(user));
+          localStorage.setItem('user',user.id);
           this.$router.push('/home');
           this.$emit('userLoggedIn', user);
         } else {
