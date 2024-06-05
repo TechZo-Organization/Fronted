@@ -227,6 +227,11 @@ export default {
   text-align: center;
 }
 
+.disabled-dropdown {
+  background-color: #c6c6c6;
+  color: #6a6565;
+}
+
 .product-category-title{
   background-color: #FFD146;
   padding: 1rem 0.5rem 1rem 1.5rem;

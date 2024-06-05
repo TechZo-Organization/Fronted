@@ -65,7 +65,7 @@ export default {
         <div class="product-exchange">
           <h2>Detalles:</h2>
           <h4>¿Dónde puedo intercambiar este objeto?</h4>
-          <p>{{ product.location.district }}</p>
+          <p>Disponible en {{ product.location.departament }}, {{ product.location.district }}</p>
           <h4>¿Cambio por?</h4>
           <p>{{ product.change_for }}</p>
           <div class="category-exchange">

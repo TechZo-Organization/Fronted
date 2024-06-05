@@ -143,7 +143,7 @@ export default {
         <h2 class="subtitle-products">Últimos trueques publicados</h2>
         <div class="list-products">
           <router-link v-for="product in products" :key="product.id" :to="`/product-information/${product.id}`" @click.native="scrollToTop">
-            <pv-card class="card-container" v-if="!product.boost">
+            <pv-card class="card-container" >
               <template #title>
                 <img v-if="product.images && product.images.length" :src="product.images[0]" alt="Imagen del producto" class="product-image">
                 <div v-else class="no-image-placeholder">No image available</div>
