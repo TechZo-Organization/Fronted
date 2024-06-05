@@ -78,7 +78,7 @@ export default {
   padding: 1rem 0 1rem 3rem;
 }
 
-button {
+.sent,.get{
   font-size: 1rem;
   font-family: 'Montserrat', sans-serif;
   font-weight: bolder;
@@ -86,7 +86,7 @@ button {
   padding: 0.3rem 1rem;
 }
 
-button:hover {
+.sent:hover, .get:hover{
   background-color: #000000;
   color: #ffffff;
 }
@@ -100,7 +100,7 @@ button:hover {
   font-weight: bold;
 }
 
-button.active {
+.sent.active,.get.active {
   border: none;
   margin-right: 1rem;
   background-color: black;

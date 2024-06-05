@@ -1,85 +1,3 @@
-<template>
-  <div class="sent-offers-cards-container">
-    <div v-for="sent in offers" :key="sent.id" class="container-sent-offers">
-      <div class="sent-offers-card">
-        <div class="header-product-name-sent">
-          <h1 v-if="sent.product_get">{{ sent.product_get.product_name }}</h1>
-        </div>
-        <div>
-          <div class="content">
-            <div class="colum col1">
-              <div class="card-get">
-                <div class="header-card-get">
-                  <div class="container-image">
-                    <img v-if="sent.user_get" :src="sent.user_get.img" alt="User Image">
-                  </div>
-                  <h1 v-if="sent.user_get">{{ sent.user_get.name }}</h1>
-                </div>
-                <div class="content-card-get">
-                  <p v-if="sent.product_get">{{ sent.product_get.description }}</p>
-                </div>
-                <div class="footer-card-get">
-                  <img v-if="sent.product_get" :src="sent.product_get.images" alt="Product Image">
-                </div>
-              </div>
-            </div>
-            <div class="colum col2">
-              <div class="card-offer">
-                <div class="mat-content">
-                  <div class="content-description">
-                    <h1>Datos:</h1>
-                    <div class="content-more-info">
-                      <p v-if="sent.product_get">
-                        Valor estimado: S/.{{ sent.product_get.price }}
-                      </p>
-                      <p v-if="sent.product_get">
-                        {{ sent.product_get.location?.district }},
-                        {{ sent.product_get.location?.departament }}
-                      </p>
-                    </div>
-                    <h1 v-if="sent.user_get">¿Qué solicita {{ sent.user_get.name }}?</h1>
-                    <div class="change-for">
-                      <img src="../../../public/products/exchange.icon.png" style="height: 20px; width: 20px" alt="Change Icon">
-                      <p v-if="sent.product_get">{{ sent.product_get.change_for }}</p>
-                    </div>
-                    <h1>¿Qué le ofreciste?</h1>
-                  </div>
-                  <div class="my-offer">
-                    <div class="col11">
-                      <div class="product-sent-image">
-                        <img v-if="sent.product_offers" :src="sent.product_offers.images" alt="Offered Product Image">
-                      </div>
-                    </div>
-                    <div class="col22">
-                      <div class="product-sent-text">
-                        <h1 v-if="sent.product_offers">Ofreciste tu {{ sent.product_offers.product_name }}</h1>
-                        <h4 v-if="sent.product_offers">{{ sent.product_offers.description }}</h4>
-                        <div class="footer">
-                          <h4 v-if="sent.product_offers"><b>Valor aproximado s/.{{ sent.product_offers.price }}</b></h4>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="footer-card-offer">
-                    <div class="footer-title">
-                      <h1>Estado de la oferta:</h1>
-                    </div>
-                    <div class="status-btn">
-                      <div :style="getStatusStyles(sent.status)">
-                        <h2>{{ sent.status }}</h2>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</template>
-
 <script>
 import { homeApiService } from "../../home/services/home-api.service";
 import { userApiService } from "../services/user-api.service";
@@ -151,7 +69,8 @@ export default {
             borderRadius: '10px',
             width: '8.5rem',
             height: '2.2rem',
-            textAlign: 'center'
+            textAlign: 'center',
+            alignContent: 'center',
           };
           break;
         case 'Pendiente':
@@ -162,7 +81,8 @@ export default {
             borderRadius: '10px',
             width: '8.5rem',
             height: '2.2rem',
-            textAlign: 'center'
+            textAlign: 'center',
+            alignContent: 'center',
           };
           break;
         case 'Denegado':
@@ -173,7 +93,8 @@ export default {
             borderRadius: '10px',
             width: '8.5rem',
             height: '2.2rem',
-            textAlign: 'center'
+            textAlign: 'center',
+            alignContent: 'center',
           };
           break;
         default:
@@ -185,6 +106,94 @@ export default {
   }
 };
 </script>
+
+<template>
+  <div class="sent-offers-cards-container">
+    <div v-for="sent in offers" :key="sent.id" class="container-sent-offers">
+      <div class="sent-offers-card">
+        <div class="header-product-name-sent">
+          <h1 v-if="sent.product_get">{{ sent.product_get.product_name }}</h1>
+        </div>
+        <div>
+          <div class="content">
+            <div class="colum col1">
+              <div class="card-get">
+                <div class="header-card-get">
+                  <div class="container-image-sent-offers">
+                    <img v-if="sent.user_get" :src="sent.user_get.img" alt="User Image">
+                  </div>
+                  <h1 v-if="sent.user_get">{{ sent.user_get.name }}</h1>
+                </div>
+                <div class="content-card-get">
+                  <p v-if="sent.product_get">{{ sent.product_get.description }}</p>
+                </div>
+                <div class="footer-card-get">
+                  <img v-if="sent.product_get" :src="sent.product_get.images" alt="Product Image">
+                </div>
+              </div>
+            </div>
+            <div class="colum col2">
+              <div class="card-offer">
+                <div class="mat-content">
+                  <div class="content-description">
+                    <h1>Datos:</h1>
+                    <div class="content-more-info">
+                      <div  class="change-for">
+                        <img src="../../../public/products/moneda.png" style="height: 20px; width: 20px" alt="Change Icon">
+                        <p v-if="sent.product_get">
+                          Valor estimado: S/.{{ sent.product_get.price }}
+                        </p>
+                      </div>
+                      <div class="change-for">
+                        <img src="../../../public/donations/location-icon.png" style="height: 20px; width: 20px" alt="Change Icon">
+                        <p v-if="sent.product_get">
+                          {{ sent.product_get.location?.district }},
+                          {{ sent.product_get.location?.departament }}
+                        </p>
+                      </div>
+                    </div>
+                    <h1 v-if="sent.user_get">¿Qué solicita {{ sent.user_get.name }}?</h1>
+                    <div class="change-for">
+                      <img src="../../../public/products/exchange.icon.png" style="height: 18px; width: 18px" alt="Change Icon">
+                      <p v-if="sent.product_get">{{ sent.product_get.change_for }}</p>
+                    </div>
+                    <h1>¿Qué le ofreciste?</h1>
+                  </div>
+                  <div class="my-offer">
+                    <div class="col11">
+                      <div class="product-sent-image">
+                        <img v-if="sent.product_offers" :src="sent.product_offers.images" alt="Offered Product Image">
+                      </div>
+                    </div>
+                    <div class="col22">
+                      <div class="product-sent-text">
+                        <h1 v-if="sent.product_offers">Ofreciste tu {{ sent.product_offers.product_name }}</h1>
+                        <h4 v-if="sent.product_offers">{{ sent.product_offers.description }}</h4>
+                        <div class="footer">
+                          <h4 v-if="sent.product_offers"><b>Valor aproximado s/.{{ sent.product_offers.price }}</b></h4>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="footer-card-offer">
+                    <div class="footer-title">
+                      <h1>Estado de la oferta:</h1>
+                    </div>
+                    <div class="status-btn-sent">
+                      <div :style="getStatusStyles(sent.status)">
+                        <h2>{{ sent.status }}</h2>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
 
 <style>
 h1,h2,h3,h4,h5,h6,p{
@@ -200,21 +209,25 @@ h1,h2,h3,h4,h5,h6,p{
 .container-sent-offers{
   max-width: 1000px;
   width: 100%;
+  background-color: #ffffff;
+  box-shadow: 0px 0px 20px 0px #cccccc;
 }
 .header-product-name-sent{
   background-color: #FFD146;
   color: #000000;
-  padding-bottom: 5px;
   display: flex;
   align-items: center;
+  padding: 16px 16px 5px;
 }
 .header-product-name-sent h1{
   font-size: 1.8rem;
   font-weight: bold;
+  margin: 0 0 16px;
 }
 .content{
   width: 100%;
   display:flex;
+  padding: 0 16px 16px;
   flex-wrap: wrap;
 }
 .col1{
@@ -235,27 +248,27 @@ h1,h2,h3,h4,h5,h6,p{
   align-content: center;
   align-items: center;
   gap: 15px;
-}
-.mat-mdc-card{
-  box-shadow: none;
+  display:flex;
+  flex-direction: column;
 }
 .header-card-get{
   display: flex;
   align-items: center;
+  padding: 16px 16px 0;
 }
 .header-card-get h1 {
   font-weight: bold;
   margin-left: 1rem;
   font-size: 1.2rem;
 }
-.container-image {
+.container-image-sent-offers {
   flex-shrink: 0;
   overflow: hidden;
   width: 80px;
   height: 80px;
   border-radius: 50%;
 }
-.container-image img{
+.container-image-sent-offers img{
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -263,6 +276,10 @@ h1,h2,h3,h4,h5,h6,p{
 }
 .content-card-get{
   font-size: 15px;
+  padding: 0 1rem;
+}
+.content-card-get p{
+  text-align:left;
 }
 .footer-card-get img{
   width: 100%;
@@ -274,6 +291,9 @@ h1,h2,h3,h4,h5,h6,p{
   max-height: 250px;
   border-radius: 5px;
 
+}
+.mat-content{
+  padding: 16px;
 }
 .footer-card-get{
   text-align: center;
@@ -314,14 +334,15 @@ h1,h2,h3,h4,h5,h6,p{
 }
 .change-for{
   display: flex;
+  margin-bottom:15px;
   flex-direction: row;
 }
 .change-for p{
-  margin-left: 5px;
+  margin-left: 8px;
   font-size: 15px;
 }
 .change-for img{
-  margin-top: 2px;
+  margin-top: 1px;
 }
 .my-offer{
   display:flex;
@@ -357,8 +378,11 @@ h1,h2,h3,h4,h5,h6,p{
 .col22 h1{
   color: #FFD146;
   text-align: left;
+  margin-bottom:10px;
 }
-
+.col22 h4{
+  margin-bottom:10px;
+}
 .product-sent-image{
   text-align: center;
   display: flex;
@@ -377,9 +401,11 @@ h1,h2,h3,h4,h5,h6,p{
 }
 .product-sent-text h2{
   color: #fac500;
+  text-align:left;
 }
 .product-sent-text {
   margin-left: 1rem;
+  text-align:left;
 }
 .footer-card-offer{
   display: flex;
@@ -397,7 +423,7 @@ h1,h2,h3,h4,h5,h6,p{
   align-content: center;
   text-align: center;
 }
-.status-btn {
+.status-btn-sent {
   margin-left: 10px;
   order: 2;
   flex: 1;
@@ -411,6 +437,9 @@ h1,h2,h3,h4,h5,h6,p{
 }
 
 @media (max-width: 780px) {
+  .change-for p{
+    text-align: left;
+  }
   .my-offer {
     flex-direction: column;
   }
@@ -424,7 +453,7 @@ h1,h2,h3,h4,h5,h6,p{
     flex-direction: column;
     align-content: center;
   }
-  .status-btn{
+  .status-btn-sent{
     padding-top:10px;
     text-align: center;
     align-self: center;
@@ -437,7 +466,7 @@ h1,h2,h3,h4,h5,h6,p{
   }
   .col22 h1{
     margin-top: 1rem;
-    margin-bottom: 0;
+    margin-bottom: 10px;
   }
   .footer-title h1{
     margin: 0;
@@ -454,7 +483,7 @@ h1,h2,h3,h4,h5,h6,p{
     flex-direction: column;
     text-align: center;
   }
-  .container-image {
+  .container-image-sent-offers {
     margin-left: 0;
     width: 100px;
     height: 100px;
@@ -482,7 +511,7 @@ h1,h2,h3,h4,h5,h6,p{
     flex-direction: column;
     text-align: center;
   }
-  .container-image{
+  .container-image-sent-offers{
     width: 100px;
     height: 100px;
   }
@@ -501,7 +530,7 @@ h1,h2,h3,h4,h5,h6,p{
   .card-offer{
     padding-top: 1rem;
   }
-  .status-btn{
+  .status-btn-sent{
     margin-left: 0;
   }
 }
