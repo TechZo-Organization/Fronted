@@ -13,4 +13,8 @@ export class userApiService {
     loginUser(email, password) {
         return http.post('/login', { email, password });
     }
+
+    registerUser(user) {
+        return http.post('/users', user);
+    }
 }
