@@ -174,6 +174,7 @@ export default {
 .product-image img {
   width: 50%;
   height: auto;
+
 }
 
 .product-text{
@@ -263,6 +264,8 @@ export default {
   border: 4px solid #fff;
   width: 120px;
   height: 120px;
+  object-position: center;
+  object-fit:cover;
 }
 
 .user-details{

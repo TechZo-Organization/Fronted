@@ -258,8 +258,9 @@ h1,h2,h3,h4,h5,h6,p{
 }
 .header-card-get h1 {
   font-weight: bold;
+  text-align: left;
   margin-left: 1rem;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
 }
 .container-image-sent-offers {
   flex-shrink: 0;
