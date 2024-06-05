@@ -9,6 +9,9 @@ export class offerApiService {
     getOffers() {
         return http.get("/offers");
     }
+    updateOfferStatus(id, status){
+        return http.put(`offers/${id}`, { status});
+    }
     getOfferById(offerId) {
         return http.get(`/offers/${offerId}`);
     }
