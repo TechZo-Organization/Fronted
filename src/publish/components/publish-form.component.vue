@@ -4,9 +4,11 @@ import { environment } from '../../../environments/environment.js';
 import { publishApiService } from '../services/publish-api.service.js';
 import { homeApiService } from '../../home/services/home-api.service.js';
 import {userApiService} from "../../login/services/user-api.service.js";
+import DialogPublish from "../../public/components/dialog-publish.component.vue";
 
 export default {
   name: 'publish-form',
+  components: {DialogPublish},
   data() {
     return {
       countries: [],
@@ -37,6 +39,7 @@ export default {
       description: '',
       changeFor: '',
       price: '',
+      showDialog: false
     };
   },
   methods: {
@@ -118,9 +121,15 @@ export default {
     removeImage(index) {
       this.uploadedImages.splice(index, 1);
     },
+    closeDialog() {
+      this.showDialog = false;
+      document.body.classList.remove('no-scroll');
+    },
     async submitForm() {
       if (this.$refs.form.checkValidity()) {
         this.visible = true;
+        this.showDialog = true;
+        document.body.classList.add('no-scroll');
         await this.uploadImage();
         console.log(this.imagesUrl);
 
@@ -295,16 +304,7 @@ export default {
         <pv-button type="submit" class="submit b-publish">Publicar</pv-button>
       </div>
     </form>
-    <pv-dialog v-model:visible="visible">
-      <div class="dialog-container">
-        <div class="dialog-content">
-          <h1 class="dialog-title">Producto Publicado!</h1>
-          <div class="dialog-buttons">
-            <pv-button class="dialog-button" @click="visible = false">Aceptar</pv-button>
-          </div>
-        </div>
-      </div>
-    </pv-dialog>
+    <dialog-publish :visible="showDialog" @close="closeDialog"/>
   </div>
 </template>
 
