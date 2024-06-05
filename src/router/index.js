@@ -21,6 +21,7 @@ import ProfileComponent from "../profile/profile-content.component.vue";
 import ProductInformationContent from "../product-information/product-information-content.component.vue";
 import PublisherProfileContent from "../publisher-profile/publisher-profile-content.component.vue";
 import OngInformationContent from "../ong-information/ong-information-content.component.vue";
+import productCategoriesContent from "../product-categories/product-categories-content.component.vue";
 
 const router = createRouter({
     history: createWebHistory(),
@@ -33,6 +34,7 @@ const router = createRouter({
         { path: '/product-information/:id', component: ProductInformationContent, meta: { title: 'Product Information' }},
         { path: '/publisher-profile/:id', component: PublisherProfileContent, meta: { title: 'Publisher Profile' }},
         { path: '/ong-information/:id', component: OngInformationContent, meta: { title: 'Ong Information' }},
+        { path: '/product-categories', component: productCategoriesContent, meta: { title: 'Product Categories' }},
         //Terms & conditions pages:
         { path: '/help', component: HelpContent, meta: { title: 'Help' } },
         { path: '/contact-us', component: ContactUsContent, meta: { title: 'Contact us' } },

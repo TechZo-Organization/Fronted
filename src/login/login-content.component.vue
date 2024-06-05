@@ -172,6 +172,10 @@ footer{
   padding: 0.25rem;
 }
 
+.input:focus{
+  border: 1px solid #FFD146;
+}
+
 .submit{
   width: 100%;
   background-color: #ffd146;
