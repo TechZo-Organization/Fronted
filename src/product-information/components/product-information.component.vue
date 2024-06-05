@@ -1,14 +1,19 @@
 <script>
 import { homeApiService } from "../../home/services/home-api.service.js";
 import { userApiService } from "../../profile/services/user-api.service.js";
+import DialogFavoritesAdded from "./dialog-favorites-added.component.vue";
 
 export default {
   name: "product-information",
+  components: {
+    DialogFavoritesAdded,
+  },
   data() {
     return {
       product: null,
       user: null,
       categories: [],
+      dialogVisible: false,
     };
   },
   methods: {
@@ -17,6 +22,29 @@ export default {
         top: 0,
         behavior: 'smooth'
       });
+    },
+    getLoggedInUserId() {
+      return Number(localStorage.getItem('user'));
+    },
+    async addToFavorites() {
+      const loggedInUserId = this.getLoggedInUserId();
+      if (loggedInUserId) {
+        try {
+          const userService = new userApiService();
+          const userResponse = await userService.getUserById(loggedInUserId);
+          const loggedInUser = userResponse.data;
+
+          if (!loggedInUser.favorites.some(fav => fav.product_id === this.product.id)) {
+            loggedInUser.favorites.push({ product_id: this.product.id });
+            const updateResponse = await userService.putUser(loggedInUser.id, loggedInUser);
+            console.log('Added to favorites:', updateResponse);
+            this.dialogVisible = true;
+          } else {
+          }
+        } catch (error) {
+        }
+      } else {
+      }
     },
   },
   async created() {
@@ -34,7 +62,6 @@ export default {
       const categoriesResponse = await homeService.getCategoriesProduct();
       this.categories = categoriesResponse.data;
     } catch (error) {
-      console.error("Error fetching data: ", error);
     }
   },
   computed: {
@@ -100,13 +127,18 @@ export default {
           </div>
           <hr />
           <div class="favorite-profile">
-            <pv-button class="favorite-product">
+            <pv-button class="favorite-product" @click="addToFavorites()">
               <img src="../../../public/product-information/favorite-icon.png" alt="Favorite Icon" />
             </pv-button>
           </div>
         </div>
       </div>
     </div>
+    <dialog-favorites-added
+        :visible="dialogVisible"
+        @close="dialogVisible = false"
+        @confirm="addToFavorites()"
+    />
   </div>
 </template>
 
