@@ -7,22 +7,35 @@ export default {
     return {
       email: '',
       password: '',
+      emailError: '',
+      passwordError: '',
+      showPassword: false,
       userService: new userApiService(),
     };
   },
   methods: {
+    togglePasswordVisibility() {
+      this.showPassword = !this.showPassword;
+    },
     async handleLogin() {
+      this.emailError = '';
+      this.passwordError = '';
+
       try {
         const response = await this.userService.getUser();
         const users = response.data;
-        const user = users.find(u => u.email === this.email && u.password === this.password);
+        const user = users.find(u => u.email === this.email);
 
-        if (user) {
-          localStorage.setItem('user',user.id);
+        if (user && user.password === this.password) {
+          localStorage.setItem('user', user.id);
           this.$router.push('/home');
           this.$emit('userLoggedIn', user);
         } else {
-          alert('Invalid credentials');
+          if (!user) {
+            this.emailError = 'Correo inválido';
+          } else if (user.password !== this.password) {
+            this.passwordError = 'Contraseña inválida';
+          }
         }
       } catch (error) {
         console.error(error);
@@ -56,14 +69,27 @@ export default {
               <hr class="hr-line">
             </div>
             <div class="input-content">
-              <label><b>Correo</b></label><br>
-              <pv-input v-model="email" required class="input" type="text" /><br><br>
-              <label style="justify-content: space-between; display: flex;"><b>Contraseña</b> <pv-button style="color: #ffd146;">¿Olvidaste tu contraseña?</pv-button></label>
-              <pv-input v-model="password" required class="input" type="password" /><br><br>
-              <pv-button type="submit" class="submit">Iniciar sesión</pv-button>
-              <router-link to="/register">
-                <pv-button class="create-account">¿No tienes una cuenta? <span style="color:#ffd146; margin-left: 10px;">Crea tu cuenta</span></pv-button>
-              </router-link>
+              <div>
+                <label><b>Correo</b></label><br>
+                <pv-input v-model="email" required class="input i-login" type="text" />
+                <p v-if="emailError" class="error-message">{{ emailError }}</p>
+              </div>
+              <div>
+                <label style="justify-content: space-between; display: flex;"><b>Contraseña</b> <pv-button style="color: #ffd146;">¿Olvidaste tu contraseña?</pv-button></label>
+                <div class="input-group">
+                  <pv-input v-model="password" required class="show-hide-text" :type="showPassword ? 'text' : 'password'"></pv-input>
+                  <div class="show-hide">
+                    <img :src="showPassword ? '../../public/login/show-icon.png' : '../../public/login/hide-icon.png'" @click="togglePasswordVisibility" class="show-hide-password"/>
+                  </div>
+                </div>
+                <p v-if="passwordError" class="error-message">{{ passwordError }}</p>
+              </div>
+              <div style="margin-top: 1.5rem">
+                <pv-button type="submit" class="submit">Iniciar sesión</pv-button>
+                <router-link to="/register">
+                  <pv-button class="create-account">¿No tienes una cuenta? <span style="color:#ffd146; margin-left: 10px;">Crea tu cuenta</span></pv-button>
+                </router-link>
+              </div>
             </div>
           </div>
         </form>
@@ -81,13 +107,13 @@ export default {
 </template>
 
 <style>
-.login-container{
-  width:100%;
+.login-container {
+  width: 100%;
   height: 100%;
 }
 
-.login-content{
-  width:100%;
+.login-content {
+  width: 100%;
   display: flex;
 }
 
@@ -105,7 +131,7 @@ export default {
   height: 100vh;
   object-fit: cover;
 }
-footer{
+footer {
   font-family: 'JetBrains Mono', monospace;
   width: 100%;
   height: 5vh;
@@ -118,7 +144,7 @@ footer{
   font-size: 1em;
 }
 
-.footer-links{
+.footer-links {
   display: flex;
   gap: 60px;
   color: white;
@@ -130,12 +156,12 @@ footer{
   align-items: center;
 }
 
-.inputs-login{
+.inputs-login {
   width: 60%;
   margin: 1rem;
 }
 
-.b-login-google{
+.b-login-google {
   border: 1px solid #ccc;
   border-radius: 20px;
   padding: 0.35rem;
@@ -145,7 +171,7 @@ footer{
   transition: 0.43s;
 }
 
-.b-login-google:hover{
+.b-login-google:hover {
   border: 1px solid #ffd146;
   color: #ffd146;
 }
@@ -156,7 +182,7 @@ footer{
   margin-top: 10px;
 }
 
-.hr-container h1{
+.hr-container h1 {
   color: #ccc;
 }
 
@@ -165,18 +191,18 @@ footer{
   margin: 0 10px;
 }
 
-.input{
+.input {
   width: 100%;
   border: 1px solid #ccc;
   border-radius: 5px;
   padding: 0.25rem;
 }
 
-.input:focus{
+.input:focus {
   border: 1px solid #FFD146;
 }
 
-.submit{
+.submit {
   width: 100%;
   background-color: #ffd146;
   font-weight: bold;
@@ -188,33 +214,43 @@ footer{
   border-radius: 20px;
 }
 
-.submit:hover{
+.submit:hover {
   background-color: #000;
   color: #ffd146;
 }
 
-.input:focus{
+.input:focus {
   outline: none;
 }
 
-.create-account{
+.create-account {
   width: 100%;
   justify-content: center;
   padding-top: 1rem;
 }
 
-@media (max-width: 960px){
+.error-message {
+  color: red;
+  font-size: 0.875em;
+  margin-top: 0.25rem;
+}
 
-  .main-image{
+.input-content{
+  gap: 1rem;
+  display: grid;
+}
+
+@media (max-width: 960px) {
+  .main-image {
     display: none;
   }
 
-  .login-form{
+  .login-form {
     width: 100%;
     padding-bottom: 3rem;
   }
 
-  footer{
+  footer {
     padding: 10px 0;
     height: auto;
     flex-direction: column-reverse;
@@ -222,11 +258,10 @@ footer{
     text-align: center;
   }
 
-  .footer-links{
+  .footer-links {
     flex-direction: column;
     gap: 20px;
     text-align: center;
   }
-
 }
 </style>
