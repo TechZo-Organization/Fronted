@@ -1,0 +1,509 @@
+<template>
+  <div class="sent-offers-cards-container">
+    <div v-for="sent in offers" :key="sent.id" class="container-sent-offers">
+      <div class="sent-offers-card">
+        <div class="header-product-name-sent">
+          <h1 v-if="sent.product_get">{{ sent.product_get.product_name }}</h1>
+        </div>
+        <div>
+          <div class="content">
+            <div class="colum col1">
+              <div class="card-get">
+                <div class="header-card-get">
+                  <div class="container-image">
+                    <img v-if="sent.user_get" :src="sent.user_get.img" alt="User Image">
+                  </div>
+                  <h1 v-if="sent.user_get">{{ sent.user_get.name }}</h1>
+                </div>
+                <div class="content-card-get">
+                  <p v-if="sent.product_get">{{ sent.product_get.description }}</p>
+                </div>
+                <div class="footer-card-get">
+                  <img v-if="sent.product_get" :src="sent.product_get.images" alt="Product Image">
+                </div>
+              </div>
+            </div>
+            <div class="colum col2">
+              <div class="card-offer">
+                <div class="mat-content">
+                  <div class="content-description">
+                    <h1>Datos:</h1>
+                    <div class="content-more-info">
+                      <p v-if="sent.product_get">
+                        Valor estimado: S/.{{ sent.product_get.price }}
+                      </p>
+                      <p v-if="sent.product_get">
+                        {{ sent.product_get.location?.district }},
+                        {{ sent.product_get.location?.departament }}
+                      </p>
+                    </div>
+                    <h1 v-if="sent.user_get">¿Qué solicita {{ sent.user_get.name }}?</h1>
+                    <div class="change-for">
+                      <img src="../../../public/products/exchange.icon.png" style="height: 20px; width: 20px" alt="Change Icon">
+                      <p v-if="sent.product_get">{{ sent.product_get.change_for }}</p>
+                    </div>
+                    <h1>¿Qué le ofreciste?</h1>
+                  </div>
+                  <div class="my-offer">
+                    <div class="col11">
+                      <div class="product-sent-image">
+                        <img v-if="sent.product_offers" :src="sent.product_offers.images" alt="Offered Product Image">
+                      </div>
+                    </div>
+                    <div class="col22">
+                      <div class="product-sent-text">
+                        <h1 v-if="sent.product_offers">Ofreciste tu {{ sent.product_offers.product_name }}</h1>
+                        <h4 v-if="sent.product_offers">{{ sent.product_offers.description }}</h4>
+                        <div class="footer">
+                          <h4 v-if="sent.product_offers"><b>Valor aproximado s/.{{ sent.product_offers.price }}</b></h4>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="footer-card-offer">
+                    <div class="footer-title">
+                      <h1>Estado de la oferta:</h1>
+                    </div>
+                    <div class="status-btn">
+                      <div :style="getStatusStyles(sent.status)">
+                        <h2>{{ sent.status }}</h2>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import { homeApiService } from "../../home/services/home-api.service";
+import { userApiService } from "../services/user-api.service";
+import { offerApiService } from "../../publisher-profile/services/offers-api.service";
+import { Offer } from "../../publisher-profile/model/offer.entity";
+
+export default {
+  name: 'user-sent-offers',
+  data() {
+    return {
+      offers: [],
+      postsService: new homeApiService(),
+      usersService: new userApiService(),
+      offerService: new offerApiService()
+    };
+  },
+  mounted() {
+    this.getAllOffers();
+  },
+  methods: {
+    async getAllOffers() {
+      try {
+        const response = await this.offerService.getOffers();
+        const data = response.data; // Asegurarse de acceder a la propiedad data del response
+        if (Array.isArray(data)) {
+          const userId = localStorage.getItem('user');
+          const offerPromises = data.map(async (offer) => {
+            if (offer.id_user_offers === userId) {
+              const newOffer = new Offer(
+                  offer.id,
+                  offer.id_user_offers,
+                  offer.id_product_offers,
+                  offer.id_user_get,
+                  offer.id_product_get,
+                  offer.status
+              );
+
+              const [productGet, productOffers, userGet] = await Promise.all([
+                this.postsService.getProductById(offer.id_product_get),
+                this.postsService.getProductById(offer.id_product_offers),
+                this.usersService.getUserById(offer.id_user_get)
+              ]);
+
+              newOffer.setProductGet = productGet.data;
+              newOffer.setProductOffers = productOffers.data;
+              newOffer.setUserGet = userGet.data;
+
+              return newOffer;
+            }
+          });
+
+          // Filtramos las ofertas nulas (las que no pertenecen al usuario)
+          this.offers = (await Promise.all(offerPromises)).filter(Boolean);
+        } else {
+          console.error('Data is not an array:', data);
+        }
+      } catch (error) {
+        console.error('Error fetching offers:', error);
+      }
+    },
+    getStatusStyles(status) {
+      let styles = {};
+      switch (status) {
+        case 'Aceptado':
+          styles = {
+            color: '#41DB0B',
+            backgroundColor: '#EAFFDD',
+            border: '1px solid #41DB0B',
+            borderRadius: '10px',
+            width: '8.5rem',
+            height: '2.2rem',
+            textAlign: 'center'
+          };
+          break;
+        case 'Pendiente':
+          styles = {
+            color: '#FFA22A',
+            backgroundColor: '#FFF2CC',
+            border: '1px solid #FFA22A',
+            borderRadius: '10px',
+            width: '8.5rem',
+            height: '2.2rem',
+            textAlign: 'center'
+          };
+          break;
+        case 'Denegado':
+          styles = {
+            color: '#FF502A',
+            backgroundColor: '#FFD7B9',
+            border: '1px solid #FF502A',
+            borderRadius: '10px',
+            width: '8.5rem',
+            height: '2.2rem',
+            textAlign: 'center'
+          };
+          break;
+        default:
+          styles = {};
+          break;
+      }
+      return styles;
+    }
+  }
+};
+</script>
+
+<style>
+h1,h2,h3,h4,h5,h6,p{
+  font-family: 'Montserrat', sans-serif;
+}
+.sent-offers-cards-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  gap: 2rem;
+}
+.container-sent-offers{
+  max-width: 1000px;
+  width: 100%;
+}
+.header-product-name-sent{
+  background-color: #FFD146;
+  color: #000000;
+  padding-bottom: 5px;
+  display: flex;
+  align-items: center;
+}
+.header-product-name-sent h1{
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+.content{
+  width: 100%;
+  display:flex;
+  flex-wrap: wrap;
+}
+.col1{
+  flex-direction: column;
+  display: inline-block;
+  order: 1;
+  flex:1;
+}
+.col2 {
+  flex-direction: column;
+  display: inline-block;
+  order: 2;
+  flex: 2;
+}
+.card-get{
+  height: calc(100% - 20px);
+  margin: 20px 20px 20px 0;
+  align-content: center;
+  align-items: center;
+  gap: 15px;
+}
+.mat-mdc-card{
+  box-shadow: none;
+}
+.header-card-get{
+  display: flex;
+  align-items: center;
+}
+.header-card-get h1 {
+  font-weight: bold;
+  margin-left: 1rem;
+  font-size: 1.2rem;
+}
+.container-image {
+  flex-shrink: 0;
+  overflow: hidden;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+}
+.container-image img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+.content-card-get{
+  font-size: 15px;
+}
+.footer-card-get img{
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+  max-width: 250px;
+  max-height: 250px;
+  border-radius: 5px;
+
+}
+.footer-card-get{
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+.card-offer{
+  width: auto;
+  height: calc(100% - 20px);
+  margin: 20px 0 20px 0;
+  align-content: center;
+  gap: 15px;
+  box-shadow: none;
+  border-radius: 0;
+  border-left: solid 1px #DCDCDC;
+}
+.content-description h1{
+  font-size: 20px;
+  font-weight: bold;
+  text-align: left;
+  padding-bottom:0.5rem ;
+  color: #000000;
+  margin: 0;
+}
+.content-description {
+  padding: 0 20px 0 20px;
+  font-size: 15px;
+}
+.content-more-info p {
+  display: flex;
+  align-items: center;
+}
+.content-more-info p {
+  gap: 5px;
+}
+.change-for{
+  display: flex;
+  flex-direction: row;
+}
+.change-for p{
+  margin-left: 5px;
+  font-size: 15px;
+}
+.change-for img{
+  margin-top: 2px;
+}
+.my-offer{
+  display:flex;
+  flex: 1;
+  margin: 1rem;
+  padding: 1rem;
+  align-items: center;
+  border-radius: 8px;
+  border: solid 1px #ddd;
+  box-shadow: 0 4px 4px rgba(0, 0, 0,0.25);
+  flex-wrap: wrap;
+  box-sizing: border-box;
+}
+.col11{
+  flex-direction: column;
+  display: flex;
+  box-sizing: border-box;
+  order: 1;
+  flex:1;
+}
+.col22{
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  order: 2;
+  flex: 2;
+}
+.col11 h1, .col22 h1, .footer-card-offer h1{
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+}
+.col22 h1{
+  color: #FFD146;
+  text-align: left;
+}
+
+.product-sent-image{
+  text-align: center;
+  display: flex;
+  overflow: hidden;
+  justify-content: center;
+}
+.product-sent-image img {
+  width: 180px;
+  height: 180px;
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover;
+  border-radius: 5px;
+  object-position: center;
+}
+.product-sent-text h2{
+  color: #fac500;
+}
+.product-sent-text {
+  margin-left: 1rem;
+}
+.footer-card-offer{
+  display: flex;
+  flex-direction: row;
+}
+
+.footer-title{
+  flex-direction: column;
+  display: flex;
+  box-sizing: border-box;
+  order: 1;
+  flex:1;
+  align-items: flex-start;
+  align-self: center;
+  align-content: center;
+  text-align: center;
+}
+.status-btn {
+  margin-left: 10px;
+  order: 2;
+  flex: 1;
+}
+.footer-card-offer h1 {
+  margin: 0;
+  padding: 0;
+}
+.footer-card-offer{
+  padding: 0 20px 0 20px;
+}
+
+@media (max-width: 780px) {
+  .my-offer {
+    flex-direction: column;
+  }
+
+  .col11, .col22 , .card-get{
+    width: 100%;
+  }
+
+  .footer-card-offer{
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+  }
+  .status-btn{
+    padding-top:10px;
+    text-align: center;
+    align-self: center;
+    align-content: center;
+    align-items: center;
+  }
+  .content-description {
+    padding: 0 10px 0 10px;
+    font-size: 15px;
+  }
+  .col22 h1{
+    margin-top: 1rem;
+    margin-bottom: 0;
+  }
+  .footer-title h1{
+    margin: 0;
+    padding: 0;
+  }
+
+}
+@media (max-width: 620px){
+  .col1, .col2 {
+    width: 100%;
+  }
+  .header-card-offer{
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+  }
+  .container-image {
+    margin-left: 0;
+    width: 100px;
+    height: 100px;
+  }
+  .content {
+    flex-direction: column;
+  }
+
+  .card-offer{
+    border-left: none;
+    border-top: solid 1px #C2C2C2;
+  }
+
+}
+
+@media (max-width: 420px){
+  .col1, .col2 {
+    width: 100%;
+  }
+  .footer-card-offer{
+    padding-top: 1rem;
+  }
+  .header-card-get{
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+  }
+  .container-image{
+    width: 100px;
+    height: 100px;
+  }
+  .content {
+    flex-direction: column;
+  }
+  .my-offer{
+    margin: 0;
+  }
+  .mat-content{
+    padding: 0;
+  }
+  .content-description{
+    padding: 0;
+  }
+  .card-offer{
+    padding-top: 1rem;
+  }
+  .status-btn{
+    margin-left: 0;
+  }
+}
+
+</style>
