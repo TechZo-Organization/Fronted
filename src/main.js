@@ -22,6 +22,7 @@ import Dialog from 'primevue/dialog';
 import TabMenu from 'primevue/tabmenu';
 import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
+import ProgressBar from 'primevue/progressbar';
 
 createApp(App)
     .use(router)
@@ -40,4 +41,5 @@ createApp(App)
     .component('pv-tab-menu', TabMenu)
     .component('pv-tab-view', TabView)
     .component('pv-tab-panel', TabPanel)
+    .component('pv-progress-bar', ProgressBar)
     .mount('#app')
