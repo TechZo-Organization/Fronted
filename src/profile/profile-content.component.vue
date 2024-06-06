@@ -74,7 +74,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 300px;
+  height: 380px;
   width: 100%;
   overflow: hidden;
 }
@@ -132,6 +132,7 @@ export default {
 @media screen and (max-width: 500px){
   .user-info{
     flex-direction: column;
+    gap: 0;
   }
 }
 

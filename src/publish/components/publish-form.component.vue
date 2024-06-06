@@ -336,6 +336,13 @@ export default {
   box-shadow: 0px 0px 20px 0px #c6c6c6;
 }
 
+ol, ul, menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background-color:white;
+}
+
 .check-b {
   width: 1.5rem;
   height: 1.5rem;
@@ -346,7 +353,6 @@ export default {
   font-size: 20px;
   font-weight: 900;
 }
-
 .inputs-publish {
   padding: 0rem 2rem 2rem 2rem;
   margin: 1rem;
@@ -415,6 +421,7 @@ export default {
   border-radius: 0px 10px 10px 0px;
   border-left: white;
 }
+
 
 .images-upload {
   display: flex;

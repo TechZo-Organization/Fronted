@@ -21,7 +21,6 @@ export default {
     },
     async fetchProducts() {
       const loggedUserId = localStorage.getItem('user');
-      console.log('Logged User ID:', loggedUserId); // Debugging statement
       if (!loggedUserId) {
         this.error = 'No logged-in user found';
         this.loading = false;
@@ -29,7 +28,6 @@ export default {
       }
       try {
         const response = await new homeApiService().getProduct();
-        console.log('Products fetched:', response.data); // Debugging statement
         const allProducts = response.data;
         this.products = allProducts
             .filter(product => product.user_id === loggedUserId)
@@ -45,22 +43,18 @@ export default {
                 product.user_id,
                 product.location
             ));
-        console.log('Filtered Products:', this.products); // Debugging statement
         this.loading = false;
       } catch (err) {
         this.error = err;
-        console.error('Error fetching products:', err); // Debugging statement
         this.loading = false;
       }
     },
     async fetchCategories() {
       try {
         const response = await new homeApiService().getCategoriesProduct();
-        console.log('Categories fetched:', response.data); // Debugging statement
         this.categories = response.data;
       } catch (err) {
         this.error = err;
-        console.error('Error fetching categories:', err); // Debugging statement
       }
     },
     getCategoryName(categoryId) {
@@ -77,8 +71,12 @@ export default {
 
 <template>
   <div class="post-content">
-    <h1>IntercambioZ Publicados</h1>
-    <hr>
+    <div class="favorite__first">
+      <p>IntercambioZ Publicados:</p>
+    </div>
+    <div class="line-text">
+      <div class="line"></div>
+    </div>
     <div class="post-list">
       <div v-if="loading">Loading...</div>
       <div v-else-if="error">{{ error.message }}</div>
@@ -119,10 +117,6 @@ export default {
 </template>
 
 <style scoped>
-.post-content{
-  padding: 1.5rem;
-  justify-content: center;
-}
 
 .post-content h1{
   text-align: left;
@@ -139,7 +133,7 @@ export default {
 }
 
 .post-cards-container {
-  max-width: 600px;
+  max-width: 800px;
   display: flex;
   flex-wrap: wrap;
 }
@@ -151,6 +145,7 @@ export default {
   width: 100%;
   cursor: pointer;
   transition: 0.43s;
+  height: fit-content;
 }
 
 .card-post:hover{
@@ -163,12 +158,16 @@ export default {
 }
 
 .image-post{
-  width: 30%;
+  width: 40%;
+  height:100%;
 }
 
 .image-post img{
   width: 100%;
-  height: 350px;
+  height:100%;
+  max-height:fit-content;
+  object-position: center;
+  object-fit:cover;
 }
 
 .post-info{
