@@ -1,15 +1,19 @@
 <script>
 import { homeApiService } from "../../home/services/home-api.service.js";
 import { Product } from "../../home/model/product.entity.js";
+import DialogDeletePost from "./dialog-delete-post.component.vue";
 
 export default {
   name: 'post-profile',
+  components: {DialogDeletePost},
   data() {
     return {
       products: [],
       categories: [],
       loading: true,
-      error: null
+      error: null,
+      dialogVisible: false,
+      selectedId: null
     };
   },
   methods: {
@@ -60,6 +64,22 @@ export default {
     getCategoryName(categoryId) {
       const category = this.categories.find(cat => cat.id === categoryId);
       return category ? category.name : 'Unknown Category';
+    },
+    openConfirm(id){
+      this.selectedId = id;
+      this.dialogVisible = true;
+    },
+    confirmDelete(id) {
+      try {
+        new homeApiService().deleteProduct(id);
+        this.products = this.products.filter(product => product.id !== id);
+        this.dialogVisible = false;
+      } catch (err) {
+        this.error = err;
+      }
+    },
+    editPosts(id){
+
     }
   },
   async created() {
@@ -71,7 +91,7 @@ export default {
 
 <template>
   <div class="post-content">
-    <div class="favorite__first">
+    <div class="user-offers-title">
       <p>IntercambioZ Publicados:</p>
     </div>
     <div class="line-text">
@@ -83,18 +103,27 @@ export default {
       <div v-else>
         <div class="post-cards-container">
           <div v-for="product in products" :key="product.product_name" class="card-post">
-
             <div class="card-content">
               <div class="image-post">
                 <img :src="product.images[0]" />
               </div>
               <div class="post-info">
-                <router-link :to="`/product-information/${product.id}`" @click.native="scrollToTop">
-                  <div class="post-title">
-                    <h1>{{ product.product_name }}</h1>
-                    <h2>{{ getCategoryName(product.category_id) }}</h2>
+                <div class="post-title">
+                  <div class="post-title-header">
+                    <router-link :to="`/product-information/${product.id}`" @click.native="scrollToTop">
+                      <h1>{{ product.product_name }}</h1>
+                    </router-link>
+                    <div class="post-title-actions">
+                      <button @click="editPosts(product.id)" class="delete__button" title="Editar">
+                        <img src="../../../public/profile/edit.png" alt="edit" style="height: 18px;width:18px">
+                      </button>
+                      <button @click="openConfirm(product.id)" class="delete__button" title="Eliminar">
+                        <img src="../../../public/profile/delete.png" alt="delete" style="height: 18px;width:18px">
+                      </button>
+                    </div>
                   </div>
-                </router-link>
+                  <h2>{{ getCategoryName(product.category_id) }}</h2>
+                </div>
                 <div class="post-details">
                   <p>{{ product.description }}</p>
                   <div class="icon-detail">
@@ -113,6 +142,11 @@ export default {
         </div>
       </div>
     </div>
+    <dialog-delete-post
+        :visible="dialogVisible"
+        @close="dialogVisible = false"
+        @confirm="confirmDelete(selectedId)"
+    />
   </div>
 </template>
 
@@ -181,6 +215,27 @@ export default {
   padding: 0.5rem;
 }
 
+.post-title-header {
+  color: white;
+  background-color: black;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.post-title-header h1 {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+}
+.post-title-actions{
+  gap:5px;
+  display: flex;
+  flex-direction: row;
+  padding:0 0 16px;
+  padding-left: 5px;
+}
+
 .post-title h1{
   transition: 0.43s;
 }
@@ -232,7 +287,13 @@ export default {
   .post-info{
     width: 100%;
   }
-
+  .post-title-actions{
+    gap:5px;
+    display: flex;
+    flex-direction: column;
+    padding:0 0 16px;
+    padding-left: 5px;
+  }
   .post-cards-container {
     max-width: 300px;
   }
