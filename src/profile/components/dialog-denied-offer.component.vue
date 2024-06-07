@@ -11,9 +11,7 @@
         <p>
           Recuerda que una vez declines la oferta, el usuario no podrá volver a hacer una por está publicación
         </p>
-        <div style="display: grid;">
           <pv-button @click="confirmDelete" class="b-login-dialog"><b>Confirmar</b></pv-button>
-        </div>
       </div>
     </div>
   </div>
