@@ -27,14 +27,17 @@ export default {
 .b-category {
   background-color: #fff;
   border: 2px solid #FFD146;
-  color: #FFD146;
+  color: #ddb12a;
   font-weight: bolder;
   border-radius: 20px;
   padding: 0.25rem 1rem;
   transition: 0.43s;
+  margin: 0.2rem;
+
 }
 
 .b-category:hover {
   background-color: #000;
 }
+
 </style>

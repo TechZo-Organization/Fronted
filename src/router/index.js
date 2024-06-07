@@ -21,8 +21,9 @@ import ProfileComponent from "../profile/profile-content.component.vue";
 import ProductInformationContent from "../product-information/product-information-content.component.vue";
 import PublisherProfileContent from "../publisher-profile/publisher-profile-content.component.vue";
 import OngInformationContent from "../ong-information/ong-information-content.component.vue";
+import ProductCategoriesContent from "../product-categories/product-categories-content.component.vue";
+import MembershipPaymentContent from "../membership-payment/membership-payment-content.component.vue";
 import EditProfileComponent from "../profile/components/edit-profile.component.vue";
-
 const router = createRouter({
     history: createWebHistory(),
     routes: [
@@ -35,6 +36,8 @@ const router = createRouter({
         { path: '/product-information/:id', component: ProductInformationContent, meta: { title: 'Product Information' }},
         { path: '/publisher-profile/:id', component: PublisherProfileContent, meta: { title: 'Publisher Profile' }},
         { path: '/ong-information/:id', component: OngInformationContent, meta: { title: 'Ong Information' }},
+        { path: '/product-categories', component: ProductCategoriesContent, meta: { title: 'Product Categories' }},
+        { path: '/membership-payment/:id', component: MembershipPaymentContent, meta: { title: 'Membership Payment' }},
         //Terms & conditions pages:
         { path: '/help', component: HelpContent, meta: { title: 'Help' } },
         { path: '/contact-us', component: ContactUsContent, meta: { title: 'Contact us' } },
