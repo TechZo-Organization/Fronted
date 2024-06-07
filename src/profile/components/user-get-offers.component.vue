@@ -60,7 +60,7 @@
                 </div>
                 <div class="action-buttons">
                   <button class="accept-button" @click="setStatusAccepted(offer.id)">Aceptar</button>
-                  <button class="decline-button" @click="setStatusDenied(offer.id)">Declinar</button>
+                  <button @click="openConfirm(offer.id)" class="decline-button" >Declinar</button>
                 </div>
               </div>
             </div>
@@ -68,6 +68,16 @@
         </div>
       </div>
     </div>
+    <dialog-accepted-offer
+        :visible="dialogAcceptedVisible"
+        :data="dialogAcceptedData"
+        @close="dialogAcceptedVisible = false"
+    />
+    <dialog-denied-offer
+        :visible="dialogVisible"
+        @close="dialogVisible = false"
+        @confirm="setStatusDenied(selectedId)"
+    />
   </div>
 </template>
 
@@ -76,12 +86,19 @@ import { homeApiService } from "../../home/services/home-api.service";
 import { userApiService } from "../services/user-api.service";
 import { offerApiService } from "../../publisher-profile/services/offers-api.service";
 import { Offer } from "../../publisher-profile/model/offer.entity";
+import DialogDeniedOffer from "./dialog-denied-offer.component.vue";
+import DialogAcceptedOffer from "./dialog-accepted-offer.vue";
 
 export default {
   name: 'UserGetOffers',
+  components: {DialogDeniedOffer,DialogAcceptedOffer},
   data() {
     return {
       offers: [],
+      dialogVisible: false,
+      dialogAcceptedVisible:false,
+      selectedId: null,
+      dialogAcceptedData: {}, // Nueva variable para guardar los datos del diálogo
       postsService: new homeApiService(),
       usersService: new userApiService(),
       offerService: new offerApiService()
@@ -133,28 +150,28 @@ export default {
         const offer = this.offers.find(offer => offer.id === offerId);
         if (offer) {
           this.offers = this.offers.filter(offer => offer.id !== offerId);
-          this.$root.$emit('bv::show::modal', 'dialog-successful-exchange', {
-            data: {
-              name: offer.user_offer.name,
-              img: offer.user_offer.img,
-              phone: offer.user_offer.phone,
-              email: offer.user_offer.email
-            }
-          });
+          this.dialogAcceptedVisible = true; // Mostrar el diálogo
+          this.dialogAcceptedData = { // Guardar los datos en una variable
+            name: offer.user_offer.name,
+            img: offer.user_offer.img,
+            phone: offer.user_offer.phone,
+            email: offer.user_offer.email
+          };
         }
       });
     },
+    openConfirm(offerId) {
+      this.selectedId = offerId;
+      this.dialogVisible = true;
+    },
     setStatusDenied(offerId) {
-      this.$root.$emit('bv::show::modal', 'dialog-denied-offer', {
-        callback: (result) => {
-          if (result) {
-            this.offerService.updateOfferStatus(offerId, 'Denegado').then(() => {
-              this.offers = this.offers.filter(offer => offer.id !== offerId);
-            });
-          }
-        }
+      this.offerService.updateOfferStatus(offerId, 'Denegado').then(() => {
+        this.offers = this.offers.filter(offer => offer.id !== offerId);
+        this.dialogVisible = false;
       });
     }
+
+
   }
 };
 </script>
