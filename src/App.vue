@@ -21,7 +21,10 @@ export default {
     && $route.path !== '/admin/ongs'
     && $route.path !== '/admin/memberships'
     && $route.path !== '/admin/categories-product'
-    && $route.path !== '/admin/categories-ong'"
+    && $route.path !== '/admin/categories-ong'
+    && $route.path !== '/membership-payment/1'
+    && $route.path !== '/membership-payment/2'
+    && $route.path !== '/membership-payment/3'"
     ></toolbar-content>
     <router-view></router-view>
     <footer-content v-if="$route.path !== '/log-in' && $route.path !== '/register'
@@ -30,7 +33,10 @@ export default {
     && $route.path !== '/admin/ongs'
     && $route.path !== '/admin/memberships'
     && $route.path !== '/admin/categories-product'
-    && $route.path !== '/admin/categories-ong'"
+    && $route.path !== '/admin/categories-ong'
+    && $route.path !== '/membership-payment/1'
+    && $route.path !== '/membership-payment/2'
+    && $route.path !== '/membership-payment/3'"
     ></footer-content>
   </div>
 </template>
