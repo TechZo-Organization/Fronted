@@ -2,10 +2,12 @@
 import { homeApiService } from "../../home/services/home-api.service.js";
 import { userApiService } from "../../profile/services/user-api.service.js";
 import DialogFavoritesAdded from "./dialog-favorites-added.component.vue";
+import DialogOfferContent from "./dialog-offer.component.vue";
 
 export default {
   name: "product-information",
   components: {
+    DialogOfferContent,
     DialogFavoritesAdded,
   },
   data() {
@@ -14,6 +16,8 @@ export default {
       user: null,
       categories: [],
       dialogVisible: false,
+      dialogOfferVisible: false,
+      detailsVisible: true,
     };
   },
   methods: {
@@ -24,7 +28,7 @@ export default {
       });
     },
     getLoggedInUserId() {
-      return Number(localStorage.getItem('user'));
+      return (localStorage.getItem('user'));
     },
     async addToFavorites() {
       const loggedInUserId = this.getLoggedInUserId();
@@ -39,12 +43,25 @@ export default {
             const updateResponse = await userService.putUser(loggedInUser.id, loggedInUser);
             console.log('Added to favorites:', updateResponse);
             this.dialogVisible = true;
+            document.body.classList.add('no-scroll');
           } else {
           }
         } catch (error) {
         }
       } else {
       }
+    },
+    async offerProduct(){
+      this.dialogOfferVisible = true;
+      document.body.classList.add('no-scroll');
+    },
+    closeOfferProductDialog() {
+      this.dialogOfferVisible = false;
+
+    },
+    closeFavoriteDialog() {
+      this.dialogVisible = false;
+      document.body.classList.remove('no-scroll');
     },
   },
   async created() {
@@ -58,10 +75,12 @@ export default {
       const userService = new userApiService();
       const userResponse = await userService.getUserById(userId);
       this.user = userResponse.data;
-
       const categoriesResponse = await homeService.getCategoriesProduct();
       this.categories = categoriesResponse.data;
     } catch (error) {
+    }
+    if(this.product.user_id === this.getLoggedInUserId()){
+      this.detailsVisible =false;
     }
   },
   computed: {
@@ -107,15 +126,15 @@ export default {
         </div>
         <div class="user-details">
           <h1>{{ user.name }}</h1>
-          <router-link :to="`/publisher-profile/${product.user_id}`" @click.native="scrollToTop">
+          <router-link :to="detailsVisible ? '/publisher-profile/${product.user_id}' : `/profile`" @click.native="scrollToTop">
             <pv-button class="show-profile">
               Ver Perfil
             </pv-button>
           </router-link>
-          <hr />
-          <div class="offer-profile">
+          <hr v-if="detailsVisible"/>
+          <div class="offer-profile" v-if="detailsVisible">
             <h2>¿Estás interesado?</h2>
-            <pv-button class="offer-product">
+            <pv-button class="offer-product" @click="offerProduct()">
               <img
                   src="../../../public/product-information/offer-icon.png"
                   height="30"
@@ -126,7 +145,7 @@ export default {
             </pv-button>
           </div>
           <hr />
-          <div class="favorite-profile">
+          <div class="favorite-profile" v-if="detailsVisible">
             <pv-button class="favorite-product" @click="addToFavorites()">
               <img src="../../../public/product-information/favorite-icon.png" alt="Favorite Icon" />
             </pv-button>
@@ -136,8 +155,13 @@ export default {
     </div>
     <dialog-favorites-added
         :visible="dialogVisible"
-        @close="dialogVisible = false"
+        @close="closeFavoriteDialog()"
         @confirm="addToFavorites()"
+    />
+    <dialog-offer-content
+        :visible="dialogOfferVisible"
+        @close="closeOfferProductDialog()"
+        @confirm="offerProduct()"
     />
   </div>
 </template>

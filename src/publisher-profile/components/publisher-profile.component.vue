@@ -64,8 +64,8 @@ export default {
             review.get_user_id,
             review.give_user_id
         ));
-        await this.fetchReviewerNames(); // Añadir await aquí
-        this.calculateAverageScore(); // Calcular el puntaje promedio después de obtener las reseñas
+        await this.fetchReviewerNames();
+        this.calculateAverageScore();
       } catch (error) {
         console.error("Error fetching user reviews:", error);
       }
