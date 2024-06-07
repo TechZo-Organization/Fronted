@@ -32,6 +32,7 @@ export default {
         name: '',
         email: '',
         phone: '',
+        membership: '',
       },
       productName: '',
       email: '',
@@ -39,7 +40,8 @@ export default {
       description: '',
       changeFor: '',
       price: '',
-      showDialog: false
+      showDialog: false,
+      boostOrNotDisabled: false
     };
   },
   methods: {
@@ -68,7 +70,9 @@ export default {
           name: user.name,
           email: user.email,
           phone: user.phone,
+          membership: user.membership
         };
+        this.boostOrNotDisabled = user.membership === '1';
       } catch (error) {
         console.error('Error fetching user data:', error);
       }
@@ -230,10 +234,11 @@ export default {
           <div class="row-form">
             <div class="title-boost">
               <div class="icon-title">
-                <img src="../../../public/publish/boost-icon.png" height="40" width="40"/>                <h1>Boost de Visibilidad</h1>
+                <img src="../../../public/publish/boost-icon.png" height="40" width="40"/>
+                <h1>Boost de Visibilidad</h1>
               </div>
               <div class="toggle-option">
-                <pv-toggle-button v-model="boostOrNot" onLabel="On" offLabel="Off" class="b-toggle" :class="{'onToggle': boostOrNot}"/>
+                <pv-toggle-button v-model="boostOrNot" onLabel="On" offLabel="Off" class="b-toggle" :class="{'onToggle': boostOrNot}" :disabled="boostOrNotDisabled"/>
               </div>
             </div>
             <div class="text-boost">

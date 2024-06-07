@@ -41,7 +41,7 @@ export default {
           email: this.email,
           phone: this.phone,
           password: this.password,
-          membership: 1,
+          membership: "1",
           membership_date: '',
           img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR6lqpQj3oAmc1gtyM78oJCbTaDrD7Fj9NRlceOPDZiHA&s",
           id: (users.length + 1).toString(),

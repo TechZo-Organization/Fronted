@@ -6,13 +6,16 @@ export default {
     CardMembership,
   },
   props: {
-    memberships: Object,
+    memberships: {
+      type: Array,
+      required: true
+    }
   }
 }
 </script>
 
 <template>
-  <div v-for="membership in memberships" class="list-container">
+  <div v-for="membership in memberships" :key="membership.id" class="list-container">
     <card-membership :membership="membership" ></card-membership>
   </div>
 </template>

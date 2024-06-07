@@ -4,7 +4,7 @@ export class User {
         email = '',
         phone = '',
         password = '',
-        membership = 0,
+        membership = '',
         img = '',
         id = '',
         favorites = []
