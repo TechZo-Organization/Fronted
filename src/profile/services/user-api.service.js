@@ -16,4 +16,10 @@ export class userApiService {
     putUser(id,data){
         return http.put(`/users/${id}`,data)
     }
+    deleteUser(id){
+        return http.delete(`/users/${id}`)
+    }
+    changePassword(id, newPassword) {
+        return http.put(`/users/${id}`, { password: newPassword });
+    }
 }
