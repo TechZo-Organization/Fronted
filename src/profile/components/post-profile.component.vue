@@ -71,7 +71,7 @@ export default {
 
 <template>
   <div class="post-content">
-    <div class="favorite__first">
+    <div class="user-offers-title">
       <p>IntercambioZ Publicados:</p>
     </div>
     <div class="line-text">
