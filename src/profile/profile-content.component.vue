@@ -34,6 +34,9 @@ export default {
         console.error('Error fetching user:', error);
       }
     },
+    edit() {
+      this.$router.push('/edit-profile');
+    },
     logout() {
       localStorage.removeItem('user');
       this.user = null;
