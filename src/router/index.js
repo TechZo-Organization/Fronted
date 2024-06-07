@@ -21,6 +21,7 @@ import ProfileComponent from "../profile/profile-content.component.vue";
 import ProductInformationContent from "../product-information/product-information-content.component.vue";
 import PublisherProfileContent from "../publisher-profile/publisher-profile-content.component.vue";
 import OngInformationContent from "../ong-information/ong-information-content.component.vue";
+import EditProfileComponent from "../profile/components/edit-profile.component.vue";
 
 const router = createRouter({
     history: createWebHistory(),
@@ -29,7 +30,8 @@ const router = createRouter({
         { path: '/donations', component: DonationsContent, meta: { title: 'Donations' } },
         { path: '/memberships', component: MembershipsContent, meta: { title: 'Memberships' } },
         { path: '/publish', component: PublishComponent, meta: { title: 'Publish' }},
-        { path: '/profile', component: ProfileComponent, meta: { title: 'Profile' }},
+        { path: '/profile', component: ProfileComponent, meta: { title: 'Edit Profile' }},
+        { path: '/edit-profile', component: EditProfileComponent, meta: { title: 'Profile' }},
         { path: '/product-information/:id', component: ProductInformationContent, meta: { title: 'Product Information' }},
         { path: '/publisher-profile/:id', component: PublisherProfileContent, meta: { title: 'Publisher Profile' }},
         { path: '/ong-information/:id', component: OngInformationContent, meta: { title: 'Ong Information' }},
