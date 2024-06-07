@@ -1,33 +1,69 @@
 <script>
 import { membershipsApiService } from "./services/membership-api.service.js";
+import { userApiService } from "../login/services/user-api.service.js";
 import MembershipList from "./components/membership-list.component.vue";
 
 export default {
   name: "memberships-content",
-  components:{
+  components: {
     MembershipList,
   },
-  data(){
-    return{
+  data() {
+    return {
       memberships: [],
+      filteredMemberships: [],
+      userMembershipId: null,
       errors: [],
+      user: null,
       membershipsApi: new membershipsApiService(),
+      userApi: new userApiService()
     }
   },
   created() {
     this.getAllMemberships();
+    this.getUser();
   },
   methods: {
     getAllMemberships() {
       this.membershipsApi.getMemberships()
           .then((response) => {
             this.memberships = response.data;
+            this.filterMemberships();
           })
           .catch((error) => {
             this.errors.push(error);
           });
     },
+    getUser() {
+      const userId = localStorage.getItem('user');
+      if (userId) {
+        this.userApi.getUserById(userId)
+            .then((response) => {
+              this.user = response.data;
+              this.userMembershipId = this.user.membership;  // Set userMembershipId to the user's membership
+              this.filterMemberships();
+            })
+            .catch((error) => {
+              this.errors.push(error);
+            });
+      }
+    },
+    filterMemberships() {
+      if (this.userMembershipId && this.memberships.length) {
+        this.filteredMemberships = this.memberships.filter(membership => membership.id.toString() !== this.userMembershipId.toString());
+      } else {
+        this.filteredMemberships = this.memberships;
+      }
+    },
   },
+  watch: {
+    memberships(newMemberships) {
+      this.filterMemberships();
+    },
+    userMembershipId(newUserMembershipId) {
+      this.filterMemberships();
+    }
+  }
 }
 </script>
 
@@ -41,8 +77,11 @@ export default {
       <h2>y obten beneficios exclusivos para ti!</h2>
     </div>
     <div class="main-container">
-      <div class="memberships-container" >
-        <membership-list v-if="errors" :memberships="memberships"></membership-list>
+      <div class="memberships-container">
+        <membership-list v-if="!errors.length" :memberships="filteredMemberships"></membership-list>
+        <div v-else>
+          <p>Error al cargar las membresías. Intenta nuevamente más tarde.</p>
+        </div>
       </div>
     </div>
     <div class="footer-container">
@@ -52,49 +91,48 @@ export default {
 </template>
 
 <style scoped>
-
-.title-container{
+.title-container {
   padding: 5rem 3rem 3rem 3rem;
   font-size: 40px;
   font-weight: bolder;
   text-align: center;
 }
 
-.title-container h1{
+.title-container h1 {
   font-size: 50px;
   color: #FFD146;
 }
 
-.main-container{
+.main-container {
   padding: 0rem 4rem 0rem 4rem;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.memberships-container{
+.memberships-container {
   display: flex;
   gap: 1rem;
 }
 
-.footer-container{
+.footer-container {
   text-align: center;
   font-size: 20px;
   font-weight: bolder;
   padding: 1.5rem 1.5rem 6rem 1.5rem;
 }
 
-@media screen and (max-width: 900px){
-  .title-container{
+@media screen and (max-width: 900px) {
+  .title-container {
     font-size: 30px;
   }
 
-  .title-container h1{
+  .title-container h1 {
     font-size: 40px;
   }
-  .memberships-container{
+
+  .memberships-container {
     display: grid;
   }
 }
-
 </style>
