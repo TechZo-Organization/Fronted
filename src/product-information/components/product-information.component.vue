@@ -3,10 +3,12 @@ import { homeApiService } from "../../home/services/home-api.service.js";
 import { userApiService} from "../../login/services/user-api.service.js";
 import DialogFavoritesAdded from "./dialog-favorites-added.component.vue";
 import DialogOfferContent from "./dialog-offer.component.vue";
+import DialogContent from "../../public/components/dialog-content.component.vue";
 
 export default {
   name: "product-information",
   components: {
+    DialogContent,
     DialogOfferContent,
     DialogFavoritesAdded,
   },
@@ -18,6 +20,7 @@ export default {
       dialogVisible: false,
       dialogOfferVisible: false,
       detailsVisible: true,
+      showDialog: false,
     };
   },
   methods: {
@@ -26,6 +29,10 @@ export default {
         top: 0,
         behavior: 'smooth'
       });
+    },
+    closeDialog() {
+      this.showDialog = false;
+      document.body.classList.remove('no-scroll');
     },
     getLoggedInUserId() {
       return (localStorage.getItem('user'));
@@ -49,11 +56,19 @@ export default {
         } catch (error) {
         }
       } else {
+        this.showDialog = true;
+        document.body.classList.add('no-scroll');
       }
     },
     async offerProduct(){
-      this.dialogOfferVisible = true;
-      document.body.classList.add('no-scroll');
+      const loggedInUserId = this.getLoggedInUserId();
+      if (loggedInUserId) {
+        this.dialogOfferVisible = true;
+        document.body.classList.add('no-scroll');
+      }else{
+        this.showDialog = true;
+        document.body.classList.add('no-scroll');
+      }
     },
     closeOfferProductDialog() {
       this.dialogOfferVisible = false;
@@ -163,6 +178,7 @@ export default {
         @close="closeOfferProductDialog()"
         @confirm="offerProduct()"
     />
+    <dialog-content :visible="showDialog" @close="closeDialog"/>
   </div>
 </template>
 
