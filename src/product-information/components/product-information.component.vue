@@ -1,6 +1,6 @@
 <script>
 import { homeApiService } from "../../home/services/home-api.service.js";
-import { userApiService } from "../../profile/services/user-api.service.js";
+import { userApiService} from "../../login/services/user-api.service.js";
 import DialogFavoritesAdded from "./dialog-favorites-added.component.vue";
 import DialogOfferContent from "./dialog-offer.component.vue";
 
@@ -126,7 +126,7 @@ export default {
         </div>
         <div class="user-details">
           <h1>{{ user.name }}</h1>
-          <router-link :to="detailsVisible ? '/publisher-profile/${product.user_id}' : `/profile`" @click.native="scrollToTop">
+          <router-link :to="detailsVisible ? `/publisher-profile/${product.user_id}` : `/profile`" @click.native="scrollToTop">
             <pv-button class="show-profile">
               Ver Perfil
             </pv-button>
