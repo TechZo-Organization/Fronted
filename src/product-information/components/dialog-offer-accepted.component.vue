@@ -1,42 +1,62 @@
-<template>
-  <div v-if="visible" class="dialog-overlay">
-    <div class="dialog">
-      <div style="display: flex; justify-content: flex-end;">
-        <pv-button @click="closeDialog">
-          <img src="../../../public/toolbar/close-icon.png" height="30" width="30"/>
-        </pv-button>
-      </div>
-      <div class="dialog-container">
-        <h1>¿Estás seguro que deseas declinar esta oferta?</h1>
-        <p>
-          Recuerda que una vez declines la oferta, el usuario no podrá volver a hacer una por está publicación
-        </p>
-          <pv-button @click="confirmDelete" class="b-login-dialog"><b>Confirmar</b></pv-button>
-      </div>
-    </div>
-  </div>
-</template>
-
 <script>
+
 export default {
-  name: 'dialog-denied-offer',
+  name: "dialog-offer-accepted",
   props: {
     visible: {
       type: Boolean,
       required: true
+    },
+    productName: {
+      type: String,
+      required: true
+    },
+    userName: {
+      type: String,
+      required: true
+    }
+  },
+  data(){
+    return{
+      errors: [],
     }
   },
   methods: {
-    closeDialog() {
+    handleClick() {
       this.$emit('close');
+      document.body.classList.remove('no-scroll');
     },
-    confirmDelete() {
-      this.$emit('confirm');
-      this.closeDialog();
-    }
+    scrollToTop() {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    },
+    scrollToTopAndHandle(){
+      this.scrollToTop();
+      this.handleClick();
+    },
   }
-};
+}
 </script>
+
+<template>
+  <div v-if="visible" class="dialog-overlay">
+    <div class="dialog">
+      <div class="dialog-container">
+        <h1>Muchas gracias por ofrecer tu {{ productName }}</h1>
+        <p>
+          Te notificaremos el estado de tu solicitud en las siguientes horas. Ya sea que {{ userName }} acepte o decline tu oferta.
+        </p>
+        <div style="display: grid;">
+          <router-link to="/profile" @click.native="scrollToTopAndHandle" >
+            <pv-button class="b-login-dialog"><b>Confirmar</b></pv-button>
+          </router-link>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
 
 <style scoped>
 .dialog-overlay {

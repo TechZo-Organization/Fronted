@@ -1,72 +1,41 @@
 <script>
-import { userApiService } from "../login/services/user-api.service.js";
-import DialogRegisterSuccesfully from "./components/dialog-register-succesfully.component.vue";
+import { userApiService } from "../profile/services/user-api.service.js";
+import DialogChangePasswordSuccesfully from "./components/dialog-change-password-succesfully.component.vue";
 
 export default {
-  name: "register-content",
-  components: {
-    DialogRegisterSuccesfully
-  },
+  name: "change-password",
+  components: {DialogChangePasswordSuccesfully},
   data() {
     return {
-      name: '',
-      email: '',
-      phone: '',
       password: '',
       confirmPassword: '',
       showPassword: false,
       showConfirmPassword: false,
       userService: new userApiService(),
       errorMessage: '',
-      showDialog: false,
+      showDialog: false
     };
   },
   methods: {
-    async handleRegister() {
-      if (!this.validatePhone(this.phone)) {
-        this.errorMessage = 'El número de celular debe tener 9 dígitos';
-        return;
-      }
-
-      if (!this.validatePassword(this.password)) {
-        this.errorMessage = 'La contraseña debe incluir al menos 2 números, un carácter especial y una letra mayúscula';
-        return;
-      }
-
+    handleChangePassword() {
       if (this.password !== this.confirmPassword) {
         this.errorMessage = 'Las contraseñas no coinciden';
         return;
       }
 
-      try {
-        const response = await this.userService.getUser();
-        const users = response.data;
-        const newUser = {
-          name: this.name,
-          email: this.email,
-          phone: this.phone,
-          password: this.password,
-          membership: "1",
-          membership_date: '',
-          img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR6lqpQj3oAmc1gtyM78oJCbTaDrD7Fj9NRlceOPDZiHA&s",
-          id: (users.length + 1).toString(),
-          favorites: []
-        };
+      this.errorMessage = '';
 
-        await this.userService.registerUser(newUser);
-        this.showDialog = true;  // Mostrar el diálogo de registro exitoso
-      } catch (error) {
-        console.error(error);
-        this.errorMessage = 'Error al registrar el usuario';
-      }
-    },
-    validatePhone(phone) {
-      const phoneRegex = /^\d{9}$/;
-      return phoneRegex.test(phone);
-    },
-    validatePassword(password) {
-      const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*\d.*\d).{8,}$/;
-      return passwordRegex.test(password);
+      const userId = localStorage.getItem('id-temporal');
+      this.userService.changePassword(userId, this.password)
+          .then(() => {
+            this.showDialog = true;
+            this.password = '';
+            this.confirmPassword = '';
+            localStorage.removeItem('id-temporal');
+          })
+          .catch((error) => {
+            this.errorMessage = 'Error al cambiar la contraseña';
+          });
     },
     togglePasswordVisibility() {
       this.showPassword = !this.showPassword;
@@ -87,34 +56,13 @@ export default {
     </div>
     <div class="login-content">
       <div class="login-form">
-        <form @submit.prevent="handleRegister" class="form-container">
+        <form @submit.prevent="handleChangePassword" class="form-container">
           <br>
           <img src="../../public/login/cambiazo-logo.png" height="50%"/>
           <div class="inputs-register">
-            <h1 style="font-size: 25px; font-weight: 1000px; margin-bottom: 15px;">Registrarse</h1>
-            <router-link to="/home">
-              <pv-button class="b-register-google">
-                <img src="../../public/login/google-icon.png" alt="Google image" width="18px" style="margin-right: 5px;">Registrarse con Google
-              </pv-button>
-            </router-link>
-            <div class="hr-container">
-              <hr class="hr-line">
-              <h1>o registrarse con correo</h1>
-              <hr class="hr-line">
-            </div>
+            <h1 style="font-size: 25px; font-weight: 1000px; margin-bottom: 15px;">Cambiar Contraseña</h1>
+
             <div class="input-content">
-              <div>
-                <label><b>Nombre</b></label><br>
-                <pv-input v-model="name" required class="input" type="text"></pv-input>
-              </div>
-              <div>
-                <label><b>Correo electrónico</b></label><br>
-                <pv-input v-model="email" required class="input" type="text"></pv-input>
-              </div>
-              <div>
-                <label><b>Número de celular</b></label><br>
-                <pv-input maxlength="9" v-model="phone" required class="input" type="text"></pv-input>
-              </div>
               <div>
                 <label><b>Contraseña</b></label><br>
                 <div class="input-group">
@@ -134,19 +82,13 @@ export default {
                 </div>
               </div>
               <p v-if="errorMessage" style="color: red;">{{ errorMessage }}</p>
-              <div class="checkbox-terms">
-                <label for="terms&conditions"><input id="terms&conditions" type="checkbox" required> Aceptar <span style="color:#ffd146;">terminos y condiciones</span></label>
-              </div>
-              <pv-button type="submit" class="submit">Registrarse</pv-button>
-              <router-link to="/log-in">
-                <pv-button class="create-account">¿Ya tienes una cuenta? <span style="color:#ffd146; margin-left: 10px;">Inicia sesión</span></pv-button>
-              </router-link>
+              <pv-button type="submit" class="submit">Cambiar</pv-button>
               <br>
             </div>
           </div>
         </form>
       </div>
-      <img src="../../public/login/background-register-image.png" class="main-image-register"/>
+      <img src="../../public/login/background-register-image.png" class="main-image-change-password"/>
     </div>
     <footer>
       <p>&copy TechZo 2024. All Rights Reserved</p>
@@ -155,10 +97,8 @@ export default {
         <a href="/privacy-policies">Política de privacidad</a>
       </div>
     </footer>
-    <dialog-register-succesfully
-        :visible="showDialog"
-        @close="showDialog = false"
-    />
+    <dialog-change-password-succesfully :visible="showDialog" @close="showDialog = false" />
+
   </div>
 </template>
 
@@ -211,9 +151,9 @@ export default {
   height: 100%
 }
 
-.main-image-register{
+.main-image-change-password{
   width: 50%;
-  height: 130vh;
+  height: 100vh;
 }
 
 footer{

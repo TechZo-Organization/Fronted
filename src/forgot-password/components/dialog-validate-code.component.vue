@@ -7,11 +7,12 @@
         </pv-button>
       </div>
       <div class="dialog-container">
-        <h1>¿Estás seguro que deseas declinar esta oferta?</h1>
-        <p>
-          Recuerda que una vez declines la oferta, el usuario no podrá volver a hacer una por está publicación
-        </p>
-          <pv-button @click="confirmDelete" class="b-login-dialog"><b>Confirmar</b></pv-button>
+        <h1>Código de Verificación</h1>
+        <p>Ingresa el código enviado a su correo electrónico</p>
+        <pv-input placeholder="- - - -" class="verify-code" v-model="code" maxlength="4"/>
+        <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
+        <p style="padding-top:25px;">Ingrese el código de 4 dígitos</p>
+          <pv-button @click="validateCode" class="b-login-dialog"><b>Verificar</b></pv-button>
       </div>
     </div>
   </div>
@@ -19,20 +20,33 @@
 
 <script>
 export default {
-  name: 'dialog-denied-offer',
+  name: 'DialogValidateCode',
   props: {
     visible: {
       type: Boolean,
       required: true
+    },
+    errorMessage: {
+      type: String,
+      default: ''
     }
+  },
+  data() {
+    return {
+      code: ''
+    };
   },
   methods: {
     closeDialog() {
       this.$emit('close');
     },
-    confirmDelete() {
-      this.$emit('confirm');
-      this.closeDialog();
+    validateCode() {
+      if (this.code.length !== 4) {
+        this.$emit('error', 'Código incorrecto');
+      } else {
+        this.$emit('validate', this.code);
+        this.code = '';
+      }
     }
   }
 };
@@ -62,6 +76,17 @@ export default {
   margin: 1rem;
 }
 
+.verify-code{
+  border: 1px solid #C2C2C2;
+  width: 40%;
+  height: 50px;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 10px;
+  align-items: center;
+  text-align: center;
+  font-size: 30px;
+}
 .dialog-container {
   padding: 1rem;
   text-align: center;
@@ -94,18 +119,9 @@ export default {
   color: #FFD146;
 }
 
-.b-register-dialog {
-  background-color: #fff;
-  border: 4px solid #FFD146;
-  border-radius: 10px;
-  padding: 0.5rem 1rem;
-  width: 200px;
-  color: #000;
-  transition: 0.43s;
-  justify-content: center;
-}
-
-.b-register-dialog:hover {
-  color: #FFD146;
+.error-message {
+  color: red;
+  text-align: center;
+  margin-top: 5px;
 }
 </style>

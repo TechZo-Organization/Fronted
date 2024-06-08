@@ -32,6 +32,8 @@ export default {
 
 .memberships-content{
   padding: 1rem 1.5rem 2rem 1.5rem;
+  min-height: 100vh;
+
 }
 
 .button-return{

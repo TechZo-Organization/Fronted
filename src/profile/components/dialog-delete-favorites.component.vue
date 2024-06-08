@@ -11,9 +11,7 @@
         <p>
           Recuerda que una vez eliminada la publicación, no se podrá deshacer.
         </p>
-        <div style="display: grid;">
           <pv-button @click="confirmDelete" class="b-login-dialog"><b>Confirmar</b></pv-button>
-        </div>
       </div>
     </div>
   </div>

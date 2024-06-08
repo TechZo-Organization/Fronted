@@ -24,6 +24,8 @@ import OngInformationContent from "../ong-information/ong-information-content.co
 import ProductCategoriesContent from "../product-categories/product-categories-content.component.vue";
 import MembershipPaymentContent from "../membership-payment/membership-payment-content.component.vue";
 import EditProfileComponent from "../profile/components/edit-profile.component.vue";
+import VerifyEmailComponent from "../forgot-password/verify-email.component.vue";
+import ChangePasswordComponent from "../forgot-password/change-password.component.vue";
 const router = createRouter({
     history: createWebHistory(),
     routes: [
@@ -46,6 +48,8 @@ const router = createRouter({
         //Login & register:
         { path: '/log-in', component: LoginContent, meta: { title: 'Log in' } },
         { path: '/register', component: RegisterContent, meta: { title: 'Register' } },
+        { path: '/verify-email', component: VerifyEmailComponent, meta: { title: 'Verify Email' } },
+        { path: '/change-password', component: ChangePasswordComponent, meta: { title: 'Change Password' } },
         //Admin:
         { path: '/admin', component: AdminContentComponent, meta: { title: 'Admin' } },
         { path: '/admin/users', component: CrudUsersComponent, meta: { title: 'Crud Users' } },
