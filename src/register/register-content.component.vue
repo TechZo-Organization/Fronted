@@ -120,7 +120,7 @@ export default {
                 <div class="input-group">
                   <pv-input v-model="password" required class="show-hide-text" :type="showPassword ? 'text' : 'password'"></pv-input>
                   <div class="show-hide">
-                    <img :src="showPassword ? '/public/login/show-icon.png' : '/public/login/hide-icon.png'" @click="togglePasswordVisibility" class="show-hide-password"/>
+                    <img :src="showPassword ? '/login/show-icon.png' : '/login/hide-icon.png'" @click="togglePasswordVisibility" class="show-hide-password"/>
                   </div>
                 </div>
               </div>
@@ -129,7 +129,7 @@ export default {
                 <div class="input-group">
                   <pv-input v-model="confirmPassword" required class="show-hide-text" :type="showConfirmPassword ? 'text' : 'password'"></pv-input>
                   <div class="show-hide">
-                    <img :src="showConfirmPassword ? '/public/login/show-icon.png' : '/public/login/hide-icon.png'" @click="toggleConfirmPasswordVisibility" class="show-hide-password"/>
+                    <img :src="showConfirmPassword ? '/login/show-icon.png' : '/login/hide-icon.png'" @click="toggleConfirmPasswordVisibility" class="show-hide-password"/>
                   </div>
                 </div>
               </div>
