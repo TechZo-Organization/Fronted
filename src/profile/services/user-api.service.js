@@ -8,8 +8,6 @@ const http = axios.create({
 
 export class userApiService {
 
-    validEmail = false;
-    verificationCode = '';
 
     getUsers() {
         return http.get("/users");
@@ -25,5 +23,8 @@ export class userApiService {
     }
     changePassword(id, newPassword) {
         return http.put(`/users/${id}`, { password: newPassword });
+    }
+    changeMembership(id, newMembership){
+        return http.put(`/users/${id}`, { membership: newMembership });
     }
 }
