@@ -87,7 +87,7 @@ import { userApiService } from "../services/user-api.service";
 import { offerApiService } from "../../publisher-profile/services/offers-api.service";
 import { Offer } from "../../publisher-profile/model/offer.entity";
 import DialogDeniedOffer from "./dialog-denied-offer.component.vue";
-import DialogAcceptedOffer from "./dialog-accepted-offer.vue";
+import DialogAcceptedOffer from "./dialog-accepted-offer.component.vue";
 
 export default {
   name: 'UserGetOffers',
