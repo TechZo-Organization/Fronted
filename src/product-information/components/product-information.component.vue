@@ -120,8 +120,8 @@ export default {
           </div>
         </div>
       </div>
-      <div class="user-content">
-        <div class="user-image">
+      <div class="user-content-product-information">
+        <div class="user-image-product-information">
           <img :src="user.img" alt="User Image" />
         </div>
         <div class="user-details">
@@ -269,13 +269,13 @@ export default {
   border-radius: 10px;
 }
 
-.user-content{
+.user-content-product-information{
   width: 30%;
   height: 100%;
   box-shadow: 0px 0px 20px 0px #cccccc;
 }
 
-.user-image{
+.user-image-product-information{
   background-color: #FFD146;
   padding: 2rem;
   display: flex;
@@ -283,7 +283,7 @@ export default {
   align-items: center;
 }
 
-.user-image img{
+.user-image-product-information img{
   border-radius: 50%;
   border: 4px solid #fff;
   width: 120px;
@@ -380,7 +380,7 @@ export default {
     width: 100%;
   }
 
-  .user-content{
+  .user-content-product-information{
     width: 100%;
   }
 }

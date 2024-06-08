@@ -7,6 +7,10 @@ const http = axios.create({
 
 
 export class userApiService {
+
+    validEmail = false;
+    verificationCode = '';
+
     getUsers() {
         return http.get("/users");
     }
