@@ -186,7 +186,7 @@ export default {
             <div class="publisher-rating">
               <div class="rating-list">
                 <div v-for="star in getStarRating(averageScore)" :key="star.icon">
-                  <img :src="star.icon === 'star' ? '../../../public/publisher-profile/full-star-icon.png' : star.icon === 'star_half' ? '../../../public/publisher-profile/half-star-icon.png' : '../../../public/publisher-profile/none-star-icon.png'" height="20" width="20" alt="Star">
+                  <img :src="star.icon === 'star' ? '/public/publisher-profile/full-star-icon.png' : star.icon === 'star_half' ? '/public/publisher-profile/half-star-icon.png' : '/public/publisher-profile/none-star-icon.png'" height="20" width="20" alt="Star">
                 </div>
               </div>
               <p>{{ reviews.length }} Reseña(s)</p>
@@ -208,7 +208,7 @@ export default {
             <div class="review-rating">
               <div class="stars-list">
                 <div v-for="star in getStarRating(review.score)" :key="star.icon">
-                  <img :src="star.icon === 'star' ? '../../../public/publisher-profile/full-star-icon.png' : star.icon === 'star_half' ? '../../../public/publisher-profile/half-star-icon.png' : '../../../public/publisher-profile/none-star-icon.png'" height="20" width="20" alt="Star">
+                  <img :src="star.icon === 'star' ? '/public/publisher-profile/full-star-icon.png' : star.icon === 'star_half' ? '/public/publisher-profile/half-star-icon.png' : '/public/publisher-profile/none-star-icon.png'" height="20" width="20" alt="Star">
                 </div>
               </div>
             </div>
