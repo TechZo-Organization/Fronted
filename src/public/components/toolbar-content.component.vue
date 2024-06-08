@@ -1,4 +1,5 @@
 <script>
+import {userApiService} from "../../profile/services/user-api.service.js";
 import DialogContent from "./dialog-content.component.vue";
 
 export default {
@@ -11,15 +12,28 @@ export default {
       visibleRight: false,
       showDialog: false,
       user: null,
+      apiService: new userApiService(),
+      userId: null,
     };
   },
-  mounted() {
-    const user = localStorage.getItem('user');
-    if (user) {
-      this.user = JSON.parse(user);
+  async mounted() {
+    this.userId = this.getUserIdFromLocalStorage();
+    if (this.userId) {
+      await this.fetchUserData();
     }
   },
   methods: {
+    getUserIdFromLocalStorage() {
+      return localStorage.getItem('user');
+    },
+    async fetchUserData() {
+      try {
+        const response = await this.apiService.getUserById(this.userId);
+        this.user = response.data;
+      } catch (error) {
+        console.error('Error fetching user:', error);
+      }
+    },
     toggleDrawer() {
       this.visibleRight = !this.visibleRight;
     },
@@ -41,6 +55,16 @@ export default {
     closeDialog() {
       this.showDialog = false;
       document.body.classList.remove('no-scroll');
+    },
+    scrollToTop() {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    },
+    closeSidebarAndScrollToTop() {
+      this.closeSidebar();
+      this.scrollToTop();
     }
   }
 };
@@ -56,22 +80,22 @@ export default {
       </template>
       <template #center>
         <div class="center">
-          <router-link to="/home" class="yellow-link">Inicio</router-link>
-          <router-link to="/donations" class="yellow-link">Donaciones</router-link>
-          <router-link to="/memberships" class="yellow-link">Membresías</router-link>
+          <router-link to="/home" class="yellow-link" @click.native="scrollToTop">Inicio</router-link>
+          <router-link to="/donations" class="yellow-link" @click.native="scrollToTop">Donaciones</router-link>
+          <router-link to="/memberships" class="yellow-link" @click.native="scrollToTop">Membresías</router-link>
         </div>
       </template>
       <template #end>
         <div class="end">
-          <pv-button @click="handlePublish" class="b-post"><b>Publicar</b></pv-button>
+          <pv-button @click="handlePublish" class="b-post" @click.native="scrollToTop"><b>Publicar</b></pv-button>
           <div v-if="user">
-            <router-link to="/profile">
+            <router-link to="/profile" @click.native="scrollToTop">
               <pv-button class="user-img-button">
                 <img :src="user.img" alt="User Image" class="user-img" />
               </pv-button>
             </router-link>
           </div>
-          <router-link to="/log-in" v-else>
+          <router-link to="/log-in" v-else @click.native="scrollToTop">
             <pv-button class="b-login"><b>Iniciar sesión</b></pv-button>
           </router-link>
         </div>
@@ -80,16 +104,16 @@ export default {
     </pv-toolbar>
     <pv-sidebar v-model:visible="visibleRight" header="Right Sidebar" position="right" class="top-sidebar bg-white p-4">
       <div class="sidebar-content">
-        <router-link to="/home" class="yellow-link" @click.native="closeSidebar"><h1>Inicio</h1></router-link><br>
-        <router-link to="/donations" class="yellow-link" @click.native="closeSidebar"><h1>Donaciones</h1></router-link><br>
-        <router-link to="/memberships" class="yellow-link" @click.native="closeSidebar"><h1>Membresías</h1></router-link><br>
+        <router-link to="/home" class="yellow-link" @click.native="closeSidebarAndScrollToTop"><h1>Inicio</h1></router-link><br>
+        <router-link to="/donations" class="yellow-link" @click.native="closeSidebarAndScrollToTop"><h1>Donaciones</h1></router-link><br>
+        <router-link to="/memberships" class="yellow-link" @click.native="closeSidebarAndScrollToTop"><h1>Membresías</h1></router-link><br>
         <div style="padding-top: 2rem;">
           <pv-button @click="handlePublishSidebar" class="b-post-sidebar"><b>Publicar</b></pv-button>
-          <router-link to="/log-in" v-if="!user" @click.native="closeSidebar">
+          <router-link to="/log-in" v-if="!user" @click.native="closeSidebarAndScrollToTop">
             <pv-button class="b-login-sidebar"><b>Iniciar sesión</b></pv-button>
           </router-link>
           <div v-else>
-            <router-link to="/profile" @click.native="closeSidebar">
+            <router-link to="/profile" @click.native="closeSidebarAndScrollToTop">
               <pv-button class="b-profile-sidebar"><b>Ver perfil</b></pv-button>
             </router-link>
           </div>
@@ -166,6 +190,8 @@ export default {
   width: 65px;
   height: 65px;
   border: 3px solid #FFD146;
+  object-fit:cover;
+  object-position:center;
 }
 
 .user-img-button {

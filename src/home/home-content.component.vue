@@ -27,6 +27,12 @@ export default {
     this.getAllProducts();
   },
   methods: {
+    scrollToTop() {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    },
     getAllProductCategories() {
       this.homeApi.getCategoriesProduct()
           .then((response) => {
@@ -78,16 +84,6 @@ export default {
 
 <template>
   <div class="home-content" style="background-color: #F8F7F4">
-    <br>
-    <br>
-    <br>
-    <div class="search-form">
-      <pv-input v-model="searchProduct" class="input-search" placeholder="Buscar..."></pv-input>
-      <pv-button class="b-clear-category" @click="clearCategoryFilter">Eliminar filtro</pv-button>
-    </div>
-    <div class="categories-container">
-      <categories-product :category_products="category_products" @category-selected="filterByCategory"></categories-product>
-    </div>
     <div class="boost-container">
       <div class="boost-container-slide">
         <card-boost-product :boost_products="boost_products" :categories="category_products"></card-boost-product>
@@ -99,12 +95,19 @@ export default {
     <div class="title-container">
       <h1>Últimos trueques publicados</h1>
     </div>
+    <div class="search-form">
+      <pv-input v-model="searchProduct" class="input-search" placeholder="Buscar..."></pv-input>
+      <pv-button class="b-clear-category" @click="clearCategoryFilter">Eliminar filtro</pv-button>
+    </div>
+    <div class="categories-container">
+      <categories-product :category_products="category_products" @category-selected="filterByCategory"></categories-product>
+    </div>
     <div class="products-container">
       <product-list v-if="filteredProducts.length" :products="filteredProducts" :categories="category_products"></product-list>
-      <div v-else>No se encontraron productos.</div>
+      <div v-else class="no-products"><h1>No se encontraron productos.</h1></div>
     </div>
     <div class="more-products-container">
-      <router-link to="/admin">
+      <router-link to="/product-categories" @click.native="scrollToTop">
         <pv-button class="b-more-products">Ver más</pv-button>
       </router-link>
     </div>
@@ -112,8 +115,20 @@ export default {
 </template>
 
 <style scoped>
+
+.no-products {
+  margin-top: 3.5rem;
+  margin-bottom: 2rem;
+}
+
+.no-products h1{
+  font-size: 25px;
+  font-weight: bolder;
+  text-align: center;
+}
+
 .search-form {
-  padding: 5rem 20rem 1rem 20rem;
+  padding: 3.5rem 20rem 1rem 20rem;
   text-align: center;
   display: flex;
   gap: 10px;
@@ -148,7 +163,7 @@ export default {
 }
 
 .categories-container {
-  padding: 1rem 10rem 3rem 10rem;
+  padding: 1rem 10rem 0rem 10rem;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -166,8 +181,8 @@ export default {
 }
 
 .boost-container {
-  padding-top: 2rem;
-  padding-bottom: 6rem;
+  padding-top: 10rem;
+  padding-bottom: 5rem;
   overflow: hidden;
   display: flex;
   flex-wrap: nowrap;
@@ -176,7 +191,7 @@ export default {
 .boost-container-slide {
   display: flex;
   flex-wrap: nowrap;
-  animation: 20s slide infinite linear;
+  animation: 50s slide infinite linear;
 }
 
 .title-container {
@@ -185,8 +200,7 @@ export default {
   font-weight: bolder;
   font-size: 25px;
   padding: 0.8rem;
-  margin-top: 3rem;
-  margin-bottom: 3rem;
+  margin-top: 1rem;
   box-shadow: 0px 0px 15px 0px #cccccc;
 }
 

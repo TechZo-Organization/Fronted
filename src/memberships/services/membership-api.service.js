@@ -9,4 +9,10 @@ export class membershipsApiService {
     getMemberships() {
         return http.get('/memberships');
     }
+    deleteMemberships(id){
+        return http.delete(`/memberships/${id}`)
+    }
+    getMembershipsById(id){
+        return http.get(`/memberships/${id}`)
+    }
 }

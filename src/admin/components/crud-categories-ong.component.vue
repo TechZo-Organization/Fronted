@@ -139,6 +139,10 @@ export default {
   background-color: #fff;
 }
 
+.input:active{
+  border: 1px solid #FFD146;
+}
+
 .b-add{
   background-color: #ffd146;
   padding: 0.25rem 2rem 0.25rem 2rem;

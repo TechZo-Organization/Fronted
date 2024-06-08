@@ -1,6 +1,14 @@
 <script>
 export default {
   name:"footer-content",
+  methods:{
+    scrollToTop() {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
+  }
 }
 </script>
 
@@ -11,9 +19,9 @@ export default {
         <img src="../../../public/logo/cambiazo-logo.png" height="45" width="220"/>
       </div>
       <div class="link-section">
-        <router-link to="/home" class="yellow-link">Inicio</router-link><br><br>
-        <router-link to="/donations" class="yellow-link">Donaciones</router-link><br><br>
-        <router-link to="/memberships" class="yellow-link">Membresías</router-link><br><br>
+        <router-link to="/home" class="yellow-link" @click.native="scrollToTop">Inicio</router-link><br><br>
+        <router-link to="/donations" class="yellow-link" @click.native="scrollToTop">Donaciones</router-link><br><br>
+        <router-link to="/memberships" class="yellow-link" @click.native="scrollToTop">Membresías</router-link><br><br>
       </div>
       <div class="media-section">
         <h4>Redes sociales:</h4>
@@ -35,10 +43,10 @@ export default {
     </div>
     <div class="f-row2">
       <div class="help-links">
-        <router-link to="/help" class="gray-link">Ayuda</router-link>
-        <router-link to="/contact-us" class="gray-link">Contacto</router-link>
-        <router-link to="/terms-use" class="gray-link">Condiciones de uso</router-link>
-        <router-link to="/privacy-policies" class="gray-link">Políticas de privacidad</router-link>
+        <router-link to="/help" class="gray-link" @click.native="scrollToTop">Ayuda</router-link>
+        <router-link to="/contact-us" class="gray-link" @click.native="scrollToTop">Contacto</router-link>
+        <router-link to="/terms-use" class="gray-link" @click.native="scrollToTop">Condiciones de uso</router-link>
+        <router-link to="/privacy-policies" class="gray-link" @click.native="scrollToTop">Políticas de privacidad</router-link>
       </div>
       <h4 style="color: #FFD146">&copy; TechZo 2024. Todos los derechos reservados.</h4>
     </div>
