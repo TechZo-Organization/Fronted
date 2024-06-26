@@ -5,42 +5,55 @@ export default {
   name: 'card-ong',
   props:{
     ong: Ong
+  },
+  methods: {
+    scrollToTop() {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    },
+    getPenultimateAddressPart(text) {
+      const parts = text.split(',').map(part => part.trim());
+      return parts.length > 1 ? parts[parts.length - 3] : text;
+    }
   }
 }
 </script>
 
 <template>
-  <pv-card>
-    <template #title>
-      <div class="card-container">
-        <div class="card-image">
-          <img :src="ong.logo" alt="Logo de la ONG" />
-        </div>
-        <div class="card-main">
-          <div class="card-title">
-            <div>
-              <h1>{{ ong.name }}</h1>
+  <router-link :to="`/ong-information/${ong.id}`" @click.native="scrollToTop">
+    <pv-card>
+      <template #title>
+        <div class="card-container">
+          <div class="card-image">
+            <img :src="ong.urlLogo" alt="Logo de la ONG" />
+          </div>
+          <div class="card-main">
+            <div class="card-title">
+              <div>
+                <h1>{{ ong.name }}</h1>
+              </div>
+              <div class="card-location">
+                <img src="../../../public/donations/location-icon.png" style="width: 3vh; height: 3vh; margin-right: 2px;"/>
+                <h1>{{ getPenultimateAddressPart(ong.address) }}</h1>
+              </div>
             </div>
-            <div class="card-location">
-              <img src="../../../public/donations/location-icon.png" style="width: 3vh; height: 3vh; margin-right: 2px;"/>
-              <h1>{{ ong.address["district"] }}</h1>
+            <div class="card-content">
+              <div>
+                <h1>{{ ong.type }}</h1>
+              </div>
             </div>
           </div>
-          <div class="card-content">
-            <div>
-              <h1>{{ ong.type }}</h1>
-            </div>
-          </div>
         </div>
-      </div>
-    </template>
-    <template #content>
-    </template>
-  </pv-card>
+      </template>
+      <template #content>
+      </template>
+    </pv-card>
+  </router-link>
 </template>
 
 <style scoped>
-
 .card-container{
   background-color: #fff;
   display: flex;
@@ -94,5 +107,4 @@ export default {
     display: grid;
   }
 }
-
 </style>

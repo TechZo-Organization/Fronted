@@ -5,61 +5,83 @@ export default {
     boost_products: {
       type: Array,
       required: true
+    },
+    categories: {
+      type: Array,
+      required: true
     }
   },
+  methods: {
+    getCategoryName(categoryId) {
+      const category = this.categories.find(cat => cat.id === categoryId);
+      return category ? category.name : 'Unknown';
+    },
+    scrollToTop() {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    },
+  }
 }
 </script>
 
 <template>
-  <div v-for="boost_product in boost_products"  :key="boost_product.id" class="boost-products-container">
-    <pv-card class="card-boost-container" v-if="boost_product.boost === true">
-      <template #content>
-        <div class="card-main">
-          <div>
-            <img :src="boost_product.images" class="boost_product">
+  <div v-for="boost_product in boost_products" :key="boost_product.id" class="boost-products-container">
+    <router-link :to="`/product-information/${boost_product.id}`" @click.native="scrollToTop">
+      <pv-card class="card-boost-container" v-if="boost_product.boost">
+        <template #content>
+          <div class="card-main">
+            <div>
+              <img :src="boost_product.images[0]" class="boost_product">
+            </div>
+            <div class="card-content-boost">
+              <div class="card-location">
+                <img src="../../../public/donations/location-icon.png" style="width: 18px; height: 18px"/>
+                <p>{{ boost_product.location.departament }}</p>
+              </div>
+              <div class="card-title-boost">
+                <h1>{{ boost_product.product_name }}</h1>
+                <h2>{{ getCategoryName(boost_product.category_id) }}</h2>
+              </div>
+              <div class="card-exchange-boost">
+                <h3>{{ boost_product.change_for }}</h3>
+                <h4>s/.{{ boost_product.price }} valor apróx</h4>
+              </div>
+            </div>
           </div>
-          <div class="card-content">
-            <div class="card-location">
-              <img src="../../../public/donations/location-icon.png" style="width: 15px; height: 15px"/>
-              <p>{{ boost_product.contact_information["departament"] }}</p>
-            </div>
-            <div class="card-title">
-              <h1>{{ boost_product.product_name }}</h1>
-              <h2>{{boost_product.category["name"]}}</h2>
-            </div>
-            <div class="card-exchange">
-              <h3>{{boost_product.change_for}}</h3>
-              <h4>s/.{{boost_product.price}} valor apróx</h4>
-            </div>
-          </div>
-        </div>
-      </template>
-    </pv-card>
+        </template>
+      </pv-card>
+    </router-link>
   </div>
 </template>
 
 <style scoped>
 
 .card-boost-container {
-  height: auto;
-  width: 260px;
+  height: 340px;
+  width: 280px;
   margin-left: 1rem;
+  cursor: pointer;
 }
 
 .boost_product{
-  height: 60vh;
-  filter: brightness(0.5);
+  height: 340px;
+  width: 280px;
+  filter: brightness(0.8);
+  object-fit: cover;
+  object-position: center;
 }
 
 .card-main {
-  height: 55vh;
-  width: 100%;
+  height: 340px;
+  width: 280px;
   background-size: cover;
   background-position: center;
   position: relative;
 }
 
-.card-content {
+.card-content-boost {
   position: absolute;
   bottom: 0;
   left: 0;
@@ -71,14 +93,15 @@ export default {
   display: flex;
   text-align: right;
   align-items: center;
+  font-weight: bold;
   justify-content: right;
   gap: 5px;
-  margin-bottom: 2rem;
+  margin-bottom: 100px;
 }
 
-.card-title h1{
-  text-align: justify;
-  font-size: 18px;
+.card-title-boost h1{
+  text-align: left;
+  font-size: 20px;
   display: -webkit-box;
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
@@ -88,15 +111,17 @@ export default {
   font-weight: bolder;
 }
 
-.card-title h2{
+.card-title-boost h2{
   margin-bottom: 10px;
-  border: 1px solid #ffd146;
+  border: 2px solid #ffd146;
+  color:#ffd146;
+  font-weight:bold;
   border-radius: 10px;
   text-align: center;
   width: 130px;
 }
 
-.card-exchange h3{
+.card-exchange-boost h3{
   font-size: 13px;
   text-align: justify;
   display: -webkit-box;
@@ -110,12 +135,12 @@ export default {
   font-weight: bolder;
 }
 
-.card-exchange h4{
+.card-exchange-boost h4{
   font-weight: bolder;
   color: #ffd146;
 }
 
-.card-exchange{
+.card-exchange-boost{
   background-color: rgba(0, 0, 0, 0.7);
   text-align: center;
   padding: 10px;

@@ -7,10 +7,14 @@ const http = axios.create({
 
 export class donationsApiService {
     getCategories() {
-        return http.get('/categories-ongs');
+        return http.get('/api/v1/category');
     }
 
     getOngs() {
-        return http.get('/ongs');
+        return http.get('/api/v1/ong');
+    }
+
+    getOngById(id) {
+        return http.get(`/api/v1/ong/${id}`);
     }
 }
