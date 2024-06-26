@@ -2,10 +2,11 @@
 import { homeApiService } from "../../home/services/home-api.service.js";
 import { Product } from "../../home/model/product.entity.js";
 import DialogDeletePost from "./dialog-delete-post.component.vue";
+import DialogEditPost from "./dialog-edit-post.component.vue";
 
 export default {
   name: 'post-profile',
-  components: {DialogDeletePost},
+  components: {DialogEditPost, DialogDeletePost},
   data() {
     return {
       products: [],
@@ -13,7 +14,9 @@ export default {
       loading: true,
       error: null,
       dialogVisible: false,
-      selectedId: null
+      selectedId: null,
+      editDialogVisible: false,  // Estado para el diálogo de edición
+      selectedProduct: null
     };
   },
   methods: {
@@ -68,6 +71,11 @@ export default {
     openConfirm(id){
       this.selectedId = id;
       this.dialogVisible = true;
+      document.body.classList.add('no-scroll');
+    },
+    closeConfirm() {
+      this.dialogVisible = false;
+      document.body.classList.remove('no-scroll');
     },
     confirmDelete(id) {
       try {
@@ -79,7 +87,9 @@ export default {
       }
     },
     editPosts(id){
-
+      this.selectedProduct = this.products.find(product => product.id === id);
+      this.editDialogVisible = true;
+      document.body.classList.add('no-scroll');
     }
   },
   async created() {
@@ -142,12 +152,19 @@ export default {
         </div>
       </div>
     </div>
+    <dialog-edit-post
+        :visible="editDialogVisible"
+        :product="selectedProduct"
+        @close="editDialogVisible = false"
+        @updated="fetchProducts()"
+    />
     <dialog-delete-post
         :visible="dialogVisible"
-        @close="dialogVisible = false"
+        @close="closeConfirm()"
         @confirm="confirmDelete(selectedId)"
     />
   </div>
+
 </template>
 
 <style scoped>
