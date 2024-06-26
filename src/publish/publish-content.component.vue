@@ -35,4 +35,17 @@ export default {
   border-radius: 40px 0px 0px 0px;
   box-shadow: 0px 0px 20px 0px #c6c6c6;
 }
+
+@media only screen and (max-width: 900px) {
+  .publish-content {
+    justify-content: center;
+    padding-top: 8rem;
+    padding-bottom: 3rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  .publish-title {
+    font-size: 25px;
+  }
+}
 </style>

@@ -10,7 +10,15 @@ export class userApiService {
         return http.get('/users');
     }
 
-    loginUser(email, password) {
-        return http.post('/login', { email, password });
+    getUserById(userId) {
+        return http.get(`/users/${userId}`);
+    }
+
+    registerUser(user) {
+        return http.post('/users', user);
+    }
+
+    updateUser(userId, userData) {
+        return http.put(`/users/${userId}`, userData);
     }
 }

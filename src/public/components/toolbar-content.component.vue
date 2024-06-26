@@ -1,4 +1,5 @@
 <script>
+import {userApiService} from "../../profile/services/user-api.service.js";
 import DialogContent from "./dialog-content.component.vue";
 
 export default {
@@ -11,15 +12,28 @@ export default {
       visibleRight: false,
       showDialog: false,
       user: null,
+      apiService: new userApiService(),
+      userId: null,
     };
   },
-  mounted() {
-    const user = localStorage.getItem('user');
-    if (user) {
-      this.user = JSON.parse(user);
+  async mounted() {
+    this.userId = this.getUserIdFromLocalStorage();
+    if (this.userId) {
+      await this.fetchUserData();
     }
   },
   methods: {
+    getUserIdFromLocalStorage() {
+      return localStorage.getItem('user');
+    },
+    async fetchUserData() {
+      try {
+        const response = await this.apiService.getUserById(this.userId);
+        this.user = response.data;
+      } catch (error) {
+        console.error('Error fetching user:', error);
+      }
+    },
     toggleDrawer() {
       this.visibleRight = !this.visibleRight;
     },
@@ -176,6 +190,8 @@ export default {
   width: 65px;
   height: 65px;
   border: 3px solid #FFD146;
+  object-fit:cover;
+  object-position:center;
 }
 
 .user-img-button {

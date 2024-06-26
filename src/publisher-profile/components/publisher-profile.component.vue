@@ -64,8 +64,8 @@ export default {
             review.get_user_id,
             review.give_user_id
         ));
-        await this.fetchReviewerNames(); // Añadir await aquí
-        this.calculateAverageScore(); // Calcular el puntaje promedio después de obtener las reseñas
+        await this.fetchReviewerNames();
+        this.calculateAverageScore();
       } catch (error) {
         console.error("Error fetching user reviews:", error);
       }
@@ -143,7 +143,7 @@ export default {
         <h2 class="subtitle-products">Últimos trueques publicados</h2>
         <div class="list-products">
           <router-link v-for="product in products" :key="product.id" :to="`/product-information/${product.id}`" @click.native="scrollToTop">
-            <pv-card class="card-container" v-if="!product.boost">
+            <pv-card class="card-container" >
               <template #title>
                 <img v-if="product.images && product.images.length" :src="product.images[0]" alt="Imagen del producto" class="product-image">
                 <div v-else class="no-image-placeholder">No image available</div>
@@ -186,7 +186,7 @@ export default {
             <div class="publisher-rating">
               <div class="rating-list">
                 <div v-for="star in getStarRating(averageScore)" :key="star.icon">
-                  <img :src="star.icon === 'star' ? '../../../public/publisher-profile/full-star-icon.png' : star.icon === 'star_half' ? '../../../public/publisher-profile/half-star-icon.png' : '../../../public/publisher-profile/none-star-icon.png'" height="20" width="20" alt="Star">
+                  <img :src="star.icon === 'star' ? '/publisher-profile/full-star-icon.png' : star.icon === 'star_half' ? '/publisher-profile/half-star-icon.png' : '/publisher-profile/none-star-icon.png'" height="20" width="20" alt="Star">
                 </div>
               </div>
               <p>{{ reviews.length }} Reseña(s)</p>
@@ -208,7 +208,7 @@ export default {
             <div class="review-rating">
               <div class="stars-list">
                 <div v-for="star in getStarRating(review.score)" :key="star.icon">
-                  <img :src="star.icon === 'star' ? '../../../public/publisher-profile/full-star-icon.png' : star.icon === 'star_half' ? '../../../public/publisher-profile/half-star-icon.png' : '../../../public/publisher-profile/none-star-icon.png'" height="20" width="20" alt="Star">
+                  <img :src="star.icon === 'star' ? '/publisher-profile/full-star-icon.png' : star.icon === 'star_half' ? '/publisher-profile/half-star-icon.png' : '/publisher-profile/none-star-icon.png'" height="20" width="20" alt="Star">
                 </div>
               </div>
             </div>
@@ -394,6 +394,8 @@ export default {
   border: 4px solid #fff;
   width: 120px;
   height: 120px;
+  object-position: center;
+  object-fit:cover;
 }
 
 .publisher-details{

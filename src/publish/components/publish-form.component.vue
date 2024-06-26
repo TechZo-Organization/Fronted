@@ -1,9 +1,14 @@
 <script>
-import {publishApiService} from "../services/publish-api.service.js";
-import {homeApiService} from "../../home/services/home-api.service.js";
+import axios from 'axios';
+import { environment } from '../../../environments/environment.js';
+import { publishApiService } from '../services/publish-api.service.js';
+import { homeApiService } from '../../home/services/home-api.service.js';
+import {userApiService} from "../../login/services/user-api.service.js";
+import DialogPublish from "../../public/components/dialog-publish.component.vue";
 
 export default {
   name: 'publish-form',
+  components: {DialogPublish},
   data() {
     return {
       countries: [],
@@ -16,10 +21,27 @@ export default {
       selectedCategory: null,
       apiService: new publishApiService(),
       homeService: new homeApiService(),
+      userService: new userApiService(),
       acceptedPrivacyPolicy: false,
       boostOrNot: false,
       uploadedImages: [],
       visible: false,
+      imagesUrl: [],
+      files: [],
+      userData: {
+        name: '',
+        email: '',
+        phone: '',
+        membership: '',
+      },
+      productName: '',
+      email: '',
+      phone: '',
+      description: '',
+      changeFor: '',
+      price: '',
+      showDialog: false,
+      boostOrNotDisabled: false
     };
   },
   methods: {
@@ -39,6 +61,22 @@ export default {
         console.error('Error fetching categories:', error);
       }
     },
+    async fetchUserData() {
+      try {
+        const response = await this.userService.getUser();
+        const userId = localStorage.getItem('user');
+        const user = response.data.find(user => user.id === userId);
+        this.userData = {
+          name: user.name,
+          email: user.email,
+          phone: user.phone,
+          membership: user.membership
+        };
+        this.boostOrNotDisabled = user.membership === '1';
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    },
     onCountryChange() {
       if (this.selectedCountry) {
         this.departments = this.selectedCountry.departments;
@@ -55,10 +93,11 @@ export default {
     },
     handleImageUpload(event) {
       const files = event.target.files;
-      if (files.length + this.uploadedImages.length > 8) {
-        alert('Solo puedes subir hasta 8 imágenes.');
+      if (files.length + this.uploadedImages.length > 1) {
+        alert('Solo puedes subir una imagen');
         return;
       }
+      this.files = files;
       for (let i = 0; i < files.length; i++) {
         const reader = new FileReader();
         reader.onload = (e) => {
@@ -67,18 +106,71 @@ export default {
         reader.readAsDataURL(files[i]);
       }
     },
+    async uploadImage() {
+      const api = "https://api.imgbb.com/1/upload?expiration=300&key=e20a8b081ea288c51254cd9dca20515c&name=";
+      for (let file of this.files) {
+        const url = api + file.name;
+        const data = new FormData();
+        data.append('image', file);
+
+        try {
+          const response = await fetch(url, { method: 'post', body: data });
+          const responseData = await response.json();
+          this.imagesUrl.push(responseData.data.url);
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    },
     removeImage(index) {
       this.uploadedImages.splice(index, 1);
+    },
+    closeDialog() {
+      this.showDialog = false;
+      document.body.classList.remove('no-scroll');
     },
     async submitForm() {
       if (this.$refs.form.checkValidity()) {
         this.visible = true;
+        this.showDialog = true;
+        document.body.classList.add('no-scroll');
+        await this.uploadImage();
+        console.log(this.imagesUrl);
+
+        const userId = localStorage.getItem('user');
+        const response = await this.homeService.getProduct();
+        const productCount = response.data.length;
+
+        const productData = {
+          id: productCount + 1,
+          user_id: userId,
+          category_id: this.selectedCategory.id,
+          product_name: this.productName,
+          description: this.description,
+          change_for: this.changeFor,
+          price: this.price,
+          images: this.imagesUrl,
+          boost: this.boostOrNot,
+          location: {
+            country: this.selectedCountry.country,
+            departament: this.selectedDepartment.name,
+            district: this.selectedCity.name,
+          },
+        };
+
+        try {
+          await axios.post(`${environment.baseUrl}/products`, productData);
+          console.log('Product created successfully');
+        } catch (error) {
+          console.error('Error creating product:', error);
+        }
       }
     },
   },
-  mounted() {
-    this.fetchCountries();
-    this.fetchCategories();
+  async mounted() {
+    await this.fetchCountries();
+    await this.fetchCategories();
+    await this.fetchUserData();
   }
 };
 </script>
@@ -94,13 +186,13 @@ export default {
             </div>
             <div class="inputs-publish">
               <label><b>Nombre</b></label><br>
-              <pv-input required class="input" type="text"></pv-input>
+              <pv-input v-model="userData.name" required class="input disabled-dropdown" type="text" disabled></pv-input>
               <br><br>
               <label><b>Correo electrónico</b></label><br>
-              <pv-input required class="input" type="email"></pv-input>
+              <pv-input v-model="userData.email" required class="input disabled-dropdown" type="email" disabled></pv-input>
               <br><br>
               <label><b>Teléfono</b></label><br>
-              <pv-input required class="input" type="text"></pv-input>
+              <pv-input v-model="userData.phone" required class="input disabled-dropdown" type="text" disabled></pv-input>
               <br><br>
               <label><b>País</b></label><br>
               <pv-dropdown
@@ -142,10 +234,11 @@ export default {
           <div class="row-form">
             <div class="title-boost">
               <div class="icon-title">
-                <img src="../../../public/publish/boost-icon.png" height="40" width="40"/>                <h1>Boost de Visibilidad</h1>
+                <img src="../../../public/publish/boost-icon.png" height="40" width="40"/>
+                <h1>Boost de Visibilidad</h1>
               </div>
               <div class="toggle-option">
-                <pv-toggle-button v-model="boostOrNot" onLabel="On" offLabel="Off" class="b-toggle" :class="{'onToggle': boostOrNot}"/>
+                <pv-toggle-button v-model="boostOrNot" onLabel="On" offLabel="Off" class="b-toggle" :class="{'onToggle': boostOrNot}" :disabled="boostOrNotDisabled"/>
               </div>
             </div>
             <div class="text-boost">
@@ -170,18 +263,18 @@ export default {
               />
               <br><br>
               <label><b>Producto</b></label><br>
-              <pv-input required class="input" type="text"></pv-input>
+              <pv-input required class="input" type="text" v-model="productName"></pv-input>
               <br><br>
               <label><b>Describe tu producto</b></label><br>
-              <pv-input required class="input input-xl" type="text"></pv-input>
+              <pv-input required class="input input-xl" type="text" v-model="description"></pv-input>
               <br><br>
               <label><b>¿Que quieres a Cambio?</b></label><br>
-              <pv-input required class="input input-xl" type="text"></pv-input>
+              <pv-input required class="input input-xl" type="text" v-model="changeFor"></pv-input>
               <br><br>
               <label><b>Valor Aproximado</b></label><br>
               <div class="price-section">
                 <div class="price-icon"><h1>S/.</h1></div>
-                <pv-input required class="input input-price" type="text"></pv-input>
+                <pv-input required class="input input-price" type="text" v-model="price"></pv-input>
               </div>
             </div>
           </div>
@@ -190,7 +283,7 @@ export default {
               <h1>Imágenes</h1>
             </div>
             <div style="text-align: center; padding-top: 1rem;">
-              <p>Puedes agregar hasta un máximo de 8 imágenes</p>
+              <p>Agrega o arrastra tu imagen aquí.</p>
             </div>
             <div class="inputs-publish images-upload">
               <pv-input id="file-upload" class="input-upload"
@@ -216,19 +309,7 @@ export default {
         <pv-button type="submit" class="submit b-publish">Publicar</pv-button>
       </div>
     </form>
-    <div class="dialog-container">
-      <pv-dialog v-model:visible="visible" modal :header="null" :style="{ width: '25rem', 'background-color': 'white', 'border-radius': '10px', 'padding': '20px' }">
-        <div class="dialog-content">
-          <h1 class="text-center">¡Publicación exitosa!</h1>
-          <p class="text-center">Muchas gracias por publicar en CambiaZo, te enviaremos un correo con la confirmación respectiva.</p>
-          <div class="flex justify-content-center">
-            <router-link to="/home">
-              <pv-button label="Confirmar" />
-            </router-link>
-          </div>
-        </div>
-      </pv-dialog>
-    </div>
+    <dialog-publish :visible="showDialog" @close="closeDialog"/>
   </div>
 </template>
 
@@ -243,6 +324,7 @@ export default {
 
 .form-container {
   display: grid;
+  width:100%;
 }
 
 .first-form-column {
@@ -259,6 +341,13 @@ export default {
   box-shadow: 0px 0px 20px 0px #c6c6c6;
 }
 
+ol, ul, menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background-color:white;
+}
+
 .check-b {
   width: 1.5rem;
   height: 1.5rem;
@@ -269,7 +358,6 @@ export default {
   font-size: 20px;
   font-weight: 900;
 }
-
 .inputs-publish {
   padding: 0rem 2rem 2rem 2rem;
   margin: 1rem;
@@ -338,6 +426,7 @@ export default {
   border-radius: 0px 10px 10px 0px;
   border-left: white;
 }
+
 
 .images-upload {
   display: flex;
