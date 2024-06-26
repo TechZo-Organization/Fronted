@@ -1,15 +1,22 @@
 <script>
 import { homeApiService } from "../../home/services/home-api.service.js";
 import { Product } from "../../home/model/product.entity.js";
+import DialogDeletePost from "./dialog-delete-post.component.vue";
+import DialogEditPost from "./dialog-edit-post.component.vue";
 
 export default {
   name: 'post-profile',
+  components: {DialogEditPost, DialogDeletePost},
   data() {
     return {
       products: [],
       categories: [],
       loading: true,
-      error: null
+      error: null,
+      dialogVisible: false,
+      selectedId: null,
+      editDialogVisible: false,  // Estado para el diálogo de edición
+      selectedProduct: null
     };
   },
   methods: {
@@ -21,7 +28,6 @@ export default {
     },
     async fetchProducts() {
       const loggedUserId = localStorage.getItem('user');
-      console.log('Logged User ID:', loggedUserId); // Debugging statement
       if (!loggedUserId) {
         this.error = 'No logged-in user found';
         this.loading = false;
@@ -29,7 +35,6 @@ export default {
       }
       try {
         const response = await new homeApiService().getProduct();
-        console.log('Products fetched:', response.data); // Debugging statement
         const allProducts = response.data;
         this.products = allProducts
             .filter(product => product.user_id === loggedUserId)
@@ -45,27 +50,46 @@ export default {
                 product.user_id,
                 product.location
             ));
-        console.log('Filtered Products:', this.products); // Debugging statement
         this.loading = false;
       } catch (err) {
         this.error = err;
-        console.error('Error fetching products:', err); // Debugging statement
         this.loading = false;
       }
     },
     async fetchCategories() {
       try {
         const response = await new homeApiService().getCategoriesProduct();
-        console.log('Categories fetched:', response.data); // Debugging statement
         this.categories = response.data;
       } catch (err) {
         this.error = err;
-        console.error('Error fetching categories:', err); // Debugging statement
       }
     },
     getCategoryName(categoryId) {
       const category = this.categories.find(cat => cat.id === categoryId);
       return category ? category.name : 'Unknown Category';
+    },
+    openConfirm(id){
+      this.selectedId = id;
+      this.dialogVisible = true;
+      document.body.classList.add('no-scroll');
+    },
+    closeConfirm() {
+      this.dialogVisible = false;
+      document.body.classList.remove('no-scroll');
+    },
+    confirmDelete(id) {
+      try {
+        new homeApiService().deleteProduct(id);
+        this.products = this.products.filter(product => product.id !== id);
+        this.dialogVisible = false;
+      } catch (err) {
+        this.error = err;
+      }
+    },
+    editPosts(id){
+      this.selectedProduct = this.products.find(product => product.id === id);
+      this.editDialogVisible = true;
+      document.body.classList.add('no-scroll');
     }
   },
   async created() {
@@ -77,26 +101,39 @@ export default {
 
 <template>
   <div class="post-content">
-    <h1>IntercambioZ Publicados</h1>
-    <hr>
+    <div class="user-offers-title">
+      <p>IntercambioZ Publicados:</p>
+    </div>
+    <div class="line-text">
+      <div class="line"></div>
+    </div>
     <div class="post-list">
       <div v-if="loading">Loading...</div>
       <div v-else-if="error">{{ error.message }}</div>
       <div v-else>
         <div class="post-cards-container">
           <div v-for="product in products" :key="product.product_name" class="card-post">
-
             <div class="card-content">
               <div class="image-post">
                 <img :src="product.images[0]" />
               </div>
               <div class="post-info">
-                <router-link :to="`/product-information/${product.id}`" @click.native="scrollToTop">
-                  <div class="post-title">
-                    <h1>{{ product.product_name }}</h1>
-                    <h2>{{ getCategoryName(product.category_id) }}</h2>
+                <div class="post-title">
+                  <div class="post-title-header">
+                    <router-link :to="`/product-information/${product.id}`" @click.native="scrollToTop">
+                      <h1>{{ product.product_name }}</h1>
+                    </router-link>
+                    <div class="post-title-actions">
+                      <button @click="editPosts(product.id)" class="delete__button" title="Editar">
+                        <img src="../../../public/profile/edit.png" alt="edit" style="height: 18px;width:18px">
+                      </button>
+                      <button @click="openConfirm(product.id)" class="delete__button" title="Eliminar">
+                        <img src="../../../public/profile/delete.png" alt="delete" style="height: 18px;width:18px">
+                      </button>
+                    </div>
                   </div>
-                </router-link>
+                  <h2>{{ getCategoryName(product.category_id) }}</h2>
+                </div>
                 <div class="post-details">
                   <p>{{ product.description }}</p>
                   <div class="icon-detail">
@@ -115,14 +152,22 @@ export default {
         </div>
       </div>
     </div>
+    <dialog-edit-post
+        :visible="editDialogVisible"
+        :product="selectedProduct"
+        @close="editDialogVisible = false"
+        @updated="fetchProducts()"
+    />
+    <dialog-delete-post
+        :visible="dialogVisible"
+        @close="closeConfirm()"
+        @confirm="confirmDelete(selectedId)"
+    />
   </div>
+
 </template>
 
 <style scoped>
-.post-content{
-  padding: 1.5rem;
-  justify-content: center;
-}
 
 .post-content h1{
   text-align: left;
@@ -139,7 +184,7 @@ export default {
 }
 
 .post-cards-container {
-  max-width: 600px;
+  max-width: 800px;
   display: flex;
   flex-wrap: wrap;
 }
@@ -151,6 +196,7 @@ export default {
   width: 100%;
   cursor: pointer;
   transition: 0.43s;
+  height: fit-content;
 }
 
 .card-post:hover{
@@ -163,12 +209,16 @@ export default {
 }
 
 .image-post{
-  width: 30%;
+  width: 40%;
+  height:100%;
 }
 
 .image-post img{
   width: 100%;
-  height: 350px;
+  height:100%;
+  max-height:fit-content;
+  object-position: center;
+  object-fit:cover;
 }
 
 .post-info{
@@ -180,6 +230,27 @@ export default {
   color: #fff;
   text-align: left;
   padding: 0.5rem;
+}
+
+.post-title-header {
+  color: white;
+  background-color: black;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.post-title-header h1 {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+}
+.post-title-actions{
+  gap:5px;
+  display: flex;
+  flex-direction: row;
+  padding:0 0 16px;
+  padding-left: 5px;
 }
 
 .post-title h1{
@@ -233,7 +304,13 @@ export default {
   .post-info{
     width: 100%;
   }
-
+  .post-title-actions{
+    gap:5px;
+    display: flex;
+    flex-direction: column;
+    padding:0 0 16px;
+    padding-left: 5px;
+  }
   .post-cards-container {
     max-width: 300px;
   }

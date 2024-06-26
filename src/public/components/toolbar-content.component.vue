@@ -190,6 +190,8 @@ export default {
   width: 65px;
   height: 65px;
   border: 3px solid #FFD146;
+  object-fit:cover;
+  object-position:center;
 }
 
 .user-img-button {

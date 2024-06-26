@@ -4,7 +4,8 @@ export class User {
         email = '',
         phone = '',
         password = '',
-        membership = 0,
+        membership = '',
+        membership_date='',
         img = '',
         id = '',
         favorites = []
@@ -14,6 +15,7 @@ export class User {
         this.phone = phone;
         this.password = password;
         this.membership = membership;
+        this.membership_date = membership_date;
         this.img = img;
         this.id = id;
         this.favorites = favorites;

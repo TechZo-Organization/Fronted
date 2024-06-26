@@ -34,7 +34,13 @@ export default {
     closeDialog() {
       this.showDialog = false;
       document.body.classList.remove('no-scroll');
-    }
+    },
+    scrollToTop() {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    },
   }
 };
 </script>
@@ -49,7 +55,9 @@ export default {
       </template>
       <template #subtitle><p>{{ membership.description }}</p>
         <div style="text-align: center;">
-          <pv-button @click="handleStart" class="b-start"><b>¡Empieza ahora!</b></pv-button>
+          <router-link :to="`/membership-payment/${membership.id}`" @click.native="scrollToTop">
+            <pv-button @click="handleStart" class="b-start"><b>¡Empieza ahora!</b></pv-button>
+          </router-link>
         </div>
       </template>
       <template #content>
