@@ -13,7 +13,11 @@ export default {
         behavior: 'smooth'
       });
     },
-  },
+    getPenultimateAddressPart(text) {
+      const parts = text.split(',').map(part => part.trim());
+      return parts.length > 1 ? parts[parts.length - 3] : text;
+    }
+  }
 }
 </script>
 
@@ -23,7 +27,7 @@ export default {
       <template #title>
         <div class="card-container">
           <div class="card-image">
-            <img :src="ong.logo" alt="Logo de la ONG" />
+            <img :src="ong.urlLogo" alt="Logo de la ONG" />
           </div>
           <div class="card-main">
             <div class="card-title">
@@ -32,7 +36,7 @@ export default {
               </div>
               <div class="card-location">
                 <img src="../../../public/donations/location-icon.png" style="width: 3vh; height: 3vh; margin-right: 2px;"/>
-                <h1>{{ ong.address["district"] }}</h1>
+                <h1>{{ getPenultimateAddressPart(ong.address) }}</h1>
               </div>
             </div>
             <div class="card-content">
@@ -50,7 +54,6 @@ export default {
 </template>
 
 <style scoped>
-
 .card-container{
   background-color: #fff;
   display: flex;
@@ -104,5 +107,4 @@ export default {
     display: grid;
   }
 }
-
 </style>
