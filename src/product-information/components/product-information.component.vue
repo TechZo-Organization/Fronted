@@ -126,7 +126,7 @@ export default {
         <div class="product-exchange">
           <h2>Detalles:</h2>
           <h4>¿Dónde puedo intercambiar este objeto?</h4>
-          <p>Disponible en {{ product.district.department.name }}, {{ product.district.name }}</p>
+          <p>Disponible en {{ product.district.name }}, {{ product.district.department.name }}</p>
           <h4>¿Cambio por?</h4>
           <p>{{ product.objectChange }}</p>
           <div class="category-exchange">
@@ -212,9 +212,10 @@ export default {
 }
 
 .product-image img {
-  width: 50%;
-  height: auto;
-
+  width: 70%;
+  height: 70vh;
+  object-position:center;
+  object-fit:cover;
 }
 
 .product-text{
@@ -383,6 +384,12 @@ export default {
 }
 
 @media screen and (max-width: 900px){
+  .product-image img {
+    width: 100%;
+    height: 50vh;
+    object-position:center;
+    object-fit:cover;
+  }
   .product-information h1{
     font-size: 25px;
   }

@@ -55,7 +55,7 @@ export default {
         });
       } else if (this.userMembershipId === null && this.memberships.length) {
         this.filteredMemberships = this.memberships.filter(membership => {
-          return membership.id !== 1;
+          return membership.id;
         });
       }
     }

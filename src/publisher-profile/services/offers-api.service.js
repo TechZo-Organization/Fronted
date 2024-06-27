@@ -10,13 +10,16 @@ export class offerApiService {
         return http.get("/api/v1/offer");
     }
     updateOfferStatus(id, status){
-        return http.put(`/api/v1/offer/${id}`, { status});
+        return http.put(`/api/v1/offer/${id}`, status);
     }
     getOfferById(offerId) {
         return http.get(`/offer/${offerId}`);
     }
-    getOffersByUserId(userId) {
-        return http.get(`/api/v1/offer?get_user_id=${userId}`);
+    getOffersByUserOwnId(userId) {
+        return http.get(`/api/v1/offer/user-own/${userId}`);
+    }
+    getOffersByUserChangeId(userId) {
+        return http.get(`/api/v1/offer/user-change/${userId}`);
     }
     createOffer(offerData) {
         return http.post("/api/v1/offer", offerData);
@@ -27,4 +30,6 @@ export class offerApiService {
     deleteOffer(offerId) {
         return http.delete(`/api/v1/offer/${offerId}`);
     }
+
+
 }

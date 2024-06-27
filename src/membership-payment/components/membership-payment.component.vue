@@ -16,6 +16,8 @@ export default {
         name: '',
         email: '',
         phone: '',
+        photo: '',
+        membershipId: 1,
       },
       cardNumber: '',
       expiryMonth: '',
@@ -45,11 +47,13 @@ export default {
       try {
         const response = await this.userService.getUser();
         const userId = localStorage.getItem('user');
-        const user = response.data.find(user => user.id === userId);
+        const user = response.data.find(user => Number(user.id) === Number(userId));
         this.userData = {
           name: user.name,
           email: user.email,
           phone: user.phone,
+          photo: user.photo,
+          membershipId: user.membershipId,
         };
       } catch (error) {
         console.error('Error fetching user data:', error);
@@ -59,14 +63,17 @@ export default {
       if (this.validateForm()) {
         try {
           const userId = localStorage.getItem('user');
-          const today = new Date();
-          const formattedDate = `${String(today.getDate()).padStart(2, '0')}/${String(today.getMonth() + 1).padStart(2, '0')}/${today.getFullYear()}`;
           this.showDialog = true;
           document.body.classList.add('no-scroll');
-          await this.userService.updateUser(userId, {
-            membership: this.membership.id.toString(),
-            membership_date: formattedDate,
-          });
+          const newMembership = {
+            name: this.userData.name,
+            email:this.userData.email,
+            phone: this.userData.phone,
+            photo: this.userData.photo,
+            membershipId: Number(this.membership.id),
+          }
+          console.log(newMembership)
+          await this.userService.updateUser(Number(userId), newMembership);
         } catch (error) {
           console.error('Error actualizando la membresía del usuario:', error);
         }
