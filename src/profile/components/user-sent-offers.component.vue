@@ -2,7 +2,6 @@
 import { homeApiService } from "../../home/services/home-api.service";
 import { userApiService } from "../services/user-api.service";
 import { offerApiService } from "../../publisher-profile/services/offers-api.service";
-import { Offer } from "../../publisher-profile/model/offer.entity";
 
 export default {
   name: 'user-sent-offers',
@@ -27,29 +26,35 @@ export default {
         }
 
         const response = await this.usersService.getOffersMade(userId);
-
-        const data = response.data; // Asegurarse de acceder a la propiedad data del response
+        const data = response.data;
         if (Array.isArray(data)) {
           const offerPromises = data.map(async (offer) => {
-            const newOffer = new Offer(
-                offer.id,
-                offer.productOwnerId,
-                offer.productExchangeId,
-                offer.state
-            );
+            const newOffer = {
+              id: offer.id,
+              productOwnerId: offer.productOwnerId,
+              productExchangeId: offer.productExchangeId,
+              state: offer.state,
+              product_get: null,
+              product_offers: null,
+              user_get: null,
+            };
 
             const [productOwner, productExchange] = await Promise.all([
               this.postsService.getProductById(offer.productOwnerId),
               this.postsService.getProductById(offer.productExchangeId)
             ]);
 
-            newOffer.setProductGet = productExchange.data;
-            newOffer.setProductOffers = productOwner.data;
+            newOffer.product_get = productExchange.data;
+            newOffer.product_offers = productOwner.data;
+
+            if (productExchange.data.userId) {
+              const userProfile = await this.usersService.getProfileInfoById(productExchange.data.userId);
+              newOffer.user_get = userProfile.data;
+            }
 
             return newOffer;
           });
 
-          // Filtramos las ofertas nulas (las que no pudieron ser cargadas)
           this.offers = (await Promise.all(offerPromises)).filter(Boolean);
         } else {
           console.error('Data is not an array:', data);
@@ -106,12 +111,13 @@ export default {
   }
 };
 </script>
+
 <template>
   <div class="sent-offers-cards-container">
     <div v-for="sent in offers" :key="sent.id" class="container-sent-offers">
       <div class="sent-offers-card">
         <div class="header-product-name-sent">
-          <h1 v-if="sent.product_get">{{ sent.product_get.product_name }}</h1>
+          <h1 v-if="sent.product_get">{{ sent.product_get.name }}</h1>
         </div>
         <div>
           <div class="content">
@@ -119,7 +125,7 @@ export default {
               <div class="card-get">
                 <div class="header-card-get">
                   <div class="container-image-sent-offers">
-                    <img v-if="sent.user_get" :src="sent.user_get.img" alt="User Image">
+                    <img v-if="sent.user_get" :src="sent.user_get.photo" alt="User Image">
                   </div>
                   <h1 v-if="sent.user_get">{{ sent.user_get.name }}</h1>
                 </div>
@@ -127,7 +133,7 @@ export default {
                   <p v-if="sent.product_get">{{ sent.product_get.description }}</p>
                 </div>
                 <div class="footer-card-get">
-                  <img v-if="sent.product_get" :src="sent.product_get.images" alt="Product Image">
+                  <img v-if="sent.product_get" :src="sent.product_get.photo" alt="Product Image">
                 </div>
               </div>
             </div>
@@ -146,22 +152,22 @@ export default {
                       <div class="change-for">
                         <img src="../../../public/donations/location-icon.png" style="height: 20px; width: 20px" alt="Change Icon">
                         <p v-if="sent.product_get">
-                          {{ sent.product_get.location?.district }},
-                          {{ sent.product_get.location?.departament }}
+                          {{ sent.product_get.district?.name }},
+                          {{ sent.product_get.district?.department?.name }}
                         </p>
                       </div>
                     </div>
                     <h1 v-if="sent.user_get">¿Qué solicita {{ sent.user_get.name }}?</h1>
                     <div class="change-for">
                       <img src="../../../public/products/exchange.icon.png" style="height: 18px; width: 18px" alt="Change Icon">
-                      <p v-if="sent.product_get">{{ sent.product_get.change_for }}</p>
+                      <p v-if="sent.product_get">{{ sent.product_get.objectChange }}</p>
                     </div>
                     <h1>¿Qué le ofreciste?</h1>
                   </div>
                   <div class="my-offer">
                     <div class="col11">
                       <div class="product-sent-image">
-                        <img v-if="sent.product_offers" :src="sent.product_offers.images" alt="Offered Product Image">
+                        <img v-if="sent.product_offers" :src="sent.product_offers.photo" alt="Offered Product Image">
                       </div>
                     </div>
                     <div class="col22">
