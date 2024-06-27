@@ -41,7 +41,7 @@ export default {
     async fetchUserProducts(userId) {
       try {
         const response = await new homeApiService().getProduct();
-        this.products = response.data.filter(product => product.user_id === userId);
+        this.products = response.data.filter(product => product.userId === userId);
         this.isLoading = false;
       } catch (error) {
         console.error("Error fetching user products:", error);
@@ -74,12 +74,12 @@ export default {
         const productToGetResponse = await new homeApiService().getProductById(productToGetId);
         const productToGet = productToGetResponse.data;
 
-        const userToGetResponse = await new userApiService().getUserById(productToGet.user_id);
+        const userToGetResponse = await new userApiService().getUserById(productToGet.userId);
         const userToGet = userToGetResponse.data;
 
         this.createOffer(productId, productToGet);
         document.body.classList.add('no-scroll');
-        this.productName = this.products.find(product => product.id === productId).product_name;
+        this.productName = this.products.find(product => product.id === productId).name;
         this.userName = userToGet.name;// Asegúrate de que el nombre del usuario está en la propiedad 'name'
         this.visibleAccepted = true;
       } catch (error) {
@@ -97,7 +97,7 @@ export default {
           id: newOfferId,
           id_user_offers: userId,
           id_product_offers: productId,
-          id_user_get: productToGet.user_id,
+          id_user_get: productToGet.userId,
           id_product_get: productToGet.id,
           status: "Pendiente"
         };
@@ -126,20 +126,20 @@ export default {
         <div class="product-offer-list" v-for="product in products" :key="product.id">
           <div class="product-offer-card">
             <div class="product-offer-image">
-              <img v-if="product.images && product.images.length" :src="product.images[0]" />
+              <img v-if="product.photo !== ''" :src="product.photo" />
               <pv-button @click="handleClick(product.id)" class="b-confirm-offer"><b>Confirmar</b></pv-button>
             </div>
             <div class="product-offer-details">
-              <h1>{{ product.product_name }}</h1>
-              <h3>{{ getCategoryName(product.category_id) }}</h3>
+              <h1>{{ product.name }}</h1>
+              <h3>{{ getCategoryName(product.categoryId) }}</h3>
               <p class="detail-description">{{ product.description }}</p>
               <div class="icon-details">
                 <img src="../../../public/donations/location-icon.png" height="20" width="20"/>
-                <p>{{ product.location.district || 'Unknown' }}, {{ product.location.departament || 'Unknown' }}</p>
+                <p>{{ product.district.name || 'Unknown' }}, {{ product.district.departament.name || 'Unknown' }}</p>
               </div>
               <div class="icon-details">
                 <img src="../../../public/products/exchange.icon.png" height="20" width="20"/>
-                <p>{{ product.change_for }}</p>
+                <p>{{ product.objectChange }}</p>
               </div>
               <div class="price-details">
                 <h2>Valor aproximado s/.{{ product.price }}</h2>

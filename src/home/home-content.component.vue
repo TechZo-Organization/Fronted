@@ -25,6 +25,7 @@ export default {
   created() {
     this.getAllProductCategories();
     this.getAllProducts();
+
   },
   methods: {
     scrollToTop() {
@@ -64,7 +65,7 @@ export default {
       if (this.selectedCategory && this.searchProduct) {
         return this.products.filter(product =>
             product.category_id === this.selectedCategory &&
-            product.product_name.toLowerCase().includes(this.searchProduct.toLowerCase())
+            product.name.toLowerCase().includes(this.searchProduct.toLowerCase())
         );
       } else if (this.selectedCategory) {
         return this.products.filter(product =>
@@ -72,7 +73,7 @@ export default {
         );
       } else if (this.searchProduct) {
         return this.products.filter(product =>
-            product.product_name.toLowerCase().includes(this.searchProduct.toLowerCase())
+            product.name.toLowerCase().includes(this.searchProduct.toLowerCase())
         );
       } else {
         return this.products;
