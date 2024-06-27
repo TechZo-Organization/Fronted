@@ -126,6 +126,7 @@
 <script>
 import { userApiService } from "../services/user-api.service.js";
 import { membershipsApiService } from "../../memberships/services/membership-api.service.js";
+import {authService} from "../../auth/services/auth-api.service.js";
 import DialogDeleteAccount from "./dialog-delete-account.component.vue";
 import DialogCancelMembership from "./dialog-cancel-membership.component.vue";
 import DialogChangeSuccesfully from "./dialog-change-succesfully.vue";
@@ -138,6 +139,7 @@ export default {
       user: null,
       membershipService: new membershipsApiService(),
       userService: new userApiService(),
+      authService: new authService(),
       userId: null,
       membership: {},
       dialogVisibleDeleteAccount: false,
@@ -233,9 +235,8 @@ export default {
       });
     },
     logout() {
-      localStorage.removeItem('user');
       this.user = null;
-      this.$router.push('/log-in');
+      this.authService.logOut();
     },
     deleteAccount() {
       this.dialogVisibleDeleteAccount = true;
