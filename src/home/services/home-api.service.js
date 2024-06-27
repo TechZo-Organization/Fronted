@@ -26,5 +26,9 @@ export class homeApiService {
         return http.put(`/api/v1/product/${id}`, data);
     }
 
+    getProductByUserId(userId, available) {
+        return http.get(`/api/v1/product/user/${userId}/available/${available}`);
+    }
+
 
 }

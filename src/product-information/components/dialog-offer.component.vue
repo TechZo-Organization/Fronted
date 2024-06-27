@@ -40,12 +40,10 @@ export default {
     },
     async fetchUserProducts(userId) {
       try {
-        const response = await new homeApiService().getProduct();
-        this.products = response.data.filter(product => product.userId === userId);
-        this.isLoading = false;
+        const response = await new homeApiService().getProductByUserId(userId, true); // Cambiamos la función aquí
+        this.products = response.data; // Asumimos que la respuesta contiene directamente los productos
       } catch (error) {
         console.error("Error fetching user products:", error);
-        this.isLoading = false;
       }
     },
     async fetchCategories() {
@@ -73,34 +71,28 @@ export default {
         const productToGetId = window.location.pathname.split('/').pop();
         const productToGetResponse = await new homeApiService().getProductById(productToGetId);
         const productToGet = productToGetResponse.data;
+        const productExchangeId = productToGet.id;
 
         const userToGetResponse = await new userApiService().getUserById(productToGet.userId);
         const userToGet = userToGetResponse.data;
 
-        this.createOffer(productId, productToGet);
+        this.createOffer(productId, productExchangeId);
         document.body.classList.add('no-scroll');
         this.productName = this.products.find(product => product.id === productId).name;
-        this.userName = userToGet.name;// Asegúrate de que el nombre del usuario está en la propiedad 'name'
+        this.userName = userToGet.name;
         this.visibleAccepted = true;
       } catch (error) {
         console.error("Error fetching product to get data:", error);
       }
     },
-    async createOffer(productId, productToGet) {
-      const userId = localStorage.getItem('user');
+    async createOffer(productId, productExchangeId) {
       try {
-        const response = await new offerApiService().getOffers();
-        const allOffers = response.data;
-        const newOfferId = allOffers.length + 1;
-
         const offerData = {
-          id: newOfferId,
-          id_user_offers: userId,
-          id_product_offers: productId,
-          id_user_get: productToGet.userId,
-          id_product_get: productToGet.id,
-          status: "Pendiente"
+          productOwnerId: productId,
+          productExchangeId: productExchangeId,
+          state: "Pending"
         };
+        console.log(offerData);
 
         await new offerApiService().createOffer(offerData);
 
