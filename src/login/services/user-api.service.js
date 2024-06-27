@@ -21,5 +21,9 @@ export class userApiService {
     updateUser(userId, userData) {
         return http.put(`/api/v1/profiles/${userId}`, userData);
     }
+
+    addFavoriteProduct(data){
+        return http.post(`/api/v1/favorite-product`, { data });
+    }
     
 }

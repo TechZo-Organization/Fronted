@@ -65,21 +65,23 @@ export default {
       try {
         const response = await this.userService.getUser();
         const userId = localStorage.getItem('user');
-        const user = response.data.find(user => user.id === userId);
+        const user = response.data.find(user => user.id.toString() === userId);
         this.userData = {
           name: user.name,
           email: user.email,
           phone: user.phone,
-          membership: user.membership
+          membership: user.membershipId
         };
-        this.boostOrNotDisabled = user.membership === '1';
+        this.boostOrNotDisabled = user.membership === 1;
       } catch (error) {
         console.error('Error fetching user data:', error);
       }
     },
     onCountryChange() {
+
       if (this.selectedCountry) {
         this.departments = this.selectedCountry.departments;
+        console.log(this.departments)
         this.selectedDepartment = null;
         this.cities = [];
         this.selectedCity = null;
@@ -140,26 +142,25 @@ export default {
         const userId = localStorage.getItem('user');
         const response = await this.homeService.getProduct();
         const productCount = response.data.length;
+        const respondDistrict = await this.apiService.getDistrictByName(this.selectedCity.name);
+        const district = respondDistrict.data
+
 
         const productData = {
-          id: productCount + 1,
-          user_id: userId,
-          category_id: this.selectedCategory.id,
-          product_name: this.productName,
+          name: this.productName,
           description: this.description,
-          change_for: this.changeFor,
+          objectChange: this.changeFor,
           price: this.price,
-          images: this.imagesUrl,
+          photo: this.imagesUrl[0],
           boost: this.boostOrNot,
-          location: {
-            country: this.selectedCountry.country,
-            departament: this.selectedDepartment.name,
-            district: this.selectedCity.name,
-          },
+          available: true,
+          categoryId: Number(this.selectedCategory.id),
+          userId: Number(userId),
+          districtId: district.id
         };
 
         try {
-          await axios.post(`${environment.baseUrl}/products`, productData);
+         await this.homeService.postProduct(productData)
           console.log('Product created successfully');
         } catch (error) {
           console.error('Error creating product:', error);

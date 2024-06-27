@@ -101,7 +101,7 @@ export default {
       <div v-else-if="error">{{ error.message }}</div>
       <div v-else>
         <div class="post-cards-container">
-          <div v-for="product in products" :key="product.name" class="card-post">
+          <div v-for="product in products.slice().reverse()" :key="product.name" class="card-post">
             <div class="card-content">
               <div class="image-post">
                 <img :src="product.photo" />

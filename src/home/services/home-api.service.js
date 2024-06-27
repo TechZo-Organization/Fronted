@@ -27,4 +27,15 @@ export class homeApiService {
     }
 
 
+    postProduct(data) {
+        console.log(data)
+        return http.post('/api/v1/product', data);
+    }
+
+
+    getProductByUserId(userId, available) {
+        return http.get(`/api/v1/product/user/${userId}/available/${available}`);
+    }
+
+
 }
