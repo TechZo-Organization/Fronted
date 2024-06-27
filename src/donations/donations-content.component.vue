@@ -15,8 +15,8 @@ export default {
       categories: [],
       errors: [],
       donationsApi: new donationsApiService(),
-      accept: false,
       searchOng: "",
+      selectedCategories: []
     };
   },
   created() {
@@ -44,10 +44,17 @@ export default {
             this.errors.push(error);
           });
     },
+    handleFilterOngs({ searchText, categories }) {
+      this.searchOng = searchText;
+      this.selectedCategories = categories;
+    },
     filterOngs() {
-      return this.ongs.filter((ong) =>
-          ong.name.toLowerCase().includes(this.searchOng.toLowerCase())
-      );
+      return this.ongs.filter((ong) => {
+        const matchesName = ong.name.toLowerCase().includes(this.searchOng.toLowerCase());
+        const matchesDistrict = ong.address.toLowerCase().includes(this.searchOng.toLowerCase());
+        const matchesCategory = this.selectedCategories.length === 0 || this.selectedCategories.includes(ong.category_id);
+        return (matchesName || matchesDistrict) && matchesCategory;
+      });
     },
   },
 };
@@ -72,10 +79,16 @@ export default {
           <h1>Nuevas ONG’s</h1>
           <p>Se han añadido {{ filterOngs().length }} nuevas organizaciones...</p>
         </div>
-        <ong-list v-if="errors" :ongs="filterOngs()"></ong-list>
+        <ong-list v-if="!errors.length" :ongs="filterOngs()"></ong-list>
+        <div v-else>
+          <p>Se encontraron errores al cargar las ONG's.</p>
+          <ul>
+            <li v-for="error in errors" :key="error.message">{{ error.message }}</li>
+          </ul>
+        </div>
       </div>
       <div class="categories-container">
-        <input-category :categories="categories" :accept.sync="accept"></input-category>
+        <input-category :categories="categories" @filterOngs="handleFilterOngs"></input-category>
       </div>
     </div>
   </div>

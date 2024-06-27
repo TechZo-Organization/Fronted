@@ -18,4 +18,13 @@ export class homeApiService {
     getCategoryById(categoryId) {
         return http.get(`/categories/${categoryId}`);
     }
+    deleteProduct(id) {
+        return http.delete(`/products/${id}`);
+    }
+
+    putProduct(id, data) {
+        return http.put(`/products/${id}`, data);
+    }
+
+
 }

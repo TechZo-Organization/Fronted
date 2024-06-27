@@ -1,5 +1,4 @@
 <script>
-
 export default {
   name: 'input-category',
   props: {
@@ -8,16 +7,24 @@ export default {
       required: true
     }
   },
-  methods:{
-    showConfirmation() {
-      alert("Gracias papu");
-    }
+  data() {
+    return {
+      searchText: '',
+    };
+  },
+  methods: {
+    handleSubmit() {
+      const selectedCategories = this.categories
+          .filter(category => category.accept)
+          .map(category => category.id);
+      this.$emit('filterOngs', { searchText: this.searchText, categories: selectedCategories });
+    },
   }
 }
 </script>
 
 <template>
-  <form @submit.prevent="showConfirmation">
+  <form @submit.prevent="handleSubmit">
     <h1>Categorías</h1>
     <div v-for="category in categories" :key="category.id">
       <div class="category">
@@ -27,7 +34,7 @@ export default {
     </div>
     <br><hr><br>
     <h1>Localización</h1>
-    <pv-input required class="input-category" placeholder="Ejem: San Borja"></pv-input>
+    <pv-input v-model="searchText" class="input-category" placeholder="Ejem: San Borja"></pv-input>
     <hr><br>
     <pv-button class="b-filter" type="submit">
       Filtrar

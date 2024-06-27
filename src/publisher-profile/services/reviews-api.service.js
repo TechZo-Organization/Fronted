@@ -15,4 +15,7 @@ export class reviewApiService {
     getReviewsByUserId(userId) {
         return http.get(`/reviews?get_user_id=${userId}`);
     }
+    postReview(data){
+        return http.post(`/reviews`, data)
+    }
 }

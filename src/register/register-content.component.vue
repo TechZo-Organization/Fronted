@@ -1,8 +1,12 @@
 <script>
 import { userApiService } from "../login/services/user-api.service.js";
+import DialogRegisterSuccesfully from "./components/dialog-register-succesfully.component.vue";
 
 export default {
   name: "register-content",
+  components: {
+    DialogRegisterSuccesfully
+  },
   data() {
     return {
       name: '',
@@ -14,6 +18,7 @@ export default {
       showConfirmPassword: false,
       userService: new userApiService(),
       errorMessage: '',
+      showDialog: false,
     };
   },
   methods: {
@@ -41,7 +46,7 @@ export default {
           email: this.email,
           phone: this.phone,
           password: this.password,
-          membership: 1,
+          membership: "1",
           membership_date: '',
           img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR6lqpQj3oAmc1gtyM78oJCbTaDrD7Fj9NRlceOPDZiHA&s",
           id: (users.length + 1).toString(),
@@ -49,7 +54,7 @@ export default {
         };
 
         await this.userService.registerUser(newUser);
-        this.$router.push('/log-in');
+        this.showDialog = true;  // Mostrar el diálogo de registro exitoso
       } catch (error) {
         console.error(error);
         this.errorMessage = 'Error al registrar el usuario';
@@ -75,13 +80,18 @@ export default {
 
 <template>
   <div class="login-container">
+    <div style="margin: 1rem;position:absolute;">
+      <router-link to="/home">
+        <img src="../../public/login/home-icon.png" height="45" width="45" />
+      </router-link>
+    </div>
     <div class="login-content">
       <div class="login-form">
         <form @submit.prevent="handleRegister" class="form-container">
           <br>
-          <img src="../../public/login/cambiazo-logo.png" height="95" width="250"/>
+          <img src="../../public/login/cambiazo-logo.png" height="50%"/>
           <div class="inputs-register">
-            <h1 style="font-size: 20px; font-weight: bolder; margin-bottom: 15px;">Registrarse</h1>
+            <h1 style="font-size: 25px; font-weight: 1000px; margin-bottom: 15px;">Registrarse</h1>
             <router-link to="/home">
               <pv-button class="b-register-google">
                 <img src="../../public/login/google-icon.png" alt="Google image" width="18px" style="margin-right: 5px;">Registrarse con Google
@@ -103,14 +113,14 @@ export default {
               </div>
               <div>
                 <label><b>Número de celular</b></label><br>
-                <pv-input v-model="phone" required class="input" type="text"></pv-input>
+                <pv-input maxlength="9" v-model="phone" required class="input" type="text"></pv-input>
               </div>
               <div>
                 <label><b>Contraseña</b></label><br>
                 <div class="input-group">
                   <pv-input v-model="password" required class="show-hide-text" :type="showPassword ? 'text' : 'password'"></pv-input>
                   <div class="show-hide">
-                    <img :src="showPassword ? '../../public/login/show-icon.png' : '../../public/login/hide-icon.png'" @click="togglePasswordVisibility" class="show-hide-password"/>
+                    <img :src="showPassword ? '/login/show-icon.png' : '/login/hide-icon.png'" @click="togglePasswordVisibility" class="show-hide-password"/>
                   </div>
                 </div>
               </div>
@@ -119,7 +129,7 @@ export default {
                 <div class="input-group">
                   <pv-input v-model="confirmPassword" required class="show-hide-text" :type="showConfirmPassword ? 'text' : 'password'"></pv-input>
                   <div class="show-hide">
-                    <img :src="showConfirmPassword ? '../../public/login/show-icon.png' : '../../public/login/hide-icon.png'" @click="toggleConfirmPasswordVisibility" class="show-hide-password"/>
+                    <img :src="showConfirmPassword ? '/login/show-icon.png' : '/login/hide-icon.png'" @click="toggleConfirmPasswordVisibility" class="show-hide-password"/>
                   </div>
                 </div>
               </div>
@@ -141,10 +151,14 @@ export default {
     <footer>
       <p>&copy TechZo 2024. All Rights Reserved</p>
       <div class="footer-links">
-        <a href="">Condiciones de Uso</a>
-        <a href="">Política de privacidad</a>
+        <a href="/terms-use">Condiciones de Uso</a>
+        <a href="/privacy-policies">Política de privacidad</a>
       </div>
     </footer>
+    <dialog-register-succesfully
+        :visible="showDialog"
+        @close="showDialog = false"
+    />
   </div>
 </template>
 
@@ -192,14 +206,14 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 55%;
+  width: 50%;
   margin: auto;
   height: 100%
 }
 
 .main-image-register{
-  width: 45%;
-  height: 132vh;
+  width: 50%;
+  height: 130vh;
 }
 
 footer{
@@ -257,6 +271,7 @@ footer{
 
 .hr-container h1{
   color: #ccc;
+  text-align:center;
 }
 
 .hr-line {
@@ -311,6 +326,10 @@ footer{
 
 @media (max-width: 960px){
 
+  .form-container {
+    padding-top: 4rem;
+  }
+
   .main-image-register{
     display: none;
   }
@@ -326,6 +345,10 @@ footer{
     flex-direction: column-reverse;
     gap: 20px;
     text-align: center;
+  }
+  .create-account{
+    display: flex;
+    flex-direction:column;
   }
 
   .footer-links{

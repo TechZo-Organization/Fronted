@@ -1,14 +1,26 @@
 <script>
 import { homeApiService } from "../../home/services/home-api.service.js";
-import { userApiService } from "../../profile/services/user-api.service.js";
+import { userApiService} from "../../login/services/user-api.service.js";
+import DialogFavoritesAdded from "./dialog-favorites-added.component.vue";
+import DialogOfferContent from "./dialog-offer.component.vue";
+import DialogContent from "../../public/components/dialog-content.component.vue";
 
 export default {
   name: "product-information",
+  components: {
+    DialogContent,
+    DialogOfferContent,
+    DialogFavoritesAdded,
+  },
   data() {
     return {
       product: null,
       user: null,
       categories: [],
+      dialogVisible: false,
+      dialogOfferVisible: false,
+      detailsVisible: true,
+      showDialog: false,
     };
   },
   methods: {
@@ -17,6 +29,54 @@ export default {
         top: 0,
         behavior: 'smooth'
       });
+    },
+    closeDialog() {
+      this.showDialog = false;
+      document.body.classList.remove('no-scroll');
+    },
+    getLoggedInUserId() {
+      return (localStorage.getItem('user'));
+    },
+    async addToFavorites() {
+      const loggedInUserId = this.getLoggedInUserId();
+      if (loggedInUserId) {
+        try {
+          const userService = new userApiService();
+          const userResponse = await userService.getUserById(loggedInUserId);
+          const loggedInUser = userResponse.data;
+
+          if (!loggedInUser.favorites.some(fav => fav.product_id === this.product.id)) {
+            loggedInUser.favorites.push({ product_id: this.product.id });
+            const updateResponse = await userService.putUser(loggedInUser.id, loggedInUser);
+            console.log('Added to favorites:', updateResponse);
+            this.dialogVisible = true;
+            document.body.classList.add('no-scroll');
+          } else {
+          }
+        } catch (error) {
+        }
+      } else {
+        this.showDialog = true;
+        document.body.classList.add('no-scroll');
+      }
+    },
+    async offerProduct(){
+      const loggedInUserId = this.getLoggedInUserId();
+      if (loggedInUserId) {
+        this.dialogOfferVisible = true;
+        document.body.classList.add('no-scroll');
+      }else{
+        this.showDialog = true;
+        document.body.classList.add('no-scroll');
+      }
+    },
+    closeOfferProductDialog() {
+      this.dialogOfferVisible = false;
+
+    },
+    closeFavoriteDialog() {
+      this.dialogVisible = false;
+      document.body.classList.remove('no-scroll');
     },
   },
   async created() {
@@ -30,11 +90,12 @@ export default {
       const userService = new userApiService();
       const userResponse = await userService.getUserById(userId);
       this.user = userResponse.data;
-
       const categoriesResponse = await homeService.getCategoriesProduct();
       this.categories = categoriesResponse.data;
     } catch (error) {
-      console.error("Error fetching data: ", error);
+    }
+    if(this.product.user_id === this.getLoggedInUserId()){
+      this.detailsVisible =false;
     }
   },
   computed: {
@@ -74,21 +135,21 @@ export default {
           </div>
         </div>
       </div>
-      <div class="user-content">
-        <div class="user-image">
+      <div class="user-content-product-information">
+        <div class="user-image-product-information">
           <img :src="user.img" alt="User Image" />
         </div>
         <div class="user-details">
           <h1>{{ user.name }}</h1>
-          <router-link :to="`/publisher-profile/${product.user_id}`" @click.native="scrollToTop">
+          <router-link :to="detailsVisible ? `/publisher-profile/${product.user_id}` : `/profile`" @click.native="scrollToTop">
             <pv-button class="show-profile">
               Ver Perfil
             </pv-button>
           </router-link>
-          <hr />
-          <div class="offer-profile">
+          <hr v-if="detailsVisible"/>
+          <div class="offer-profile" v-if="detailsVisible">
             <h2>¿Estás interesado?</h2>
-            <pv-button class="offer-product">
+            <pv-button class="offer-product" @click="offerProduct()">
               <img
                   src="../../../public/product-information/offer-icon.png"
                   height="30"
@@ -99,14 +160,25 @@ export default {
             </pv-button>
           </div>
           <hr />
-          <div class="favorite-profile">
-            <pv-button class="favorite-product">
+          <div class="favorite-profile" v-if="detailsVisible">
+            <pv-button class="favorite-product" @click="addToFavorites()">
               <img src="../../../public/product-information/favorite-icon.png" alt="Favorite Icon" />
             </pv-button>
           </div>
         </div>
       </div>
     </div>
+    <dialog-favorites-added
+        :visible="dialogVisible"
+        @close="closeFavoriteDialog()"
+        @confirm="addToFavorites()"
+    />
+    <dialog-offer-content
+        :visible="dialogOfferVisible"
+        @close="closeOfferProductDialog()"
+        @confirm="offerProduct()"
+    />
+    <dialog-content :visible="showDialog" @close="closeDialog"/>
   </div>
 </template>
 
@@ -142,6 +214,7 @@ export default {
 .product-image img {
   width: 50%;
   height: auto;
+
 }
 
 .product-text{
@@ -212,13 +285,13 @@ export default {
   border-radius: 10px;
 }
 
-.user-content{
+.user-content-product-information{
   width: 30%;
   height: 100%;
   box-shadow: 0px 0px 20px 0px #cccccc;
 }
 
-.user-image{
+.user-image-product-information{
   background-color: #FFD146;
   padding: 2rem;
   display: flex;
@@ -226,11 +299,13 @@ export default {
   align-items: center;
 }
 
-.user-image img{
+.user-image-product-information img{
   border-radius: 50%;
   border: 4px solid #fff;
   width: 120px;
   height: 120px;
+  object-position: center;
+  object-fit:cover;
 }
 
 .user-details{
@@ -321,7 +396,7 @@ export default {
     width: 100%;
   }
 
-  .user-content{
+  .user-content-product-information{
     width: 100%;
   }
 }

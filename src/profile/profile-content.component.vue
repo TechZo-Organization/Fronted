@@ -34,11 +34,9 @@ export default {
         console.error('Error fetching user:', error);
       }
     },
-    logout() {
-      localStorage.removeItem('user');
-      this.user = null;
-      this.$router.push('/log-in');
-    }
+    edit() {
+      this.$router.push('/edit-profile');
+    },
   }
 };
 </script>
@@ -51,7 +49,7 @@ export default {
         <img :src="user.img" alt="User Image" class="user-image" />
         <div class="user-options">
           <h1 class="user-name">{{ user.name }}</h1>
-          <pv-button @click="logout" class="b-logout"><b>Cerrar sesión</b></pv-button>
+          <pv-button @click="edit" class="b-logout"><b>Editar Perfil</b></pv-button>
         </div>
       </div>
     </div>
@@ -61,7 +59,7 @@ export default {
   </div>
 </template>
 
-<style scoped>
+<style>
 .profile-content {
   display: flex;
   flex-direction: column;
@@ -74,7 +72,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 300px;
+  height: 380px;
   width: 100%;
   overflow: hidden;
 }
@@ -126,12 +124,15 @@ export default {
 }
 
 .b-logout:hover {
-  color: #bf1419;
+  background-color: #FFD146;
+  transition: 0.43s;
+  color: #000;
 }
 
 @media screen and (max-width: 500px){
   .user-info{
     flex-direction: column;
+    gap: 0;
   }
 }
 
