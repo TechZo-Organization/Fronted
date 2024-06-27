@@ -40,7 +40,7 @@ export default {
         this.userApi.getUserById(userId)
             .then((response) => {
               this.user = response.data;
-              this.userMembershipId = this.user.membership;
+              this.userMembershipId = this.user.membershipId;
               this.filterMemberships();
             })
             .catch((error) => {
@@ -51,7 +51,7 @@ export default {
     filterMemberships() {
       if (this.userMembershipId !== null && this.memberships.length) {
         this.filteredMemberships = this.memberships.filter(membership => {
-          return membership.id.toString() !== this.userMembershipId.toString() && membership.id !== "1";
+          return membership.id !== this.userMembershipId && membership.id !== 1;
         });
       } else if (this.userMembershipId === null && this.memberships.length) {
         this.filteredMemberships = this.memberships.filter(membership => {

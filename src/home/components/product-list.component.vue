@@ -15,7 +15,7 @@ export default {
 
 <template>
   <div class="list-products">
-    <card-product v-for="product in products" :key="product.id" :product="product" :categories="categories"></card-product>
+    <card-product v-for="product in products.slice(-28).reverse()" :key="product.id" :product="product" :categories="categories"></card-product>
   </div>
 </template>
 

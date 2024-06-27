@@ -32,24 +32,24 @@ export default {
   <router-link :to="`/product-information/${product.id}`" @click.native="scrollToTop">
     <pv-card class="card-container">
       <template #title>
-        <img v-if="product.images && product.images.length" :src="product.images[0]" alt="Imagen del producto" class="product-image">
+        <img v-if="product.photo !== ''" :src="product.photo" alt="Imagen del producto" class="product-image">
         <div v-else class="no-image-placeholder">No image available</div>
-        <div class="location-content" v-if="product.location">
+        <div class="location-content" v-if="product.district">
           <img src="../../../public/donations/location-icon.png" style="width: 20px; height: 20px;"/>
-          <h4>{{ product.location.district || 'Unknown' }}, {{ product.location.departament || 'Unknown' }}</h4>
+          <h4>{{ product.district.name || 'Unknown' }}, {{ product.district.department.name || 'Unknown' }}</h4>
         </div>
       </template>
       <template #content>
         <div class="main-content">
           <div class="card-content">
-            <h2 class="product-name">{{ product.product_name }}</h2>
-            <h3>{{ getCategoryName(product.category_id) }}</h3>
+            <h2 class="product-name">{{ product.name }}</h2>
+            <h3>{{ getCategoryName(product.categoryId) }}</h3>
             <p class="product-description">{{ product.description }}</p>
           </div>
           <hr>
           <div class="exchange-content">
             <img src="../../../public/products/exchange.icon.png" style="width: 16px; height: 16px;"/>
-            <p class="product-changefor">{{ product.change_for }}</p>
+            <p class="product-changefor">{{ product.objectChange }}</p>
           </div>
         </div>
       </template>

@@ -126,10 +126,10 @@ export default {
   computed: {
     filteredProducts() {
       return this.products.filter(product => {
-        const matchesCategory = this.selectedCategory ? product.category_id === this.selectedCategory : true;
-        const matchesName = this.filterCriteria.searchProduct ? product.product_name.toLowerCase().includes(this.filterCriteria.searchProduct.toLowerCase()) : true;
-        const matchesCountry = this.filterCriteria.selectedCountry ? product.location.country === this.filterCriteria.selectedCountry.country : true;
-        const matchesCity = this.filterCriteria.selectedCity ? product.location.district === this.filterCriteria.selectedCity.name : true;
+        const matchesCategory = this.selectedCategory ? product.categoryId === this.selectedCategory : true;
+        const matchesName = this.filterCriteria.searchProduct ? product.name.toLowerCase().includes(this.filterCriteria.searchProduct.toLowerCase()) : true;
+        const matchesCountry = this.filterCriteria.selectedCountry ? product.district.department.country.name === this.filterCriteria.selectedCountry.country : true;
+        const matchesCity = this.filterCriteria.selectedCity ? product.district.name === this.filterCriteria.selectedCity.name : true;
         const matchesPrice = (this.filterCriteria.minPrice ? product.price >= this.filterCriteria.minPrice : true) && (this.filterCriteria.maxPrice ? product.price <= this.filterCriteria.maxPrice : true);
 
         return matchesCategory && matchesName && matchesCountry && matchesCity && matchesPrice;

@@ -135,7 +135,7 @@ export default {
               <p class="detail-description">{{ product.description }}</p>
               <div class="icon-details">
                 <img src="../../../public/donations/location-icon.png" height="20" width="20"/>
-                <p>{{ product.district.name || 'Unknown' }}, {{ product.district.departament.name || 'Unknown' }}</p>
+                <p>{{ product.district.name || 'Unknown' }}, {{ product.district.department.name || 'Unknown' }}</p>
               </div>
               <div class="icon-details">
                 <img src="../../../public/products/exchange.icon.png" height="20" width="20"/>
