@@ -34,4 +34,10 @@ export class userApiService {
     getOffersMade(userId) {
         return http.get(`/api/v1/offer/user-own/${userId}`);
     }
+    getOffersSent(userId) {
+        return http.get(`/api/v1/offer/user-change/${userId}`);
+    }
+    getProfileInfoById(profileId){
+        return http.get(`/api/v1/profiles/${profileId}`);
+    }
 }

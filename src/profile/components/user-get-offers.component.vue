@@ -3,7 +3,7 @@
     <div v-for="offer in offers" :key="offer.id" class="offer-card">
       <div class="offer-card-content">
         <div class="product-header-get">
-          <h1>{{ offer.product_get.product_name }}</h1>
+          <h1>{{ offer.product_get.name }}</h1>
         </div>
         <div class="offer-details">
           <div class="column request-column">
@@ -12,14 +12,14 @@
                 <h1>¿Qué solicitas?</h1>
                 <div class="change-for">
                   <img src="../../../public/products/exchange.icon.png" style="height: 18px; width: 18px;">
-                  <p>{{offer.product_get.change_for}}</p>
+                  <p>{{offer.product_get.objectChange}}</p>
                 </div>
               </div>
               <div class="request-description">
                 <p>{{ offer.product_get.description }}</p>
               </div>
               <div class="request-footer">
-                <img :src="offer.product_get.images" alt="Product Image">
+                <img :src="offer.product_get.photo" alt="Product Image">
               </div>
             </div>
           </div>
@@ -27,15 +27,15 @@
             <div class="offer-info-card">
               <div class="offer-info-header">
                 <div class="user-image-container">
-                  <img v-if="offer.user_offer" :src="offer.user_offer.img" alt="User Image">
+                  <img v-if="offer.user_get" :src="offer.user_get.photo" alt="User Image">
                 </div>
-                <h1 v-if="offer.user_offer">{{ offer.user_offer.name }}</h1>
+                <h1 v-if="offer.user_get">{{ offer.user_get.name }}</h1>
               </div>
               <div class="offer-content">
                 <div class="offer-image-section">
                   <h1>¿Qué te han ofrecido?</h1>
                   <div class="offer-image-container">
-                    <img :src="offer.product_offers.images" alt="Offered Product Image">
+                    <img :src="offer.product_offers.photo" alt="Offered Product Image">
                   </div>
                 </div>
                 <div class="offer-details-section">
@@ -49,7 +49,7 @@
                     </div>
                     <div class="change-for">
                       <img src="../../../public/donations/location-icon.png" style="height: 18px; width: 18px;">
-                      <p> {{ offer.product_offers.location?.district }}, {{ offer.product_offers.location?.departament }}</p>
+                      <p> {{ offer.product_offers.district?.name }}, {{ offer.product_offers.district.department.name }}</p>
                     </div>
                   </div>
                 </div>
@@ -85,7 +85,6 @@
 import { homeApiService } from "../../home/services/home-api.service";
 import { userApiService } from "../services/user-api.service";
 import { offerApiService } from "../../publisher-profile/services/offers-api.service";
-import { Offer } from "../../publisher-profile/model/offer.entity";
 import DialogDeniedOffer from "./dialog-denied-offer.component.vue";
 import DialogAcceptedOffer from "./dialog-accepted-offer.component.vue";
 
@@ -98,7 +97,7 @@ export default {
       dialogVisible: false,
       dialogAcceptedVisible:false,
       selectedId: null,
-      dialogAcceptedData: {}, // Nueva variable para guardar los datos del diálogo
+      dialogAcceptedData: {},
       postsService: new homeApiService(),
       usersService: new userApiService(),
       offerService: new offerApiService()
@@ -110,52 +109,75 @@ export default {
   methods: {
     async getAllOffers() {
       try {
-        const response = await this.offerService.getOffers();
+        const userId = localStorage.getItem('user');
+        if (!userId) {
+          console.error('User ID not found');
+          return;
+        }
+
+        const response = await this.usersService.getOffersSent(userId);
+
         const data = response.data;
         if (Array.isArray(data)) {
-          const userId = localStorage.getItem('user');
           const offerPromises = data.map(async (offer) => {
-            if (offer.id_user_get === userId && offer.status === "Pendiente") {
-              const newOffer = new Offer(
-                  offer.id,
-                  offer.id_user_offers,
-                  offer.id_product_offers,
-                  offer.id_user_get,
-                  offer.id_product_get,
-                  offer.status
-              );
-
-              const [productGet, productOffers, userGet] = await Promise.all([
-                this.postsService.getProductById(offer.id_product_get),
-                this.postsService.getProductById(offer.id_product_offers),
-                this.usersService.getUserById(offer.id_user_offers)
-              ]);
-
-              newOffer.setProductGet = productGet.data;
-              newOffer.setProductOffers = productOffers.data;
-              newOffer.setUserOffers = userGet.data;
-
-              return newOffer;
+            if (offer.state !== "Pending") {
+              return null;
             }
+            const newOffer = {
+              id: offer.id,
+              productOwnerId: offer.productOwnerId,
+              productExchangeId: offer.productExchangeId,
+              state: offer.state,
+              product_get: null,
+              product_offers: null,
+              user_get: null,
+            };
+
+            const [productOwner, productExchange] = await Promise.all([
+              this.postsService.getProductById(offer.productOwnerId),
+              this.postsService.getProductById(offer.productExchangeId)
+            ]);
+
+            if (productOwner.data.userId) {
+              const userProfile = await this.usersService.getProfileInfoById(productOwner.data.userId);
+              newOffer.user_get = userProfile.data;
+            }
+
+            newOffer.product_get = productExchange.data;
+            newOffer.product_offers = productOwner.data;
+
+            return newOffer;
           });
 
           this.offers = (await Promise.all(offerPromises)).filter(Boolean);
         } else {
+          console.error('Data is not an array:', data);
         }
       } catch (error) {
+        console.error('Error fetching offers:', error);
       }
     },
     setStatusAccepted(offerId) {
-      this.offerService.updateOfferStatus(offerId, 'Aceptado').then(() => {
+      const offer = this.offers.find(offer => offer.id === offerId);
+      if (!offer) {
+        console.error('Offer not found');
+        return;
+      }
+      const AcceptedStatus = {
+        productOwnerId: offer.productOwnerId,
+        productExchangeId: offer.productExchangeId,
+        state: "Accepted"
+      }
+      this.offerService.updateOfferStatus(offerId, AcceptedStatus).then(() => {
         const offer = this.offers.find(offer => offer.id === offerId);
         if (offer) {
           this.offers = this.offers.filter(offer => offer.id !== offerId);
-          this.dialogAcceptedVisible = true; // Mostrar el diálogo
-          this.dialogAcceptedData = { // Guardar los datos en una variable
-            name: offer.user_offer.name,
-            img: offer.user_offer.img,
-            phone: offer.user_offer.phone,
-            email: offer.user_offer.email
+          this.dialogAcceptedVisible = true;
+          this.dialogAcceptedData = {
+            name: offer.user_get.name,
+            img: offer.user_get.photo,
+            phone: offer.user_get.phone,
+            email: offer.user_get.email
           };
         }
       });
@@ -165,7 +187,17 @@ export default {
       this.dialogVisible = true;
     },
     setStatusDenied(offerId) {
-      this.offerService.updateOfferStatus(offerId, 'Denegado').then(() => {
+      const offer = this.offers.find(offer => offer.id === offerId);
+      if (!offer) {
+        console.error('Offer not found');
+        return;
+      }
+      const DeniedStatus = {
+        productOwnerId: offer.productOwnerId,
+        productExchangeId: offer.productExchangeId,
+        state: "Denied"
+      }
+      this.offerService.updateOfferStatus(offerId, DeniedStatus).then(() => {
         this.offers = this.offers.filter(offer => offer.id !== offerId);
         this.dialogVisible = false;
       });
