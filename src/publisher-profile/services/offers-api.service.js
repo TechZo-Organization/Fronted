@@ -10,7 +10,7 @@ export class offerApiService {
         return http.get("/api/v1/offer");
     }
     updateOfferStatus(id, status){
-        return http.put(`/api/v1/offer/${id}`, { status});
+        return http.put(`/api/v1/offer/${id}`, status);
     }
     getOfferById(offerId) {
         return http.get(`/offer/${offerId}`);

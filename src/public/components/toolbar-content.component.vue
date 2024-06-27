@@ -91,7 +91,7 @@ export default {
           <div v-if="user">
             <router-link to="/profile" @click.native="scrollToTop">
               <pv-button class="user-img-button">
-                <img :src="user.img" alt="User Image" class="user-img" />
+                <img :src="user.photo" alt="User Image" class="user-img" />
               </pv-button>
             </router-link>
           </div>
