@@ -7,23 +7,23 @@ const http = axios.create({
 
 export class homeApiService {
     getCategoriesProduct() {
-        return http.get("/categories-objects");
+        return http.get("/api/v1/product-category");
     }
     getProduct() {
-        return http.get("/products");
+        return http.get("/api/v1/product");
     }
     getProductById(productId) {
-        return http.get(`/products/${productId}`);
+        return http.get(`/api/v1/product/${productId}`);
     }
     getCategoryById(categoryId) {
-        return http.get(`/categories/${categoryId}`);
+        return http.get(`/api/v1/product-category/${categoryId}`);
     }
     deleteProduct(id) {
-        return http.delete(`/products/${id}`);
+        return http.delete(`/api/v1/product/${id}`);
     }
 
     putProduct(id, data) {
-        return http.put(`/products/${id}`, data);
+        return http.put(`/api/v1/product/${id}`, data);
     }
 
 

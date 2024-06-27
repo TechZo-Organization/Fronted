@@ -1,5 +1,6 @@
 <script>
 import { userApiService } from "../login/services/user-api.service.js";
+import { authService } from "../auth/services/auth-api.service.js";
 import DialogRegisterSuccesfully from "./components/dialog-register-succesfully.component.vue";
 
 export default {
@@ -17,6 +18,7 @@ export default {
       showPassword: false,
       showConfirmPassword: false,
       userService: new userApiService(),
+      authService: new authService(),
       errorMessage: '',
       showDialog: false,
     };
@@ -39,22 +41,18 @@ export default {
       }
 
       try {
-        const response = await this.userService.getUser();
-        const users = response.data;
         const newUser = {
           name: this.name,
           email: this.email,
           phone: this.phone,
-          password: this.password,
-          membership: "1",
-          membership_date: '',
-          img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR6lqpQj3oAmc1gtyM78oJCbTaDrD7Fj9NRlceOPDZiHA&s",
-          id: (users.length + 1).toString(),
-          favorites: []
+          membershipId: 1,
+          photo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR6lqpQj3oAmc1gtyM78oJCbTaDrD7Fj9NRlceOPDZiHA&s",
         };
 
+        console.log(newUser)
         await this.userService.registerUser(newUser);
-        this.showDialog = true;  // Mostrar el diálogo de registro exitoso
+        await this.authService.register(this.email, this.password);
+        this.showDialog = true;
       } catch (error) {
         console.error(error);
         this.errorMessage = 'Error al registrar el usuario';
@@ -120,7 +118,7 @@ export default {
                 <div class="input-group">
                   <pv-input v-model="password" required class="show-hide-text" :type="showPassword ? 'text' : 'password'"></pv-input>
                   <div class="show-hide">
-                    <img :src="showPassword ? '../../public/login/show-icon.png' : '../../public/login/hide-icon.png'" @click="togglePasswordVisibility" class="show-hide-password"/>
+                    <img :src="showPassword ? '/login/show-icon.png' : '/login/hide-icon.png'" @click="togglePasswordVisibility" class="show-hide-password"/>
                   </div>
                 </div>
               </div>
@@ -129,7 +127,7 @@ export default {
                 <div class="input-group">
                   <pv-input v-model="confirmPassword" required class="show-hide-text" :type="showConfirmPassword ? 'text' : 'password'"></pv-input>
                   <div class="show-hide">
-                    <img :src="showConfirmPassword ? '../../public/login/show-icon.png' : '../../public/login/hide-icon.png'" @click="toggleConfirmPasswordVisibility" class="show-hide-password"/>
+                    <img :src="showConfirmPassword ? '/login/show-icon.png' : '/login/hide-icon.png'" @click="toggleConfirmPasswordVisibility" class="show-hide-password"/>
                   </div>
                 </div>
               </div>

@@ -6,15 +6,15 @@
           <img src="../../../public/toolbar/close-icon.png" height="30" width="30"/>
         </button>
       </div>
-      <div class="dialog-container">
+      <div class="dialog-container-offer">
         <h1>¡FELICIDADES!</h1>
-        <div class="user-info">
+        <div class="user-info-offer">
           <p>Estamos muy contentos de que hayas completado de manera exitosa este CambiaZo. Le haremos saber a {{ data.name }} que aceptaste la oferta recibida.</p>
-          <div class="contact-info">
+          <div class="contact-info-offer">
             <div class="user-image">
               <img :src="data.img" alt="User Image" class="user-image"/>
             </div>
-            <div class="contact-info-detail">
+            <div class="contact-info-offer-detail">
               <h2>Información de Contacto de {{data.name}}:</h2>
 
               <button @click="sendWhatsapp"  class="button-whatsapp">WhatsApp</button>
@@ -66,7 +66,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .dialog-overlay {
   position: fixed;
   top: 0;
@@ -90,18 +90,18 @@ export default {
   margin: 1rem;
 }
 
-.dialog-container {
+.dialog-container-offer {
   padding: 1rem;
   text-align: center;
 }
 
-.dialog-container h1 {
+.dialog-container-offer h1 {
   font-size: 30px;
   font-weight: bolder;
   padding-bottom: 1rem;
 }
 
-.dialog-container p {
+.dialog-container-offer p {
   font-size: 20px;
   padding-bottom: 2rem;
 }
@@ -159,12 +159,12 @@ export default {
   border:solid 3px #61b4e3;
   transform: scale(1.02);
 }
-.contact-info{
+.contact-info-offer{
   display: flex;
   flex-direction: row;
   gap: 20px;
 }
-.contact-info-detail{
+.contact-info-offer-detail{
   display: flex;
   flex-direction: column;
   align-self: center;
@@ -174,7 +174,7 @@ export default {
   width: 100%;
   gap:15px;
 }
-.contact-info-detail h2{
+.contact-info-offer-detail h2{
   font-size: 18px;
   font-weight:bold;
 }
@@ -212,7 +212,7 @@ export default {
     width: 75%;
   }
 
-  .contact-info{
+  .contact-info-offer{
     display: flex;
     flex-direction: column;
     gap: 20px;
