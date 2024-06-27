@@ -19,16 +19,16 @@ export default {
   mounted() {
     const user = localStorage.getItem('user');
     if (user) {
-      this.user = JSON.parse(user);
+      this.user = localStorage.getItem('user');
     }
   },
   methods: {
-    handleStart() {
-      if (!this.user) {
+    handleStart(event) {
+      if (this.user) {
+        this.$router.push(`/membership-payment/${this.membership.id}`);
+      } else {
         this.showDialog = true;
         document.body.classList.add('no-scroll');
-      } else {
-        // Lógica para cuando el usuario está logueado
       }
     },
     closeDialog() {
@@ -55,9 +55,7 @@ export default {
       </template>
       <template #subtitle><p>{{ membership.description }}</p>
         <div style="text-align: center;">
-          <router-link :to="`/membership-payment/${membership.id}`" @click.native="scrollToTop">
             <pv-button @click="handleStart" class="b-start"><b>¡Empieza ahora!</b></pv-button>
-          </router-link>
         </div>
       </template>
       <template #content>

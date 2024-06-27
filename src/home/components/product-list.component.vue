@@ -15,7 +15,7 @@ export default {
 
 <template>
   <div class="list-products">
-    <card-product v-for="product in products" :key="product.id" :product="product" :categories="categories"></card-product>
+    <card-product v-for="product in products.slice(-28).reverse()" :key="product.id" :product="product" :categories="categories"></card-product>
   </div>
 </template>
 
@@ -25,7 +25,6 @@ export default {
   flex-wrap: wrap;
   justify-content: center;
   max-width: 100%;
-  padding-top: 3rem;
   padding-bottom: 3rem;
   padding-left: 1rem;
   padding-right: 1rem;

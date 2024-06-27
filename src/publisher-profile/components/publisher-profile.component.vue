@@ -38,8 +38,9 @@ export default {
     },
     async fetchUserProducts(userId) {
       try {
-        const response = await new homeApiService().getProduct();
-        this.products = response.data.filter(product => product.user_id === userId);
+        const available = true;
+        const response = await new homeApiService().getProductByIdAvailable(userId,available);
+        this.products = response.data;
         this.isLoading = false;
       } catch (error) {
         console.error("Error fetching user products:", error);
@@ -145,24 +146,24 @@ export default {
           <router-link v-for="product in products" :key="product.id" :to="`/product-information/${product.id}`" @click.native="scrollToTop">
             <pv-card class="card-container" >
               <template #title>
-                <img v-if="product.images && product.images.length" :src="product.images[0]" alt="Imagen del producto" class="product-image">
+                <img v-if="product.photo && product.photo.length" :src="product.photo" alt="Imagen del producto" class="product-image">
                 <div v-else class="no-image-placeholder">No image available</div>
-                <div class="location-content" v-if="product.location">
+                <div class="location-content">
                   <img src="../../../public/donations/location-icon.png" style="width: 20px; height: 20px;"/>
-                  <h4>{{ product.location.district || 'Unknown' }}, {{ product.location.departament || 'Unknown' }}</h4>
+                  <h4>{{ product.district.name || 'Unknown' }}, {{ product.district.department.name|| 'Unknown' }}</h4>
                 </div>
               </template>
               <template #content>
                 <div class="main-content">
                   <div class="card-content">
-                    <h2 class="product-name">{{ product.product_name }}</h2>
-                    <h3>{{ getCategoryName(product.category_id) }}</h3>
+                    <h2 class="product-name">{{ product.name }}</h2>
+                    <h3>{{ getCategoryName(product.categoryId) }}</h3>
                     <p class="product-description">{{ product.description }}</p>
                   </div>
                   <hr class="separation-line">
                   <div class="exchange-content">
                     <img src="../../../public/products/exchange.icon.png" style="width: 16px; height: 16px;"/>
-                    <p class="product-changefor">{{ product.change_for }}</p>
+                    <p class="product-changefor">{{ product.objectChange }}</p>
                   </div>
                 </div>
               </template>
@@ -178,11 +179,11 @@ export default {
       <div class="publisher-data">
         <div class="contact-information">
           <div class="publisher-image">
-            <img :src="user.img" alt="User Image"/>
+            <img :src="user.photo" alt="User Image"/>
           </div>
           <div class="publisher-details">
             <h1>{{ user.name }}</h1>
-            <h3>{{ user.email }}</h3>
+            <h3 class="email-user-publisher-profile">{{ user.email }}</h3>
             <div class="publisher-rating">
               <div class="rating-list">
                 <div v-for="star in getStarRating(averageScore)" :key="star.icon">
@@ -223,21 +224,21 @@ export default {
 </template>
 
 <style scoped>
-
 .publisher-content{
   display: flex;
   gap: 1rem;
 }
-
 .publisher-products{
   width: 75%;
 }
-
 .list-products{
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
 }
-
+.email-user-publisher-profile{
+  word-wrap: break-word;
+}
 .card-container {
   background-color: #fff;
   width: 280px;
@@ -247,18 +248,15 @@ export default {
   cursor: pointer;
   transition: 0.3s;
 }
-
 .card-container:hover {
   box-shadow: 0px 0px 20px 0px #636363;
 }
-
 .product-image {
   width: 100%;
   height: 40vh;
   object-fit: cover;
   object-position: center;
 }
-
 .no-image-placeholder {
   width: 100%;
   height: 40vh;
@@ -269,7 +267,6 @@ export default {
   color: #aaa;
   font-size: 1.2em;
 }
-
 .location-content {
   background-color: #000;
   color: #fff;
@@ -281,11 +278,9 @@ export default {
   justify-content: center;
   align-items: center;
 }
-
 .card-content {
   padding: 0.6rem;
 }
-
 .product-name {
   font-weight: bolder;
   font-size: 16.5px;
@@ -295,7 +290,6 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
 .card-content h3 {
   font-weight: bolder;
   font-size: 14px;
@@ -303,7 +297,6 @@ export default {
   padding-bottom: 0.25rem;
   color: #989898;
 }
-
 .product-description {
   font-size: 13px;
   text-align: justify;
@@ -316,7 +309,6 @@ export default {
   padding-bottom: 1rem;
   margin-bottom: 1.5rem;
 }
-
 .separation-line {
   border: none;
   height: 1.5px;
@@ -324,13 +316,11 @@ export default {
   margin-left: 15px;
   margin-right: 15px;
 }
-
 .exchange-content {
   padding: 1rem 0.6rem 0.6rem 0.6rem;
   display: flex;
   gap: 5px;
 }
-
 .product-changefor {
   font-size: 13px;
   display: -webkit-box;
@@ -342,7 +332,6 @@ export default {
   padding-bottom: 1rem;
   margin-bottom: 1rem;
 }
-
 .footer-content {
   background-color: #ffd146;
   font-weight: bolder;
@@ -350,8 +339,6 @@ export default {
   padding-bottom: 0.3rem;
   text-align: center;
 }
-
-
 .publisher-products h1{
   background-color: #FFD146;
   padding: 1rem 0.5rem 1rem 1.5rem;
@@ -361,7 +348,6 @@ export default {
   box-shadow: 0px 0px 20px 0px #cccccc;
   margin-bottom: 1rem;
 }
-
 .subtitle-products{
   background-color: #000;
   color: #fff;
@@ -371,11 +357,9 @@ export default {
   box-shadow: 0px 0px 20px 0px #cccccc;
   text-align: center;
 }
-
 .publisher-data{
   width: 25%;
 }
-
 .contact-information{
   box-shadow: 0px 0px 20px 0px #cccccc;
   margin-bottom: 1rem;
@@ -495,7 +479,10 @@ export default {
     flex-direction: column;
     align-items: center;
   }
-
+  .card-container{
+    margin-left: 0;
+    margin-right: 0;
+  }
   .publisher-products {
     width: 100%;
   }

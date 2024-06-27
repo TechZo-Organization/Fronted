@@ -1,3 +1,81 @@
+<template>
+  <div class="user-offers-title">
+    <p>Intercambios Completados con Éxito:</p>
+  </div>
+  <div class="line-text">
+    <div class="line"></div>
+  </div>
+  <div class="exchange__container">
+    <div v-for="(offer, index) in offersMade" :key="index" class="list__of_exchanges">
+      <div v-if="offer.state === 'Accepted'" class="example__card__exchanges">
+        <div class="exchange__info">
+          <div class="product__offer">
+            <img class="card__img__exchanges" :src="offer.setProductGet.photo">
+            <p class="offer__text">Ofreciste un {{ offer.setProductGet.name }}</p>
+          </div>
+          <img class="arrows" src="../../../public/profile/arrows.svg" alt="">
+          <div class="product__get">
+            <img class="card__img__exchanges" :src="offer.setProductOffers.photo">
+            <p class="get__text">Conseguiste un {{ offer.setProductOffers.name }}</p>
+          </div>
+        </div>
+        <div class="review__info">
+          <p class="question">¿Quieres puntuar la comunicación con {{ offer.setUserGet.name }}?</p>
+          <div class="qualification">
+            <p class="point">Puntuación:</p>
+            <div class="star-rating">
+              <i v-for="icon in maxRatingArr"
+                 :key="icon"
+                 @mouseenter="HandleMouseEnter(icon, index, 'made')"
+                 @mouseleave="HandleMouseLeave(index, 'made')"
+                 @click="Rating(icon, index, 'made')"
+                 :class="{ 'pi pi-star-fill': true, 'checked': selectedStar.made[index] > icon }">
+              </i>
+            </div>
+          </div>
+          <p class="suggest">Deja una reseña y comparte tu experiencia con {{ offer.setUserGet.name }}:</p>
+          <textarea v-model="inputs.made[index]" class="review__text" placeholder="Escribe aquí..."></textarea>
+          <button class="send__review" @click="sendReview(index, offer.setUserGet.id, 'made',offer.id)">Publicar</button>
+        </div>
+      </div>
+    </div>
+    <div v-for="(offer, index) in offersReceived" :key="index" class="list__of_exchanges">
+      <div v-if="offer.state === 'Accepted'" class="example__card__exchanges">
+        <div class="exchange__info">
+          <div class="product__offer">
+            <img class="card__img__exchanges" :src="offer.setProductGet.photo">
+            <p class="offer__text">Ofreciste un {{ offer.setProductGet.name }}</p>
+          </div>
+          <img class="arrows" src="../../../public/profile/arrows.svg" alt="">
+          <div class="product__get">
+            <img class="card__img__exchanges" :src="offer.setProductOffers.photo">
+            <p class="get__text">Conseguiste un {{ offer.setProductOffers.name }}</p>
+          </div>
+        </div>
+        <div class="review__info">
+          <p class="question">¿Quieres puntuar la comunicación con {{ offer.setUserGet.name }}?</p>
+          <div class="qualification">
+            <p class="point">Puntuación:</p>
+            <div class="star-rating">
+              <i v-for="icon in maxRatingArr"
+                 :key="icon"
+                 @mouseenter="HandleMouseEnter(icon, index, 'received')"
+                 @mouseleave="HandleMouseLeave(index, 'received')"
+                 @click="Rating(icon, index, 'received')"
+                 :class="{ 'pi pi-star-fill': true, 'checked': selectedStar.received[index] > icon }">
+              </i>
+            </div>
+          </div>
+          <p class="suggest">Deja una reseña y comparte tu experiencia con {{ offer.setUserGet.name }}:</p>
+          <textarea v-model="inputs.received[index]" class="review__text" placeholder="Escribe aquí..."></textarea>
+          <button class="send__review" @click="sendReview(index, offer.setUserGet.id, 'received',offer.id)">Publicar</button>
+        </div>
+      </div>
+    </div>
+    <DialogReviewComponent :visible="dialogVisible" @close="dialogVisible = false" />
+  </div>
+</template>
+
 <script>
 import { offerApiService } from "../../publisher-profile/services/offers-api.service.js";
 import { homeApiService } from "../../home/services/home-api.service.js";
@@ -49,42 +127,45 @@ export default {
         const response = await this.userService.getUserById(userId);
         this.userMe = response.data;
       } catch (error) {
+        console.error(error);
       }
     },
     async getAllOffers() {
       try {
-        const response = await this.offersService.getOffers();
+        const response = await this.offersService.getOffersByUserOwnId(Number(localStorage.getItem('user')));
         const data = response.data;
         if (Array.isArray(data)) {
           for (const offer of data) {
-            if (offer.id_user_offers === localStorage.getItem('user')) {
-              const setProductOffers = await this.getProductById(offer.id_product_offers);
-              const setProductGet = await this.getProductById(offer.id_product_get);
-              const { data: setUserGet } = await this.userService.getUserById(offer.id_user_get);
-              this.offersMade.push({ ...offer, setProductOffers, setProductGet, setUserGet });
-            }
+            console.log(offer);
+            const setProductOffers = await this.getProductById(offer.productExchangeId);
+            console.log(setProductOffers);
+            const setProductGet = await this.getProductById(offer.productOwnerId);
+            const { data: setUserGet } = await this.userService.getUserById(setProductGet.userId);
+            console.log("primera parte", setUserGet);
+            this.offersMade.push({ ...offer, setProductOffers, setProductGet, setUserGet });
           }
-        } else {
         }
       } catch (error) {
+        console.error(error);
       }
     },
     async getAllOffers2() {
       try {
-        const response = await this.offersService.getOffers();
+        const response = await this.offersService.getOffersByUserChangeId(Number(localStorage.getItem('user')));
         const data = response.data;
         if (Array.isArray(data)) {
           for (const offer of data) {
-            if (offer.id_user_get === localStorage.getItem('user')) {
-              const setProductOffers = await this.getProductById(offer.id_product_offers);
-              const setProductGet = await this.getProductById(offer.id_product_get);
-              const { data: setUserGet } = await this.userService.getUserById(offer.id_user_offers);
-              this.offersReceived.push({ ...offer, setProductOffers, setProductGet, setUserGet });
-            }
+            const setProductOffers = await this.getProductById(offer.productOwnerId);
+            const setProductGet = await this.getProductById(offer.productExchangeId);
+            const { data: setUserGet } = await this.userService.getUserById(setProductOffers.userId);
+            console.log("la otra parte", setUserGet);
+            this.offersReceived.push({ ...offer, setProductOffers, setProductGet, setUserGet });
           }
         } else {
+          console.error('Data is not an array');
         }
       } catch (error) {
+        console.error(error);
       }
     },
     async getProductById(productId) {
@@ -109,102 +190,29 @@ export default {
       this.selectedStar[type][index] = icon + 1;
       this.previousSelection[type][index] = this.selectedStar[type][index];
     },
-    async sendReview(index, otherId, type) {
+    async sendReview(index, otherId, type, offerId) {
       if (this.selectedStar[type][index] === 0) {
+        return;
       }
       const review = {
-        content: this.inputs[type][index],
+        message: this.inputs[type][index],
         score: this.selectedStar[type][index],
-        get_user_id: otherId,
-        give_user_id: this.userMe.id
+        state: "Accepted",
+        profileAuthorId: this.userMe.id,
+        profileReceptorId: otherId,
+        offerId: offerId
       };
       try {
         await this.reviewService.postReview(review);
         this.dialogVisible = true;
       } catch (error) {
+        console.error('Error posting review:', error);
       }
-    }
+    },
   }
 };
 </script>
-
-<template>
-  <div class="user-offers-title">
-    <p>Intercambios Completados con Éxito:</p>
-  </div>
-  <div class="line-text">
-    <div class="line"></div>
-  </div>
-  <div class="exchange__container">
-    <div v-for="(offer, index) in offersMade" :key="index" class="list__of_exchanges">
-      <div v-if="offer.status === 'Aceptado'" class="example__card__exchanges">
-        <div class="exchange__info">
-          <div class="product__offer">
-            <img class="card__img__exchanges" :src="offer.setProductGet.images">
-            <p class="offer__text">Ofreciste un {{ offer.setProductGet.product_name }}</p>
-          </div>
-          <img class="arrows" src="../../../public/products/exchange.icon.png" alt="">
-          <div class="product__get">
-            <img class="card__img__exchanges" :src="offer.setProductOffers.images">
-            <p class="get__text">Conseguiste un {{ offer.setProductOffers.product_name }}</p>
-          </div>
-        </div>
-        <div class="review__info">
-          <p class="question">¿Quieres puntuar la comunicación con {{ offer.setUserGet.name }}?</p>
-          <div class="qualification">
-            <p class="point">Puntuación:</p>
-            <div class="star-rating">
-              <i v-for="icon in maxRatingArr"
-                 :key="icon"
-                 @mouseenter="HandleMouseEnter(icon, index, 'received')"
-                 @mouseleave="HandleMouseLeave(index, 'received')"
-                 @click="Rating(icon, index, 'received')"
-                 :class="{ 'pi pi-star-fill': true, 'checked': selectedStar.received[index] > icon }">
-              </i>
-            </div>
-          </div>
-          <p class="suggest">Deja una reseña y comparte tu experiencia con {{ offer.setUserGet.name }}:</p>
-          <textarea v-model="inputs.made[index]" class="review__text" placeholder="Escribe aquí..."></textarea>
-          <button class="send__review" @click="sendReview(index, offer.setUserGet.id, 'made')">Publicar</button>
-        </div>
-      </div>
-    </div>
-    <div v-for="(offer, index) in offersReceived" :key="index" class="list__of_exchanges">
-      <div v-if="offer.status === 'Aceptado'" class="example__card__exchanges">
-        <div class="exchange__info">
-          <div class="product__offer">
-            <img class="card__img__exchanges" :src="offer.setProductGet.images">
-            <p class="offer__text">Ofreciste un {{ offer.setProductGet.product_name }}</p>
-          </div>
-          <img class="arrows" src="../../../public/profile/arrows.svg" alt="">
-          <div class="product__get">
-            <img class="card__img__exchanges" :src="offer.setProductOffers.images">
-            <p class="get__text">Conseguiste un {{ offer.setProductOffers.product_name }}</p>
-          </div>
-        </div>
-        <div class="review__info">
-          <p class="question">¿Quieres puntuar la comunicación con {{ offer.setUserGet.name }}?</p>
-          <div class="qualification">
-            <p class="point">Puntuación:</p>
-            <div class="star-rating">
-              <i v-for="icon in maxRatingArr"
-                 :key="icon"
-                 @mouseenter="HandleMouseEnter(icon, index, 'received')"
-                 @mouseleave="HandleMouseLeave(index, 'received')"
-                 @click="Rating(icon, index, 'received')"
-                 :class="{ 'pi pi-star-fill': true, 'checked': selectedStar.received[index] > icon }">
-              </i>
-            </div>
-          </div>
-          <p class="suggest">Deja una reseña y comparte tu experiencia con {{ offer.setUserGet.name }}:</p>
-          <textarea v-model="inputs.received[index]" class="review__text" placeholder="Escribe aquí..."></textarea>
-          <button class="send__review" @click="sendReview(index, offer.setUserGet.id, 'received')">Publicar</button>
-        </div>
-      </div>
-    </div>
-    <DialogReviewComponent :visible="dialogVisible" @close="dialogVisible = false" />
-  </div>
-</template>
+s
 
 <style>
 .list__of_exchanges{

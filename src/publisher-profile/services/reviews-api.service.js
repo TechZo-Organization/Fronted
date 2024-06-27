@@ -7,15 +7,15 @@ const http = axios.create({
 
 export class reviewApiService {
     getReviews() {
-        return http.get("/reviews");
+        return http.get("/api/v1/review");
     }
     getReviewById(reviewId) {
-        return http.get(`/reviews/${reviewId}`);
+        return http.get(`/api/v1/review/${reviewId}`);
     }
     getReviewsByUserId(userId) {
-        return http.get(`/reviews?get_user_id=${userId}`);
+        return http.get(`/api/v1/review?get_user_id=${userId}`);
     }
     postReview(data){
-        return http.post(`/reviews`, data)
+        return http.post(`/api/v1/review`, data)
     }
 }

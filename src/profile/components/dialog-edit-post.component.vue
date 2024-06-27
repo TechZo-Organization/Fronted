@@ -73,14 +73,14 @@ export default {
       try {
         const response = await this.userService.getUser();
         const userId = localStorage.getItem('user');
-        const user = response.data.find(user => user.id === userId);
+        const user = response.data.find(user => user.id.toString() === userId);
         this.userData = {
           name: user.name,
           email: user.email,
           phone: user.phone,
-          membership: user.membership
+          membershipId: user.membershipId
         };
-        this.boostOrNotDisabled = user.membership === '1';
+        this.boostOrNotDisabled = user.membershipId === 1;
       } catch (error) {
         console.error('Error fetching user data:', error);
       }
@@ -99,6 +99,7 @@ export default {
         this.selectedCity = null;
       }
     },
+
     handleImageUpload(event) {
       const files = event.target.files;
       if (files.length + this.uploadedImages.length > 1) {
@@ -141,21 +142,21 @@ export default {
       if (this.$refs.form.checkValidity()) {
         await this.uploadImage();
 
+        const responseDistrict = await this.apiService.getDistrictByName(this.selectedCity.name);
+        const district = responseDistrict.data;
+
         const productData = {
-          id: this.editedProduct.id,
-          user_id: this.editedProduct.user_id,
-          category_id: this.selectedCategory ? this.selectedCategory.id : this.editedProduct.category_id,
-          product_name: this.editedProduct.product_name,
+          id: Number(this.editedProduct.id),
+          name: this.editedProduct.name,
           description: this.editedProduct.description,
-          change_for: this.editedProduct.change_for,
+          objectChange:this.editedProduct.objectChange,
           price: this.editedProduct.price,
-          images: this.imagesUrl.length ? this.imagesUrl : this.editedProduct.images,
+          photo: this.imagesUrl.length ? this.imagesUrl[0] : this.editedProduct.photo,
           boost: this.boostOrNot,
-          location: {
-            country: this.selectedCountry ? this.selectedCountry.country : this.editedProduct.location.country,
-            departament: this.selectedDepartment ? this.selectedDepartment.name : this.editedProduct.location.departament,
-            district: this.selectedCity ? this.selectedCity.name : this.editedProduct.location.district,
-          },
+          available: true,
+          categoryId: this.selectedCategory ? Number(this.selectedCategory.id) : Number(this.editedProduct.categoryId),
+          userId: Number(this.editedProduct.userId),
+          districtId: district.id
         };
 
         try {
@@ -172,19 +173,19 @@ export default {
     await this.fetchCountries();
     await this.fetchCategories();
     await this.fetchUserData();
-    if (this.product.location) {
-      this.selectedCountry = this.countries.find(country => country.country === this.product.location.country);
+    if (this.product) {
+      this.selectedCountry = this.countries.find(country => country.name === this.product.district.department.country.name);
       if (this.selectedCountry) {
         this.departments = this.selectedCountry.departments;
-        this.selectedDepartment = this.departments.find(department => department.name === this.product.location.departament);
+        this.selectedDepartment = this.departments.find(department => department.name === this.product.district.department.name);
         if (this.selectedDepartment) {
           this.cities = this.selectedDepartment.cities.map(city => ({ name: city }));
-          this.selectedCity = this.cities.find(city => city.name === this.product.location.district);
+          this.selectedCity = this.cities.find(city => city.name === this.product.district.name);
         }
       }
     }
-    if (this.product.category_id) {
-      this.selectedCategory = this.categories.find(category => category.id === this.product.category_id);
+    if (this.product.categoryId) {
+      this.selectedCategory = this.categories.find(category => category.id === this.product.categoryId);
     }
   }
 };
@@ -241,7 +242,7 @@ export default {
                   </div>
                   <div class="inputs-publish">
                     <label><b>Título del Producto</b></label><br>
-                    <pv-input v-model="editedProduct.product_name" required class="input" type="text" placeholder="Ingrese el título de su producto"></pv-input>
+                    <pv-input v-model="editedProduct.name" required class="input" type="text" placeholder="Ingrese el título de su producto"></pv-input>
                     <br><br>
                     <label><b>Descripción del Producto</b></label><br>
                     <textarea v-model="editedProduct.description" class="input" placeholder="Descripción de tu Producto" required></textarea>
@@ -250,7 +251,7 @@ export default {
                     <pv-input v-model="editedProduct.price" required class="input" type="number" placeholder="Ingrese el precio de su producto"></pv-input>
                     <br><br>
                     <label><b>Cambiar por:</b></label><br>
-                    <textarea v-model="editedProduct.change_for" class="input" placeholder="¿Qué producto esperas recibir?" required></textarea>
+                    <textarea v-model="editedProduct.objectChange" class="input" placeholder="¿Qué producto esperas recibir?" required></textarea>
                   </div>
                 </div>
                 <div class="row-form">

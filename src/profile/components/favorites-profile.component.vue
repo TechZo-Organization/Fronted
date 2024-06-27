@@ -80,7 +80,7 @@ export default {
       <div class="line"></div>
     </div>
     <div class="favorites__container">
-      <div v-if="loading">Cargando...</div>
+      <div v-if="loading">No hay favoritos por mostrar</div>
       <div v-else>
         <div v-for="favorite in favorites" :key="favorite.id">
           <div class="example__card__favorites">

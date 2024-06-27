@@ -10,7 +10,7 @@
     <div class="background-profile">
       <img src="../../../public/profile/profile-background.png" class="background-image" />
       <div class="user-info" v-if="user">
-        <img :src="user.img" alt="User Image" class="user-image" />
+        <img :src="user.photo" alt="User Image" class="user-image" />
         <div class="user-options">
           <h1 class="user-name">{{ user.name }}</h1>
         </div>
@@ -86,7 +86,6 @@
                       <p class="card-membership-profile-membership-name">{{ membership.name }}</p>
                       <p class="card-membership-profile-membership-price" v-if="membership.price === 0">GRATIS</p>
                       <p v-else class="card-membership-profile-membership-price">${{ membership.price }}<span class="info-price">c/mes</span></p>
-                      <p class="card-membership-profile-membership-date" v-if="membership.price !== 0">Tu plan se renueva el {{ user.membership_date }}</p>
                     </div>
                   </div>
                   <div v-if="membership.price !== 0" class="card-membership-profile-footer">
@@ -126,6 +125,7 @@
 <script>
 import { userApiService } from "../services/user-api.service.js";
 import { membershipsApiService } from "../../memberships/services/membership-api.service.js";
+import {authService} from "../../auth/services/auth-api.service.js";
 import DialogDeleteAccount from "./dialog-delete-account.component.vue";
 import DialogCancelMembership from "./dialog-cancel-membership.component.vue";
 import DialogChangeSuccesfully from "./dialog-change-succesfully.vue";
@@ -138,6 +138,7 @@ export default {
       user: null,
       membershipService: new membershipsApiService(),
       userService: new userApiService(),
+      authService: new authService(),
       userId: null,
       membership: {},
       dialogVisibleDeleteAccount: false,
@@ -173,7 +174,7 @@ export default {
             email: this.user.email,
             phone: this.user.phone
           };
-          if (this.user.membership) {
+          if (this.user.membershipId) {
             await this.getMembership();
           }
         }
@@ -186,8 +187,8 @@ export default {
     },
     async getMembership() {
       try {
-        const response = await this.membershipService.getMembershipsById(this.user.membership);
-        this.membership = response.data;
+        const response = await this.membershipService.getMemberships();
+        this.membership = response.data.find(membership => membership.id === this.user.membershipId);
       } catch (error) {
         console.error('Error fetching membership:', error);
       }
@@ -210,7 +211,7 @@ export default {
           };
           await this.userService.putUser(this.userId, updatedUser);
           this.user = updatedUser;
-          this.showSuccessDialog = true; // Set flag to show success dialog
+          this.showSuccessDialog = true;
         } catch (error) {
           console.error('Error updating profile:', error);
         }
@@ -218,6 +219,7 @@ export default {
     },
     forgotPassword() {
       localStorage.removeItem('user');
+      localStorage.removeItem('authToken');
       this.$router.push('/verify-email').then(() => {
         window.location.reload();
       });
@@ -226,6 +228,7 @@ export default {
       this.dialogVisibleCancelMembership = true;
     },
     confirmCancelMembership() {
+
       this.userService.changeMembership(this.userId, 1).then(() => {
         window.location.reload();
       }).catch(error => {
@@ -233,21 +236,23 @@ export default {
       });
     },
     logout() {
-      localStorage.removeItem('user');
       this.user = null;
-      this.$router.push('/log-in');
+      this.authService.logOut();
     },
     deleteAccount() {
       this.dialogVisibleDeleteAccount = true;
     },
     confirmDeleteAccount() {
-      this.userService.deleteUser(this.userId).then(() => {
-        localStorage.removeItem('user');
-        this.$router.push('/log-in').then(() => {
-          window.location.reload();
+      this.userService.deleteUser(this.userId).then(() =>{
+        this.userService.deleteProfile(this.userId).then(()=>{
+          localStorage.removeItem('user');
+          localStorage.removeItem('authToken');
+          this.$router.push('/log-in').then(() => {
+            window.location.reload();
+          });
+        }).catch(error => {
+          console.error('Error deleting account:', error);
         });
-      }).catch(error => {
-        console.error('Error deleting account:', error);
       });
     },
   }

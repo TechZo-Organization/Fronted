@@ -1,5 +1,6 @@
 <script>
 import { userApiService } from "../login/services/user-api.service.js";
+import { authService } from "../auth/services/auth-api.service.js";
 import DialogRegisterSuccesfully from "./components/dialog-register-succesfully.component.vue";
 
 export default {
@@ -17,6 +18,7 @@ export default {
       showPassword: false,
       showConfirmPassword: false,
       userService: new userApiService(),
+      authService: new authService(),
       errorMessage: '',
       showDialog: false,
     };
@@ -39,22 +41,18 @@ export default {
       }
 
       try {
-        const response = await this.userService.getUser();
-        const users = response.data;
         const newUser = {
           name: this.name,
           email: this.email,
           phone: this.phone,
-          password: this.password,
-          membership: "1",
-          membership_date: '',
-          img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR6lqpQj3oAmc1gtyM78oJCbTaDrD7Fj9NRlceOPDZiHA&s",
-          id: (users.length + 1).toString(),
-          favorites: []
+          membershipId: 1,
+          photo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR6lqpQj3oAmc1gtyM78oJCbTaDrD7Fj9NRlceOPDZiHA&s",
         };
 
+        console.log(newUser)
         await this.userService.registerUser(newUser);
-        this.showDialog = true;  // Mostrar el diálogo de registro exitoso
+        await this.authService.register(this.email, this.password);
+        this.showDialog = true;
       } catch (error) {
         console.error(error);
         this.errorMessage = 'Error al registrar el usuario';
@@ -91,7 +89,8 @@ export default {
           <br>
           <img src="../../public/login/cambiazo-logo.png" height="50%"/>
           <div class="inputs-register">
-            <h1 style="font-size: 25px; font-weight: 1000px; margin-bottom: 15px;">Registrarse</h1>
+            <h1 style="font-size: 25px; font-weight: bolder; margin-bottom: 15px;">Registrarse</h1>
+            <!--
             <router-link to="/home">
               <pv-button class="b-register-google">
                 <img src="../../public/login/google-icon.png" alt="Google image" width="18px" style="margin-right: 5px;">Registrarse con Google
@@ -102,6 +101,7 @@ export default {
               <h1>o registrarse con correo</h1>
               <hr class="hr-line">
             </div>
+-->
             <div class="input-content">
               <div>
                 <label><b>Nombre</b></label><br>
@@ -328,6 +328,10 @@ footer{
 
   .form-container {
     padding-top: 4rem;
+  }
+
+  .form-container img{
+    width:90%;
   }
 
   .main-image-register{

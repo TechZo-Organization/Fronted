@@ -25,6 +25,7 @@ export default {
   created() {
     this.getAllProductCategories();
     this.getAllProducts();
+
   },
   methods: {
     scrollToTop() {
@@ -62,17 +63,17 @@ export default {
   computed: {
     filteredProducts() {
       if (this.selectedCategory && this.searchProduct) {
-        return this.products.filter(product =>
-            product.category_id === this.selectedCategory &&
-            product.product_name.toLowerCase().includes(this.searchProduct.toLowerCase())
-        );
+        return this.products.filter(product => {
+          return Number(product.categoryId) === Number(this.selectedCategory) &&
+              product.name.toLowerCase().includes(this.searchProduct.toLowerCase());
+        });
       } else if (this.selectedCategory) {
-        return this.products.filter(product =>
-            product.category_id === this.selectedCategory
-        );
+        return this.products.filter(product => {
+          return Number(product.categoryId) === Number(this.selectedCategory);
+        });
       } else if (this.searchProduct) {
         return this.products.filter(product =>
-            product.product_name.toLowerCase().includes(this.searchProduct.toLowerCase())
+            product.name.toLowerCase().includes(this.searchProduct.toLowerCase())
         );
       } else {
         return this.products;
@@ -229,6 +230,10 @@ export default {
 }
 
 @media screen and (max-width: 1200px) {
+
+  .title-container h1{
+    padding-top:0;
+  }
   .search-form {
     padding: 5rem 3rem 1rem 3rem;
     display: grid;
@@ -245,7 +250,7 @@ export default {
   }
 
   .categories-container {
-    padding: 1rem 3rem 3rem 3rem;
+    padding: 1rem 1rem 3rem 1rem;
   }
 }
 </style>

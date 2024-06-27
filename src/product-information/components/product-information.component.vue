@@ -42,18 +42,19 @@ export default {
       if (loggedInUserId) {
         try {
           const userService = new userApiService();
-          const userResponse = await userService.getUserById(loggedInUserId);
-          const loggedInUser = userResponse.data;
+          const data = {
+            userId: Number(loggedInUserId),
+            productId: this.product.id
+          };
+          console.log('Adding to favorites:', data);
 
-          if (!loggedInUser.favorites.some(fav => fav.product_id === this.product.id)) {
-            loggedInUser.favorites.push({ product_id: this.product.id });
-            const updateResponse = await userService.putUser(loggedInUser.id, loggedInUser);
-            console.log('Added to favorites:', updateResponse);
-            this.dialogVisible = true;
-            document.body.classList.add('no-scroll');
-          } else {
-          }
+          const response = await userService.addFavoriteProduct(data);
+          console.log('Added to favorites:', response);
+
+          this.dialogVisible = true;
+          document.body.classList.add('no-scroll');
         } catch (error) {
+          console.error("Error adding to favorites:", error.response);
         }
       } else {
         this.showDialog = true;
@@ -85,8 +86,7 @@ export default {
       const homeService = new homeApiService();
       const productResponse = await homeService.getProductById(productId);
       this.product = productResponse.data;
-
-      const userId = this.product.user_id;
+      const userId = this.product.userId;
       const userService = new userApiService();
       const userResponse = await userService.getUserById(userId);
       this.user = userResponse.data;
@@ -94,13 +94,13 @@ export default {
       this.categories = categoriesResponse.data;
     } catch (error) {
     }
-    if(this.product.user_id === this.getLoggedInUserId()){
+    if(this.product.userId.toString() === this.getLoggedInUserId()){
       this.detailsVisible =false;
     }
   },
   computed: {
     categoryName() {
-      const category = this.categories.find(cat => cat.id === this.product.category_id);
+      const category = this.categories.find(cat => cat.id === this.product.categoryId);
       return category ? category.name : 'Unknown';
     }
   }
@@ -109,12 +109,12 @@ export default {
 
 <template>
   <div class="product-information" v-if="product && user">
-    <h1 class="product-title">{{ product.product_name }}</h1>
+    <h1 class="product-title">{{ product.name }}</h1>
     <br />
     <div class="product-container">
       <div class="product-content">
         <div class="product-image">
-          <img :src="product.images[0]" alt="Product Image" />
+          <img :src="product.photo" alt="Product Image" />
         </div>
         <div class="product-text">
           <h1>s/. {{ product.price }} valor aprox.</h1>
@@ -126,9 +126,9 @@ export default {
         <div class="product-exchange">
           <h2>Detalles:</h2>
           <h4>¿Dónde puedo intercambiar este objeto?</h4>
-          <p>Disponible en {{ product.location.departament }}, {{ product.location.district }}</p>
+          <p>Disponible en {{ product.district.name }}, {{ product.district.department.name }}</p>
           <h4>¿Cambio por?</h4>
-          <p>{{ product.change_for }}</p>
+          <p>{{ product.objectChange }}</p>
           <div class="category-exchange">
             <p>Categoría:</p>
             <p class="category-text">{{ categoryName }}</p>
@@ -137,11 +137,11 @@ export default {
       </div>
       <div class="user-content-product-information">
         <div class="user-image-product-information">
-          <img :src="user.img" alt="User Image" />
+            <img :src="user.photo" alt="User Image" />
         </div>
         <div class="user-details">
           <h1>{{ user.name }}</h1>
-          <router-link :to="detailsVisible ? `/publisher-profile/${product.user_id}` : `/profile`" @click.native="scrollToTop">
+          <router-link :to="detailsVisible ? `/publisher-profile/${product.userId}` : `/profile`" @click.native="scrollToTop">
             <pv-button class="show-profile">
               Ver Perfil
             </pv-button>
@@ -212,9 +212,10 @@ export default {
 }
 
 .product-image img {
-  width: 50%;
-  height: auto;
-
+  width: 70%;
+  height: 70vh;
+  object-position:center;
+  object-fit:cover;
 }
 
 .product-text{
@@ -383,6 +384,12 @@ export default {
 }
 
 @media screen and (max-width: 900px){
+  .product-image img {
+    width: 100%;
+    height: 50vh;
+    object-position:center;
+    object-fit:cover;
+  }
   .product-information h1{
     font-size: 25px;
   }

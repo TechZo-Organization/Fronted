@@ -51,7 +51,7 @@ export default {
     filterOngs() {
       return this.ongs.filter((ong) => {
         const matchesName = ong.name.toLowerCase().includes(this.searchOng.toLowerCase());
-        const matchesDistrict = ong.address.district.toLowerCase().includes(this.searchOng.toLowerCase());
+        const matchesDistrict = ong.address.toLowerCase().includes(this.searchOng.toLowerCase());
         const matchesCategory = this.selectedCategories.length === 0 || this.selectedCategories.includes(ong.category_id);
         return (matchesName || matchesDistrict) && matchesCategory;
       });

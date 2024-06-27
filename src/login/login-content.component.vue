@@ -1,5 +1,6 @@
 <script>
 import { userApiService } from './services/user-api.service.js';
+import { authService } from '../auth/services/auth-api.service.js';
 
 export default {
   name: "login-content",
@@ -7,10 +8,10 @@ export default {
     return {
       email: '',
       password: '',
-      emailError: '',
-      passwordError: '',
+      loginError: '',
       showPassword: false,
       userService: new userApiService(),
+      authService: new authService(),
     };
   },
   methods: {
@@ -18,26 +19,21 @@ export default {
       this.showPassword = !this.showPassword;
     },
     async handleLogin() {
-      this.emailError = '';
-      this.passwordError = '';
+      this.loginError = '';
 
       try {
-        const response = await this.userService.getUser();
-        const users = response.data;
-        const user = users.find(u => u.email === this.email);
+        const response = await this.authService.login(this.email, this.password);
 
-        if (user && user.password === this.password) {
-          localStorage.setItem('user', user.id);
+        console.log(response)
+        if (response.data.token) {
+          localStorage.setItem('user', response.data.id.toString());
+          localStorage.setItem('authToken', response.data.token);
           this.$router.push('/home');
-          this.$emit('userLoggedIn', user);
+          this.$emit('userLoggedIn', response.data);
         } else {
-          if (!user) {
-            this.emailError = 'Correo inválido';
-          } else if (user.password !== this.password) {
-            this.passwordError = 'Contraseña inválida';
-          }
         }
       } catch (error) {
+        this.loginError = 'Correo  o contraseña incorrectas';
         console.error(error);
       }
     },
@@ -57,7 +53,8 @@ export default {
         <form @submit.prevent="handleLogin" class="form-container">
           <img src="../../public/login/cambiazo-logo.png"  height="50%" />
           <div class="inputs-login">
-            <h1 style="font-size: 25px; font-weight: 1000px; margin-bottom: 15px;">Iniciar Sesión</h1>
+            <h1 style="font-size: 25px; font-weight: bolder; margin-bottom: 15px;">Iniciar Sesión</h1>
+            <!--
             <router-link to="/home">
               <pv-button class="b-login-google">
                 <img src="../../public/login/google-icon.png" alt="Google image" width="18px" style="margin-right: 5px;">Iniciar Sesión con Google
@@ -68,11 +65,11 @@ export default {
               <h1>o inicia sesión con correo</h1>
               <hr class="hr-line">
             </div>
+            -->
             <div class="input-content">
               <div>
                 <label><b>Correo</b></label><br>
                 <pv-input v-model="email" required class="input i-login" type="text" />
-                <p v-if="emailError" class="error-message">{{ emailError }}</p>
               </div>
               <div>
                 <label style="justify-content: space-between; display: flex;"><b>Contraseña</b>
@@ -84,7 +81,7 @@ export default {
                     <img :src="showPassword ? '/login/show-icon.png' : '/login/hide-icon.png'" @click="togglePasswordVisibility" class="show-hide-password"/>
                   </div>
                 </div>
-                <p v-if="passwordError" class="error-message">{{ passwordError }}</p>
+                <p v-if="loginError" class="error-message">{{ loginError }}</p>
               </div>
               <div style="margin-top: 1.5rem">
                 <pv-button type="submit" class="submit">Iniciar sesión</pv-button>

@@ -3,18 +3,18 @@ import { environment } from "../../../environments/environment.js";
 
 const http = axios.create({
     baseURL: environment.baseUrl,
+    headers: {
+        'Content-Type': 'application/json'
+    }
 });
+
 
 export class publishApiService {
     getCountry() {
-        return http.get('/country');
+        return http.get('/api/v1/country');    }
+
+    getDistrictByName(districtName) {
+        return http.get(`/api/v1/district/name/${districtName}`);
     }
 
-    getDepartments(country) {
-        return http.get(`/departments?country=${country}`);
-    }
-
-    getCities(department) {
-        return http.get(`/cities?department=${department}`);
-    }
 }
