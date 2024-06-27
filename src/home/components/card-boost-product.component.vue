@@ -33,19 +33,19 @@ export default {
         <template #content>
           <div class="card-main">
             <div>
-              <img :src="boost_product.images[0]" class="boost_product">
+              <img :src="boost_product.photo" class="boost_product">
             </div>
             <div class="card-content-boost">
               <div class="card-location">
                 <img src="../../../public/donations/location-icon.png" style="width: 18px; height: 18px"/>
-                <p>{{ boost_product.location.departament }}</p>
+                <p>{{ boost_product.district.department.name}}</p>
               </div>
               <div class="card-title-boost">
-                <h1>{{ boost_product.product_name }}</h1>
-                <h2>{{ getCategoryName(boost_product.category_id) }}</h2>
+                <h1>{{ boost_product.name }}</h1>
+                <h2>{{ getCategoryName(boost_product.categoryId) }}</h2>
               </div>
               <div class="card-exchange-boost">
-                <h3>{{ boost_product.change_for }}</h3>
+                <h3>{{ boost_product.objectChange }}</h3>
                 <h4>s/.{{ boost_product.price }} valor apróx</h4>
               </div>
             </div>
