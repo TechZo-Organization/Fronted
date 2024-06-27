@@ -85,7 +85,6 @@ export default {
       const homeService = new homeApiService();
       const productResponse = await homeService.getProductById(productId);
       this.product = productResponse.data;
-
       const userId = this.product.userId;
       const userService = new userApiService();
       const userResponse = await userService.getUserById(userId);
@@ -126,7 +125,7 @@ export default {
         <div class="product-exchange">
           <h2>Detalles:</h2>
           <h4>¿Dónde puedo intercambiar este objeto?</h4>
-          <p>Disponible en {{ product.district.departament.name }}, {{ product.district.name }}</p>
+          <p>Disponible en {{ product.district.department.name }}, {{ product.district.name }}</p>
           <h4>¿Cambio por?</h4>
           <p>{{ product.objectChange }}</p>
           <div class="category-exchange">
@@ -137,7 +136,7 @@ export default {
       </div>
       <div class="user-content-product-information">
         <div class="user-image-product-information">
-          <img :src="user.img" alt="User Image" />
+            <img :src="user.photo" alt="User Image" />
         </div>
         <div class="user-details">
           <h1>{{ user.name }}</h1>

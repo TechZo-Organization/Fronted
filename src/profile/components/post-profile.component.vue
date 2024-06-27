@@ -36,20 +36,9 @@ export default {
       try {
         const response = await new homeApiService().getProduct();
         const allProducts = response.data;
-        this.products = allProducts
-            .filter(product => product.user_id === loggedUserId)
-            .map(product => new Product(
-                product.id,
-                product.product_name,
-                product.description,
-                product.change_for,
-                product.price,
-                product.images,
-                product.category_id,
-                product.boost,
-                product.user_id,
-                product.location
-            ));
+        this.products = allProducts.filter(product => product.userId.toString() === loggedUserId)
+        console.log(this.products)
+
         this.loading = false;
       } catch (err) {
         this.error = err;
@@ -112,16 +101,16 @@ export default {
       <div v-else-if="error">{{ error.message }}</div>
       <div v-else>
         <div class="post-cards-container">
-          <div v-for="product in products" :key="product.product_name" class="card-post">
+          <div v-for="product in products" :key="product.name" class="card-post">
             <div class="card-content">
               <div class="image-post">
-                <img :src="product.images[0]" />
+                <img :src="product.photo" />
               </div>
               <div class="post-info">
                 <div class="post-title">
                   <div class="post-title-header">
                     <router-link :to="`/product-information/${product.id}`" @click.native="scrollToTop">
-                      <h1>{{ product.product_name }}</h1>
+                      <h1>{{ product.name }}</h1>
                     </router-link>
                     <div class="post-title-actions">
                       <button @click="editPosts(product.id)" class="delete__button" title="Editar">
@@ -132,17 +121,17 @@ export default {
                       </button>
                     </div>
                   </div>
-                  <h2>{{ getCategoryName(product.category_id) }}</h2>
+                  <h2>{{ getCategoryName(product.categoryId) }}</h2>
                 </div>
                 <div class="post-details">
                   <p>{{ product.description }}</p>
                   <div class="icon-detail">
                     <img src="../../../public/donations/location-icon.png"/>
-                    <p>{{ product.location.district }}, {{ product.location.departament }}</p>
+                    <p>{{ product.district.name }}, {{ product.district.department.name }}</p>
                   </div>
                   <div class="icon-detail">
                     <img src="../../../public/products/exchange.icon.png"/>
-                    <p>{{ product.change_for }}</p>
+                    <p>{{ product.objectChange }}</p>
                   </div>
                   <h2>Valor aproximado s/.{{ product.price }}</h2>
                 </div>
