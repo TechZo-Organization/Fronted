@@ -13,7 +13,7 @@ export class homeApiService {
         return http.get("/api/v1/product");
     }
     getProductById(productId) {
-        return http.get(`/product/${productId}`);
+        return http.get(`/api/v1/product/${productId}`);
     }
     getCategoryById(categoryId) {
         return http.get(`/api/v1/product-category/${categoryId}`);
