@@ -7,24 +7,24 @@ const http = axios.create({
 
 export class offerApiService {
     getOffers() {
-        return http.get("/offers");
+        return http.get("/api/v1/offer");
     }
     updateOfferStatus(id, status){
-        return http.put(`offers/${id}`, { status});
+        return http.put(`/api/v1/offer/${id}`, { status});
     }
     getOfferById(offerId) {
-        return http.get(`/offers/${offerId}`);
+        return http.get(`/offer/${offerId}`);
     }
     getOffersByUserId(userId) {
-        return http.get(`/offers?get_user_id=${userId}`);
+        return http.get(`/api/v1/offer?get_user_id=${userId}`);
     }
     createOffer(offerData) {
-        return http.post("/offers", offerData);
+        return http.post("/api/v1/offer", offerData);
     }
     updateOffer(offerId, offerData) {
-        return http.put(`/offers/${offerId}`, offerData);
+        return http.put(`/api/v1/offer/${offerId}`, offerData);
     }
     deleteOffer(offerId) {
-        return http.delete(`/offers/${offerId}`);
+        return http.delete(`/api/v1/offer/${offerId}`);
     }
 }
