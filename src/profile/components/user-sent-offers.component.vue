@@ -20,36 +20,36 @@ export default {
   methods: {
     async getAllOffers() {
       try {
-        const response = await this.offerService.getOffers();
+        const userId = localStorage.getItem('user');
+        if (!userId) {
+          console.error('User ID not found');
+          return;
+        }
+
+        const response = await this.usersService.getOffersMade(userId);
+
         const data = response.data; // Asegurarse de acceder a la propiedad data del response
         if (Array.isArray(data)) {
-          const userId = localStorage.getItem('user');
           const offerPromises = data.map(async (offer) => {
-            if (offer.id_user_offers === userId) {
-              const newOffer = new Offer(
-                  offer.id,
-                  offer.id_user_offers,
-                  offer.id_product_offers,
-                  offer.id_user_get,
-                  offer.id_product_get,
-                  offer.status
-              );
+            const newOffer = new Offer(
+                offer.id,
+                offer.productOwnerId,
+                offer.productExchangeId,
+                offer.state
+            );
 
-              const [productGet, productOffers, userGet] = await Promise.all([
-                this.postsService.getProductById(offer.id_product_get),
-                this.postsService.getProductById(offer.id_product_offers),
-                this.usersService.getUserById(offer.id_user_get)
-              ]);
+            const [productOwner, productExchange] = await Promise.all([
+              this.postsService.getProductById(offer.productOwnerId),
+              this.postsService.getProductById(offer.productExchangeId)
+            ]);
 
-              newOffer.setProductGet = productGet.data;
-              newOffer.setProductOffers = productOffers.data;
-              newOffer.setUserGet = userGet.data;
+            newOffer.setProductGet = productExchange.data;
+            newOffer.setProductOffers = productOwner.data;
 
-              return newOffer;
-            }
+            return newOffer;
           });
 
-          // Filtramos las ofertas nulas (las que no pertenecen al usuario)
+          // Filtramos las ofertas nulas (las que no pudieron ser cargadas)
           this.offers = (await Promise.all(offerPromises)).filter(Boolean);
         } else {
           console.error('Data is not an array:', data);
@@ -58,10 +58,10 @@ export default {
         console.error('Error fetching offers:', error);
       }
     },
-    getStatusStyles(status) {
+    getStatusStyles(state) {
       let styles = {};
-      switch (status) {
-        case 'Aceptado':
+      switch (state) {
+        case 'Accepted':
           styles = {
             color: '#41DB0B',
             backgroundColor: '#EAFFDD',
@@ -73,7 +73,7 @@ export default {
             alignContent: 'center',
           };
           break;
-        case 'Pendiente':
+        case 'Pending':
           styles = {
             color: '#FFA22A',
             backgroundColor: '#FFF2CC',
@@ -85,7 +85,7 @@ export default {
             alignContent: 'center',
           };
           break;
-        case 'Denegado':
+        case 'Denied':
           styles = {
             color: '#FF502A',
             backgroundColor: '#FFD7B9',
@@ -106,7 +106,6 @@ export default {
   }
 };
 </script>
-
 <template>
   <div class="sent-offers-cards-container">
     <div v-for="sent in offers" :key="sent.id" class="container-sent-offers">
@@ -180,8 +179,8 @@ export default {
                       <h1>Estado de la oferta:</h1>
                     </div>
                     <div class="status-btn-sent">
-                      <div :style="getStatusStyles(sent.status)">
-                        <h2>{{ sent.status }}</h2>
+                      <div :style="getStatusStyles(sent.state)">
+                        <h2>{{ sent.state }}</h2>
                       </div>
                     </div>
                   </div>

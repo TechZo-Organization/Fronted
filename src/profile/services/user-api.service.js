@@ -27,4 +27,8 @@ export class userApiService {
     changeMembership(id, newMembership){
         return http.put(`/api/v1/profiles/${id}`, { membership: newMembership });
     }
+
+    getOffersMade(userId) {
+        return http.get(`/api/v1/offer/user-own/${userId}`);
+    }
 }

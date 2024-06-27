@@ -42,18 +42,19 @@ export default {
       if (loggedInUserId) {
         try {
           const userService = new userApiService();
-          const userResponse = await userService.getUserById(loggedInUserId);
-          const loggedInUser = userResponse.data;
+          const data = {
+            userId: Number(loggedInUserId),
+            productId: this.product.id
+          };
+          console.log('Adding to favorites:', data);
 
-          if (!loggedInUser.favorites.some(fav => fav.product_id === this.product.id)) {
-            loggedInUser.favorites.push({ product_id: this.product.id });
-            const updateResponse = await userService.putUser(loggedInUser.id, loggedInUser);
-            console.log('Added to favorites:', updateResponse);
-            this.dialogVisible = true;
-            document.body.classList.add('no-scroll');
-          } else {
-          }
+          const response = await userService.addFavoriteProduct(data);
+          console.log('Added to favorites:', response);
+
+          this.dialogVisible = true;
+          document.body.classList.add('no-scroll');
         } catch (error) {
+          console.error("Error adding to favorites:", error.response);
         }
       } else {
         this.showDialog = true;
