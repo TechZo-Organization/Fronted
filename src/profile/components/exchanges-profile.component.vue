@@ -13,7 +13,7 @@
             <img class="card__img__exchanges" :src="offer.setProductGet.photo">
             <p class="offer__text">Ofreciste un {{ offer.setProductGet.name }}</p>
           </div>
-          <img class="arrows" src="../../../public/products/exchange.icon.png" alt="">
+          <img class="arrows" src="../../../public/profile/arrows.svg" alt="">
           <div class="product__get">
             <img class="card__img__exchanges" :src="offer.setProductOffers.photo">
             <p class="get__text">Conseguiste un {{ offer.setProductOffers.name }}</p>
