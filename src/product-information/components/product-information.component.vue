@@ -1,12 +1,14 @@
 <script>
 import { homeApiService } from "../../home/services/home-api.service.js";
-import { userApiService } from "../../profile/services/user-api.service.js";
+import { userApiService} from "../../login/services/user-api.service.js";
 import DialogFavoritesAdded from "./dialog-favorites-added.component.vue";
 import DialogOfferContent from "./dialog-offer.component.vue";
+import DialogContent from "../../public/components/dialog-content.component.vue";
 
 export default {
   name: "product-information",
   components: {
+    DialogContent,
     DialogOfferContent,
     DialogFavoritesAdded,
   },
@@ -18,6 +20,7 @@ export default {
       dialogVisible: false,
       dialogOfferVisible: false,
       detailsVisible: true,
+      showDialog: false,
     };
   },
   methods: {
@@ -26,6 +29,10 @@ export default {
         top: 0,
         behavior: 'smooth'
       });
+    },
+    closeDialog() {
+      this.showDialog = false;
+      document.body.classList.remove('no-scroll');
     },
     getLoggedInUserId() {
       return (localStorage.getItem('user'));
@@ -49,11 +56,19 @@ export default {
         } catch (error) {
         }
       } else {
+        this.showDialog = true;
+        document.body.classList.add('no-scroll');
       }
     },
     async offerProduct(){
-      this.dialogOfferVisible = true;
-      document.body.classList.add('no-scroll');
+      const loggedInUserId = this.getLoggedInUserId();
+      if (loggedInUserId) {
+        this.dialogOfferVisible = true;
+        document.body.classList.add('no-scroll');
+      }else{
+        this.showDialog = true;
+        document.body.classList.add('no-scroll');
+      }
     },
     closeOfferProductDialog() {
       this.dialogOfferVisible = false;
@@ -71,7 +86,7 @@ export default {
       const productResponse = await homeService.getProductById(productId);
       this.product = productResponse.data;
 
-      const userId = this.product.user_id;
+      const userId = this.product.userId;
       const userService = new userApiService();
       const userResponse = await userService.getUserById(userId);
       this.user = userResponse.data;
@@ -79,13 +94,13 @@ export default {
       this.categories = categoriesResponse.data;
     } catch (error) {
     }
-    if(this.product.user_id === this.getLoggedInUserId()){
+    if(this.product.userId.toString() === this.getLoggedInUserId()){
       this.detailsVisible =false;
     }
   },
   computed: {
     categoryName() {
-      const category = this.categories.find(cat => cat.id === this.product.category_id);
+      const category = this.categories.find(cat => cat.id === this.product.categoryId);
       return category ? category.name : 'Unknown';
     }
   }
@@ -94,12 +109,12 @@ export default {
 
 <template>
   <div class="product-information" v-if="product && user">
-    <h1 class="product-title">{{ product.product_name }}</h1>
+    <h1 class="product-title">{{ product.name }}</h1>
     <br />
     <div class="product-container">
       <div class="product-content">
         <div class="product-image">
-          <img :src="product.images[0]" alt="Product Image" />
+          <img :src="product.photo" alt="Product Image" />
         </div>
         <div class="product-text">
           <h1>s/. {{ product.price }} valor aprox.</h1>
@@ -111,22 +126,22 @@ export default {
         <div class="product-exchange">
           <h2>Detalles:</h2>
           <h4>¿Dónde puedo intercambiar este objeto?</h4>
-          <p>Disponible en {{ product.location.departament }}, {{ product.location.district }}</p>
+          <p>Disponible en {{ product.district.departament.name }}, {{ product.district.name }}</p>
           <h4>¿Cambio por?</h4>
-          <p>{{ product.change_for }}</p>
+          <p>{{ product.objectChange }}</p>
           <div class="category-exchange">
             <p>Categoría:</p>
             <p class="category-text">{{ categoryName }}</p>
           </div>
         </div>
       </div>
-      <div class="user-content">
-        <div class="user-image">
+      <div class="user-content-product-information">
+        <div class="user-image-product-information">
           <img :src="user.img" alt="User Image" />
         </div>
         <div class="user-details">
           <h1>{{ user.name }}</h1>
-          <router-link :to="detailsVisible ? '/publisher-profile/${product.user_id}' : `/profile`" @click.native="scrollToTop">
+          <router-link :to="detailsVisible ? `/publisher-profile/${product.userId}` : `/profile`" @click.native="scrollToTop">
             <pv-button class="show-profile">
               Ver Perfil
             </pv-button>
@@ -163,6 +178,7 @@ export default {
         @close="closeOfferProductDialog()"
         @confirm="offerProduct()"
     />
+    <dialog-content :visible="showDialog" @close="closeDialog"/>
   </div>
 </template>
 
@@ -269,13 +285,13 @@ export default {
   border-radius: 10px;
 }
 
-.user-content{
+.user-content-product-information{
   width: 30%;
   height: 100%;
   box-shadow: 0px 0px 20px 0px #cccccc;
 }
 
-.user-image{
+.user-image-product-information{
   background-color: #FFD146;
   padding: 2rem;
   display: flex;
@@ -283,7 +299,7 @@ export default {
   align-items: center;
 }
 
-.user-image img{
+.user-image-product-information img{
   border-radius: 50%;
   border: 4px solid #fff;
   width: 120px;
@@ -380,7 +396,7 @@ export default {
     width: 100%;
   }
 
-  .user-content{
+  .user-content-product-information{
     width: 100%;
   }
 }

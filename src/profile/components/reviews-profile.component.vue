@@ -116,7 +116,7 @@ export default {
       <div class="count-score">
         <div class="stars-score">
           <template v-for="(star, index) in getStarRating(averageScore)" :key="`average_${index}`">
-            <img :src="star.icon === 'star' ? '../../../public/profile/full-star.png' : star.icon === 'star_half' ? '../../../public/profile/half-star.png' : '../../../public/profile/none-star.png'" alt="Star">
+            <img :src="star.icon === 'star' ? '/profile/full-star.png' : star.icon === 'star_half' ? '/profile/half-star.png' : '/profile/none-star.png'" alt="Star">
           </template>
         </div>
         <p>{{ totalReviews }} Reseña(s)</p>
@@ -155,7 +155,7 @@ export default {
               <div class="card-title">{{ review.setGiveUserName }}</div>
               <div class="stars">
                 <template v-for="(star, index) in getStarIcons(review.score)" :key="`review_${review.id}_${index}`">
-                  <img :src="star.icon === 'complete' ? '../../../public/profile/full-star.png' : star.icon === 'completed' ? '../../../public/profile/half-star.png' : '../../../public/profile/none-star.png'" alt="Star" style="width:20px; height:20px">
+                  <img :src="star.icon === 'complete' ? '/profile/full-star.png' : star.icon === 'completed' ? '/profile/half-star.png' : '/profile/none-star.png'" alt="Star" style="width:20px; height:20px">
                 </template>
               </div>
             </div>

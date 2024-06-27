@@ -32,6 +32,7 @@ export default {
     },
     getCategoryName(categoryId) {
       const category = this.categories.find(cat => cat.id === categoryId);
+      console.log(categoryId)
       return category ? category.name : 'Unknown';
     }
   },
@@ -70,13 +71,13 @@ export default {
         <h3>Detalles</h3>
         <h1>{{ ong.name }}</h1>
         <div class="social-media-buttons">
-          <a :href="ong.social_networks[0].url" target="_blank" class="link-button">
+          <a :href="ong.socialNetworks[0].url" target="_blank" class="link-button">
             <pv-button class="b-social">
               <img src="../../../public/ong-information/facebook-icon.png" height="20" width="20"/>
               <p>Facebook</p>
             </pv-button>
           </a>
-          <a :href="ong.social_networks[1].url" target="_blank" class="link-button">
+          <a :href="ong.socialNetworks[1].url" target="_blank" class="link-button">
             <pv-button class="b-social">
               <img src="../../../public/ong-information/instagram-icon.webp" height="20" width="20"/>
               <p>Instagram</p>
@@ -88,11 +89,11 @@ export default {
           </pv-button>
         </div>
         <h2>Acerca de Nosotros:</h2>
-        <p class="text-details">{{ ong.information[0].about}}</p>
+        <p class="text-details">{{ ong.aboutUs}}</p>
         <h2>Misión y Visión:</h2>
-        <p class="text-details">{{ ong.information[0].mission_vision}}</p>
+        <p class="text-details">{{ ong.missionVision}}</p>
         <h2>Formas de apoyo:</h2>
-        <p class="text-details">{{ ong.information[0].forms_of_support }}</p>
+        <p class="text-details">{{ ong.supportForm }}</p>
         <h2>Proyectos: </h2>
         <ul>
           <li v-for="project in ong.projects" :key="project.name">
@@ -104,9 +105,9 @@ export default {
       <div class="ong-contact-information">
         <div class="ong-content">
           <div class="ong-image">
-            <img :src="ong.logo" height="130" width="130"/>
+            <img :src="ong.urlLogo" height="130" width="130"/>
             <h1>{{ ong.name }}</h1>
-            <a :href="ong.website" target="_blank">
+            <a :href="ong.urlWebSite" target="_blank">
               <pv-button class="website-link">
                 Visitar sitio web
               </pv-button>
@@ -115,16 +116,16 @@ export default {
           <hr>
           <div class="ong-contact">
             <h3>Categoría</h3>
-            <p>{{ getCategoryName(ong.category) }}</p>
+            <p>{{ getCategoryName(ong.categoryId) }}</p>
             <h3>Dirección</h3>
             <div class="icon-contact">
               <img src="../../../public/donations/location-icon.png" />
-              <p>{{ ong.address.street }}, {{ ong.address.district }}, {{ ong.address.city }} - PE</p>
+              <p>{{ ong.address }} - PE</p>
             </div>
             <h3>Teléfono de Contacto</h3>
             <div class="icon-contact">
               <img src="../../../public/ong-information/phone-icon.png"/>
-              <p>{{ ong.contact_number }}</p>
+              <p>{{ ong.number }}</p>
             </div>
             <h3>Correo electrónico</h3>
             <div class="icon-contact">
@@ -133,20 +134,20 @@ export default {
             </div>
             <h3>Número de Cuenta Bancaria</h3>
             <div class="icon-contact">
-              <div v-if="ong.account_number" style="display: grid; gap: 0.5rem;" >
+              <div v-if="ong.accountNumbers" style="display: grid; gap: 0.5rem;" >
                 <img src="../../../public/ong-information/credit-card-icon.png"/>
-                <div v-for="(account, index) in ong.account_number" :key="index">
-                  <p>{{ account.name }}: {{ account.account }} </p>
+                <div v-for="(account, index) in ong.accountNumbers" :key="index">
+                  <p>{{ account.name }}: {{ account.number }} </p>
                   <p>CCI: {{ account.cci }}</p>
                 </div>
               </div>
             </div>
             <h3>Horario de atención</h3>
             <div class="icon-contact">
-              <div v-if="ong.attention_schedule" style="display: grid; gap: 0.5rem;">
+              <div v-if="ong.attentionSchedule" style="display: grid; gap: 0.5rem;">
                 <img src="../../../public/ong-information/time-icon.png" height="20" width="20"/>
-                <div v-for="(schedule, index) in ong.attention_schedule" :key="index" style="display: grid">
-                  <p>{{ schedule.schedule }}</p>
+                <div  style="display: grid">
+                  <p>{{ ong.attentionSchedule }}</p>
                 </div>
               </div>
             </div>

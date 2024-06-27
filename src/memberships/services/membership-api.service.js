@@ -7,6 +7,12 @@ const http = axios.create({
 
 export class membershipsApiService {
     getMemberships() {
-        return http.get('/memberships');
+        return http.get('/api/v1/membership');
+    }
+    deleteMemberships(id){
+        return http.delete(`/api/v1/membership/${id}`)
+    }
+    getMembershipsById(id){
+        return http.get(`/api/v1/membership/${id}`)
     }
 }

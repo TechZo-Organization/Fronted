@@ -73,7 +73,7 @@ export default {
 
 <template>
   <div class="favorites-content">
-    <div class="favorite__first">
+    <div class="user-offers-title">
       <p>Mis Favoritos:</p>
     </div>
     <div class="line-text">
@@ -167,6 +167,7 @@ export default {
   text-align: justify;
   align-items: center;
   background-color:white;
+  box-shadow: 0px 0px 20px 0px #cccccc;
   margin-bottom:2rem;
 }
 

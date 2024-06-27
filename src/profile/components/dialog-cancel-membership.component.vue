@@ -7,19 +7,20 @@
         </pv-button>
       </div>
       <div class="dialog-container">
-        <h1>¿Estás seguro que deseas eliminar esta publicación de favoritos?</h1>
-        <p>
-          Recuerda que una vez eliminada la publicación, no se podrá deshacer.
-        </p>
-          <pv-button @click="confirmDelete" class="b-login-dialog"><b>Confirmar</b></pv-button>
+        <h1>¿Estás seguro de que deseas anular tu suscripción?</h1>
+        <div style="display:flex;flex-direction:column;align-items: center;">
+          <pv-button @click="confirmCancel" class="b-login-dialog"><b>Confirmar</b></pv-button>
+          <pv-button @click="closeDialog" class="b-register-dialog"><b>Cancelar</b></pv-button>
+        </div>
       </div>
     </div>
+
   </div>
 </template>
 
 <script>
 export default {
-  name: 'dialog-delete-favorites',
+  name: 'dialog-cancel-membership',
   props: {
     visible: {
       type: Boolean,
@@ -30,7 +31,7 @@ export default {
     closeDialog() {
       this.$emit('close');
     },
-    confirmDelete() {
+    confirmCancel() {
       this.$emit('confirm');
       this.closeDialog();
     }
@@ -80,7 +81,6 @@ export default {
 
 .b-login-dialog {
   background-color: #FFD146;
-  border-radius: 10px;
   padding: 0.5rem 1rem;
   width: 200px;
   color: #000;
@@ -97,7 +97,6 @@ export default {
 .b-register-dialog {
   background-color: #fff;
   border: 4px solid #FFD146;
-  border-radius: 10px;
   padding: 0.5rem 1rem;
   width: 200px;
   color: #000;

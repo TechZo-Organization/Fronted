@@ -2,16 +2,18 @@
   <div v-if="visible" class="dialog-overlay">
     <div class="dialog">
       <div style="display: flex; justify-content: flex-end;">
-        <pv-button @click="closeDialog">
+        <button @click="closeDialog">
           <img src="../../../public/toolbar/close-icon.png" height="30" width="30"/>
-        </pv-button>
+        </button>
       </div>
       <div class="dialog-container">
-        <h1>¿Estás seguro que deseas eliminar esta publicación de favoritos?</h1>
-        <p>
-          Recuerda que una vez eliminada la publicación, no se podrá deshacer.
-        </p>
-          <pv-button @click="confirmDelete" class="b-login-dialog"><b>Confirmar</b></pv-button>
+        <h1>¡Contraseña cambiada con éxito!</h1>
+        <p></p>
+        <div style="display: grid;">
+          <router-link to="/log-in">
+            <button @click="closeDialog" class="b-login-dialog"><b>Iniciar Sesión</b></button>
+          </router-link>
+        </div>
       </div>
     </div>
   </div>
@@ -19,7 +21,7 @@
 
 <script>
 export default {
-  name: 'dialog-delete-favorites',
+  name: "dialog-change-password-succesfully",
   props: {
     visible: {
       type: Boolean,
@@ -29,10 +31,6 @@ export default {
   methods: {
     closeDialog() {
       this.$emit('close');
-    },
-    confirmDelete() {
-      this.$emit('confirm');
-      this.closeDialog();
     }
   }
 };
@@ -91,21 +89,6 @@ export default {
 
 .b-login-dialog:hover {
   background-color: #000;
-  color: #FFD146;
-}
-
-.b-register-dialog {
-  background-color: #fff;
-  border: 4px solid #FFD146;
-  border-radius: 10px;
-  padding: 0.5rem 1rem;
-  width: 200px;
-  color: #000;
-  transition: 0.43s;
-  justify-content: center;
-}
-
-.b-register-dialog:hover {
   color: #FFD146;
 }
 </style>

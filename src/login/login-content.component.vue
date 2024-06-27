@@ -1,5 +1,6 @@
 <script>
 import { userApiService } from './services/user-api.service.js';
+import { authService } from '../auth/services/auth-api.service.js';
 
 export default {
   name: "login-content",
@@ -7,10 +8,10 @@ export default {
     return {
       email: '',
       password: '',
-      emailError: '',
-      passwordError: '',
+      loginError: '',
       showPassword: false,
       userService: new userApiService(),
+      authService: new authService(),
     };
   },
   methods: {
@@ -18,26 +19,21 @@ export default {
       this.showPassword = !this.showPassword;
     },
     async handleLogin() {
-      this.emailError = '';
-      this.passwordError = '';
+      this.loginError = '';
 
       try {
-        const response = await this.userService.getUser();
-        const users = response.data;
-        const user = users.find(u => u.email === this.email);
+        const response = await this.authService.login(this.email, this.password);
 
-        if (user && user.password === this.password) {
-          localStorage.setItem('user', user.id);
+        console.log(response)
+        if (response.data.token) {
+          localStorage.setItem('user', response.data.id.toString());
+          localStorage.setItem('authToken', response.data.token);
           this.$router.push('/home');
-          this.$emit('userLoggedIn', user);
+          this.$emit('userLoggedIn', response.data);
         } else {
-          if (!user) {
-            this.emailError = 'Correo inválido';
-          } else if (user.password !== this.password) {
-            this.passwordError = 'Contraseña inválida';
-          }
         }
       } catch (error) {
+        this.loginError = 'Correo  o contraseña incorrectas';
         console.error(error);
       }
     },
@@ -47,17 +43,17 @@ export default {
 
 <template>
   <div class="login-container">
+    <div style="margin: 1rem;position:absolute;">
+      <router-link to="/home">
+        <img src="../../public/login/home-icon.png" height="45" width="45" />
+      </router-link>
+    </div>
     <div class="login-content">
       <div class="login-form">
-        <div style="margin: 1rem;">
-          <router-link to="/home">
-            <img src="../../public/login/home-icon.png" height="45" width="45" />
-          </router-link>
-        </div>
         <form @submit.prevent="handleLogin" class="form-container">
-          <img src="../../public/login/cambiazo-logo.png" height="95" width="250" />
+          <img src="../../public/login/cambiazo-logo.png"  height="50%" />
           <div class="inputs-login">
-            <h1 style="font-size: 20px; font-weight: bolder; margin-bottom: 15px;">Iniciar Sesión</h1>
+            <h1 style="font-size: 25px; font-weight: 1000px; margin-bottom: 15px;">Iniciar Sesión</h1>
             <router-link to="/home">
               <pv-button class="b-login-google">
                 <img src="../../public/login/google-icon.png" alt="Google image" width="18px" style="margin-right: 5px;">Iniciar Sesión con Google
@@ -72,17 +68,18 @@ export default {
               <div>
                 <label><b>Correo</b></label><br>
                 <pv-input v-model="email" required class="input i-login" type="text" />
-                <p v-if="emailError" class="error-message">{{ emailError }}</p>
               </div>
               <div>
-                <label style="justify-content: space-between; display: flex;"><b>Contraseña</b> <pv-button style="color: #ffd146;">¿Olvidaste tu contraseña?</pv-button></label>
+                <label style="justify-content: space-between; display: flex;"><b>Contraseña</b>
+                  <router-link to="/verify-email"><pv-button style="color: #ffd146;font-size:14px;font-weight:bold">¿Olvidaste tu contraseña?</pv-button></router-link>
+                </label>
                 <div class="input-group">
                   <pv-input v-model="password" required class="show-hide-text" :type="showPassword ? 'text' : 'password'"></pv-input>
                   <div class="show-hide">
-                    <img :src="showPassword ? '../../public/login/show-icon.png' : '../../public/login/hide-icon.png'" @click="togglePasswordVisibility" class="show-hide-password"/>
+                    <img :src="showPassword ? '/login/show-icon.png' : '/login/hide-icon.png'" @click="togglePasswordVisibility" class="show-hide-password"/>
                   </div>
                 </div>
-                <p v-if="passwordError" class="error-message">{{ passwordError }}</p>
+                <p v-if="loginError" class="error-message">{{ loginError }}</p>
               </div>
               <div style="margin-top: 1.5rem">
                 <pv-button type="submit" class="submit">Iniciar sesión</pv-button>
@@ -99,8 +96,8 @@ export default {
     <footer>
       <p>&copy TechZo 2024. All Rights Reserved</p>
       <div class="footer-links">
-        <a href="">Condiciones de Uso</a>
-        <a href="">Política de privacidad</a>
+        <a href="/terms-use">Condiciones de Uso</a>
+        <a href="/privacy-policies">Política de privacidad</a>
       </div>
     </footer>
   </div>
@@ -121,13 +118,13 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 55%;
+  width: 50%;
   margin: auto;
   height: 100%
 }
 
 .main-image {
-  width: 45%;
+  width: 50%;
   height: 100vh;
   object-fit: cover;
 }

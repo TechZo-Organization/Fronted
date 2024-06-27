@@ -7,9 +7,9 @@
         </pv-button>
       </div>
       <div class="dialog-container">
-        <h1>¿Estás seguro que deseas eliminar esta publicación de favoritos?</h1>
+        <h1>¿Estás seguro que deseas declinar esta oferta?</h1>
         <p>
-          Recuerda que una vez eliminada la publicación, no se podrá deshacer.
+          Recuerda que una vez declines la oferta, el usuario no podrá volver a hacer una por está publicación
         </p>
           <pv-button @click="confirmDelete" class="b-login-dialog"><b>Confirmar</b></pv-button>
       </div>
@@ -19,7 +19,7 @@
 
 <script>
 export default {
-  name: 'dialog-delete-favorites',
+  name: 'dialog-denied-offer',
   props: {
     visible: {
       type: Boolean,
