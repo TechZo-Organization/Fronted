@@ -19,6 +19,7 @@ export class userApiService {
     }
 
     updateUser(userId, userData) {
+        console.log(userData)
         return http.put(`/api/v1/profiles/${userId}`, userData);
     }
     

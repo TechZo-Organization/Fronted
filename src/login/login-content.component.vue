@@ -53,7 +53,8 @@ export default {
         <form @submit.prevent="handleLogin" class="form-container">
           <img src="../../public/login/cambiazo-logo.png"  height="50%" />
           <div class="inputs-login">
-            <h1 style="font-size: 25px; font-weight: 1000px; margin-bottom: 15px;">Iniciar Sesión</h1>
+            <h1 style="font-size: 25px; font-weight: bolder; margin-bottom: 15px;">Iniciar Sesión</h1>
+            <!--
             <router-link to="/home">
               <pv-button class="b-login-google">
                 <img src="../../public/login/google-icon.png" alt="Google image" width="18px" style="margin-right: 5px;">Iniciar Sesión con Google
@@ -64,6 +65,7 @@ export default {
               <h1>o inicia sesión con correo</h1>
               <hr class="hr-line">
             </div>
+            -->
             <div class="input-content">
               <div>
                 <label><b>Correo</b></label><br>

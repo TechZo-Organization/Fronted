@@ -25,7 +25,6 @@ export default {
   flex-wrap: wrap;
   justify-content: center;
   max-width: 100%;
-  padding-top: 3rem;
   padding-bottom: 3rem;
   padding-left: 1rem;
   padding-right: 1rem;

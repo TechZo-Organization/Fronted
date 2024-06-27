@@ -38,7 +38,7 @@ export default {
             <div class="card-content-boost">
               <div class="card-location">
                 <img src="../../../public/donations/location-icon.png" style="width: 18px; height: 18px"/>
-                <p>{{ boost_product.district.department.name}}</p>
+                <p>{{ boost_product.district.name}}</p>
               </div>
               <div class="card-title-boost">
                 <h1>{{ boost_product.name }}</h1>
@@ -144,6 +144,12 @@ export default {
   background-color: rgba(0, 0, 0, 0.7);
   text-align: center;
   padding: 10px;
+}
+
+@media (max-width: 768px) {
+  .card-title-boost h1{
+    padding-top:0;
+  }
 }
 
 </style>

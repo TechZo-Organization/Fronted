@@ -21,10 +21,13 @@ export class userApiService {
     deleteUser(id){
         return http.delete(`/api/v1/profiles/${id}`)
     }
+    deleteProfile(id){
+        return http.delete(`/api/v1/users/${id}`)
+    }
     changePassword(id, newPassword) {
         return http.put(`/api/v1/profiles/${id}`, { password: newPassword });
     }
     changeMembership(id, newMembership){
-        return http.put(`/api/v1/profiles/${id}`, { membership: newMembership });
+        return http.put(`/api/v1/profiles/${id}`,newMembership);
     }
 }

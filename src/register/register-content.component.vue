@@ -89,7 +89,8 @@ export default {
           <br>
           <img src="../../public/login/cambiazo-logo.png" height="50%"/>
           <div class="inputs-register">
-            <h1 style="font-size: 25px; font-weight: 1000px; margin-bottom: 15px;">Registrarse</h1>
+            <h1 style="font-size: 25px; font-weight: bolder; margin-bottom: 15px;">Registrarse</h1>
+            <!--
             <router-link to="/home">
               <pv-button class="b-register-google">
                 <img src="../../public/login/google-icon.png" alt="Google image" width="18px" style="margin-right: 5px;">Registrarse con Google
@@ -100,6 +101,7 @@ export default {
               <h1>o registrarse con correo</h1>
               <hr class="hr-line">
             </div>
+-->
             <div class="input-content">
               <div>
                 <label><b>Nombre</b></label><br>
@@ -326,6 +328,10 @@ footer{
 
   .form-container {
     padding-top: 4rem;
+  }
+
+  .form-container img{
+    width:90%;
   }
 
   .main-image-register{
