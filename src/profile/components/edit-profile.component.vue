@@ -10,7 +10,7 @@
     <div class="background-profile">
       <img src="../../../public/profile/profile-background.png" class="background-image" />
       <div class="user-info" v-if="user">
-        <img :src="user.img" alt="User Image" class="user-image" />
+        <img :src="user.photo" alt="User Image" class="user-image" />
         <div class="user-options">
           <h1 class="user-name">{{ user.name }}</h1>
         </div>
