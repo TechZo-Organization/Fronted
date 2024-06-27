@@ -199,7 +199,7 @@ export default {
                   class="input dropdown-input"
                   v-model="selectedCountry"
                   :options="countries"
-                  optionLabel="country"
+                  optionLabel="name"
                   placeholder="Elige un País"
                   @change="onCountryChange" required
               />
